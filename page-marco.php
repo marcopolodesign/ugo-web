@@ -8,7 +8,7 @@ get_header();
 
 		<div class="home-starter flex pb4 container relative">
 			<div class="center relative z-2 m-auto">
-					<h1 class="ugo-dark-pink f0 tc lh-0 recoleta bold mb2 w-70-ns center">Tu perro no va a querer que vuelvas de viaje</h1>
+					<h1 class="ugo-dark-pink f0 tc lh-0 main-font bold mb2 w-70-ns center">Tu perro no va a querer que vuelvas de viaje</h1>
 				<p class="tc messina ugo-dark-pink lh-copy f4 w-70-ns center">Somos personas que cuidan perros con el mismo cariño y entusiasmo que sus dueños, durante el tiempo que ellos no tienen disponible para hacerlo</p>
 				<div class="flex main-cta white-border br-button mv4 w-max jic center">
 					<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">

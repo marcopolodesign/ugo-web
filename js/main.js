@@ -1047,6 +1047,28 @@ marcoTL
 
 }
 
+const carrousel = () => {
+  let slider = document.querySelector('.marco-carrousel > div');
+  let controllers = Array.prototype.slice.call(document.querySelectorAll('.dot'));
+
+  controllers.forEach((c,i) => {
+    c.addEventListener('click', ()=> {
+      slider.style.transitionDelay = "0s !important"
+      controllers.forEach(c => {
+        c.classList.remove('active')
+      });
+      c.classList.add('active');
+     if (i < 0) {
+       slider.style.left = "80vw"
+     } else {
+       slider.style.left = i * -86 + "vw";
+     }
+    })
+  })
+}
+
+carrousel();
+
 
 barba.init({
   timeout: 5000,

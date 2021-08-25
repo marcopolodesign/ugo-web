@@ -1,5 +1,6 @@
 :root {
-  --pink: #f3dcd6;
+  --pink: #f4b5cd;
+  --black: #231f20;
   --darkPink: #860050;
   --mainDarkColor: #860050;
 
@@ -7,31 +8,19 @@
 }
 
 @font-face {
-  font-family: 'Recoleta Alt';
-  src: url('fonts/RecoletaAlt-Bold.eot');
-  src: url('fonts/RecoletaAlt-Bold.eot?#iefix') format('embedded-opentype'),
-    url('fonts/RecoletaAlt-Bold.woff2') format('woff2'),
-    url('fonts/RecoletaAlt-Bold.woff') format('woff'),
-    url('fonts/RecoletaAlt-Bold.ttf') format('truetype');
-  font-weight: bold;
+  font-family: 'Vim SM';
+  src: url('fonts/VimSM-Heavy.woff2') format('woff2'), url('fonts/VimSM-Heavy.woff') format('woff');
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Recoleta';
-  src: url('fonts/Recoleta-Regular.eot');
-  src: url('fonts/Recoleta-Regular.eot?#iefix') format('embedded-opentype'),
-    url('fonts/Recoleta-Regular.woff2') format('woff2'),
-    url('fonts/Recoleta-Regular.woff') format('woff'),
-    url('fonts/Recoleta-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+p {
+  font-size: 1em;
 }
 
-.recoleta {
-  font-family: var(--recoleta);
+.main-font {
+  font-family: var(--mainFont);
 }
 
 .ugo-pink {
@@ -57,7 +46,7 @@
 }
 
 .bg-color-ball {
-  background-color: var(--pink);
+  background-color: var(--black);
   width: 100vw;
   height: 100vh;
   /* transition: all 0.8s cubic-bezier(0.55, 0.055, 0.675, 0.19); */
@@ -87,13 +76,14 @@
 
 header {
   transition: all 0.3s ease;
+  background: linear-gradient(180deg, rgba(244, 181, 205, 0.69) 0%, rgba(255, 255, 255, 0) 76.39%);
 }
 
 header.scrolled {
-  background-color: #f3dcd6d5;
-  border-bottom: 1px solid var(--darkPink);
+  /* background-color: #f3dcd6d5; */
+  /* border-bottom: 1px solid var(--darkPink);
   -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px); */
 }
 
 header.scrolled p,
@@ -106,7 +96,7 @@ header.scrolled a p::after {
 }
 
 header.scrolled svg path {
-  fill: var(--darkPink);
+  /* fill: var(--darkPink); */
 }
 
 /* Home Desktop */
@@ -114,6 +104,7 @@ header.scrolled svg path {
 .home-starter {
   padding-top: 20vh;
   padding-bottom: 20vh;
+  height: 80vh;
 }
 
 .home-starter > div > * {
@@ -167,9 +158,10 @@ header.scrolled svg path {
 
 .bloque-text,
 .bloque-text > div:last-child {
-  background-color: var(--pink);
+  background-color: var(--black);
   z-index: 3;
   position: relative;
+  border-radius: 20px;
 }
 
 .bloque-text::after {
@@ -177,16 +169,39 @@ header.scrolled svg path {
   position: absolute;
   width: 100%;
   height: 100%;
-  border: 2px solid var(--darkPink);
+  border: 3px solid var(--pink);
   top: 0;
   left: 0;
   z-index: 2;
   transition: transform 0.6s 0.7s ease;
+  border-radius: 20px;
 }
 
 .numero-bloque {
   transform: translateY(-50%);
-  background-color: var(--pink);
+  /* background-color: var(--black); */
+}
+
+.numero-bloque h1 {
+  font-family: var(--mainFont);
+  -webkit-text-stroke: 2px var(--black);
+  color: #fff;
+}
+
+.bloque-text h1 {
+  font-family: var(--mainFont);
+}
+
+.bloque-text p {
+  color: #fff;
+}
+
+.bloque-shape {
+  transform: translate(-30%, -30%);
+}
+
+.bloque-element img {
+  height: 50px !important;
 }
 
 .landing-footer-ilust svg {
@@ -195,7 +210,7 @@ header.scrolled svg path {
 }
 
 .bloque-text.has-background::after {
-  background-color: var(--darkPink);
+  background-color: var(--pink);
 }
 
 .bloques-home > div > div {
@@ -226,7 +241,7 @@ header.scrolled svg path {
 }
 
 .bloques-home > div:first-child > div {
-  transition-delay: 3s !important;
+  /* transition-delay: 3s !important; */
 }
 
 .cursor.is-scroll-h {
@@ -240,8 +255,29 @@ header.scrolled svg path {
   transition: none !important;
 }
 
+.ugo-timeline {
+  background-color: #fff;
+  border-radius: 20px;
+}
+
+.ugo-timeline .marco-timeline {
+  border-color: var(--pink);
+}
+
+.timeline-item:before {
+  background-color: var(--pink);
+}
+
 .marco-gallery {
   cursor: none;
+}
+
+.landing-footer .main-cta {
+  border-color: #fff;
+}
+
+.landing-footer svg:not(.logo) path {
+  fill: #fff;
 }
 
 @media (max-width: 768px) {
