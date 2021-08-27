@@ -112,7 +112,6 @@
     <?php endif;?>
   </div>
 
-
   <?php elseif( get_row_layout() == 'carrousel' ): ?>
 
   <div class="marco-carrousel relative mv5 w-100 overflow-hidden">
