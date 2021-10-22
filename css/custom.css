@@ -5,6 +5,8 @@
   --mainDarkColor: #860050;
 
   --mainFont: 'VIM SM';
+  --mainGradient : linear-gradient(180deg, #F4B5CD 27.35%, #FF619D 84.4%);
+  border-radius: 0px 0px 40px 40px;
 }
 
 @font-face {
@@ -37,6 +39,10 @@ p {
 
 .ugo-dark-pink-bg {
   background-color: var(--darkPink);
+}
+
+.bg-gradient {
+  background: var(--mainGradient)
 }
 
 .bg-color-container {
