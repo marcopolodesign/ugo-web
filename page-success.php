@@ -56,13 +56,6 @@ get_header();
 			<p class="mt6 white tc f6">Estás recibiendo este mail porque te suscribiste en nuestra app con el mismo.</p>
 			<p class="mt2 white tc pb5 f6">® <?php echo date("Y");?> UGo Argentina SA. Todos los derechos reservados</p>
 			</section>
-
-			<script>
-				<link rel="preconnect" href="https://fonts.googleapis.com">
-				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-				<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-			</script>
-
 			<style>
 				body, h1, p {
 					font-family: 'Montserrat', sans-serif !Important;

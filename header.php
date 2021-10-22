@@ -35,6 +35,11 @@ src="https://www.facebook.com/tr?id=1674646392738394&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Facebook Pixel Code -->
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+				<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+				
+				
 	<?php wp_head(); ?>
 </head>
 
