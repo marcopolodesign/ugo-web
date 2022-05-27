@@ -112,6 +112,11 @@ header.scrolled svg path {
   /* fill: var(--darkPink); */
 }
 
+
+.header-nav a{
+  color: #fff;
+}
+
 /* Home Desktop */
 
 .home-starter {
@@ -375,6 +380,18 @@ main.paseadores {
 .landing-footer svg:not(.logo) path {
   fill: #fff;
 }
+
+/* App Page */
+
+.app-image-1 {
+  top: 5%;
+}
+
+
+.app-image-2 {
+  bottom: 5%;
+}
+
 
 /* Insta Desktop */
 

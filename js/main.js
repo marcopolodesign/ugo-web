@@ -1135,7 +1135,7 @@ barba.init({
   ],
   views: [
     {
-      namespace: 'home',
+      namespace: 'hp',
       afterEnter(data) {
         animateHome();
 

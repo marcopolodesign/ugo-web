@@ -481,14 +481,14 @@ p.lh1 {
 .footer-nav-inner a,
 .details-header > p {
   text-decoration: none;
-  display: block;
   position: relative;
   display: inline-flex;
   height: max-content;
   padding-bottom: 4px;
   line-height: 1;
   font-family: var(--suisse);
-  color: #000;
+  color: #fff;
+  font-weight: 800;
 }
 
 .header-nav a {
@@ -1097,7 +1097,7 @@ span.white {
   }
 
   .container,
-  .container-xs {
+  .container-xs, .container-mobile {
     padding-left: 20px;
     padding-right: 20px;
   }

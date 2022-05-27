@@ -1,4 +1,4 @@
-<?php /* Template Name:  Home  */
+<?php /* Template Name:  Paseadores  */
 
 get_header();
 ?>
@@ -6,7 +6,7 @@ get_header();
 <div id="primary" class="content-area">
 		<main id="main" data-barba="container" data-barba-namespace="paseadores" class="paseadores pv5 paseadores-home">
 
-    <section class="paseadores-starter container flex jic pv5">
+    <section class="paseadores-starter container flex jic pv5" id="paseadores-top">
         <div class="paseadores-starter-info w-40-ns">
           <h1 class="ugo-pink main-font f1">Ganá dinero paseando perros.</h1>
           <h2 class="f5 white mt2 fw6 lh-copy">Recibí solicitudes de paseo, elegí slos perros que queres pasear, con un servicio que se adapta a tus horarios y disponibilidad semanal para trabajar.</h2>
@@ -28,6 +28,13 @@ get_header();
     <div class="bloques-home container">
 			<?php get_template_part('template-parts/bloques-marco');?>
 		</div>
+
+
+    <div class="flex flex-column justify-center items-center ">
+      <h2 class="ugo-pink main-font f1 mv4 tc">Registrate ahora</h1>
+      <a id="paseadores-end-cta" href="#paseadores-top" class="main-cta no-deco bg-gradient white fw8 center br-button">Empezar a pasear con UGo!</a>
+    </div>
+      
 
     </main><!-- #main -->
 	</div><!-- #primary -->
