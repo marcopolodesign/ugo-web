@@ -3,53 +3,7 @@
   --lightGrey: #ccc;
   --red: #d0011b;
   --blue: #030342;
-  --messina: 'MessinaSansWeb', Helvetica, serif;
   --gtsuper: 'GT Super Display', Georgia, serif;
-}
-
-@font-face {
-  font-family: 'GT Super Display';
-  src: url('fonts/GTSuperDisplay-Light.woff2') format('woff2'),
-    url('fonts/GTSuperDisplay-Light.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MessinaSansWeb';
-  src: url('fonts/MessinaSansWeb-Bold.woff2') format('woff2'),
-    url('fonts/MessinaSansWeb-Bold.woff') format('woff');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MessinaSansWeb Book';
-  src: url('fonts/MessinaSansWeb-Book.woff2') format('woff2'),
-    url('fonts/MessinaSansWeb-Book.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MessinaSansWeb';
-  src: url('fonts/MessinaSansWeb-Light.woff2') format('woff2'),
-    url('fonts/MessinaSansWeb-Light.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'MessinaSansWeb';
-  src: url('fonts/MessinaSansWeb-Regular.woff2') format('woff2'),
-    url('fonts/MessinaSansWeb-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
 }
 
 * {
@@ -61,7 +15,7 @@ body {
   margin: auto;
   color: #000;
   font-weight: normal;
-  font-family: var(--messina);
+  font-family: 'Montserrat', sans-serif;
 }
 
 body.bg-white {
@@ -71,11 +25,11 @@ body.bg-white {
 h1,
 h2 {
   line-height: 1;
-  font-family: var(--denver);
+  font-family:'Montserrat', sans-serif;
 }
 
 p {
-  font-family: var(--messina);
+  font-family: 'Montserrat', sans-serif;
   font-weight: 300;
   font-weight: normal;
   font-size: 0.875em;
@@ -136,7 +90,7 @@ div img {
 }
 
 .cursor.red {
-  background-color: #911716;
+  background-color: var(--pink);
 }
 
 .cursor.black {
@@ -147,7 +101,7 @@ div img {
   width: 30px;
   height: 30px;
   opacity: 0.7;
-  background-color: var(--red);
+  background-color: var(--pink);
 }
 
 .cursor.is-shop {
@@ -905,6 +859,10 @@ footer {
   background-color: var(--red);
 }
 
+.reviews-cover {
+  min-height: 80vh;
+}
+
 /* End MarcoPolo general's & start MB Gallery styles */
 
 span.line {
@@ -996,6 +954,32 @@ span.white {
 
 .carrousel-image h1 {
   font-family: var(--mainFont);
+}
+
+.marco-carrousel .arrow {
+  position: absolute;
+  top: 50%;
+  padding: 20px;
+  background-color: #fff;
+  width: 80px;
+  height: 80px;
+  border-radius: 100%;
+  display: flex;
+  margin: 0 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.arrow.foward-arrow {
+  right: 0%;
+}
+
+.arrow.foward-arrow svg {
+  transform: translateX(-3px);
+}
+
+.arrow svg {
+  margin: auto;
+  transform: translateX(3px);
 }
 
 .carrousel-controller {
@@ -1160,5 +1144,46 @@ span.white {
   .timeline-item h3 {
     text-align: left;
     padding-left: 20px;
+  }
+
+  .marco-carrousel {
+    overflow: scroll;
+  }
+
+  .marco-carrousel > div:first-child {
+    width: max-content;
+    left: 0px !important;
+  }
+
+  .carrousel-image {
+    margin-left: 20px;
+    height: 50vh;
+  }
+
+  .carrousel-image > div {
+    background-position: center;
+  }
+
+  .carrousel-controller {
+    display: none;
+  }
+
+  .marco-carrousel .arrow {
+    display: none;
+  }
+
+  .reviews-cover {
+    height: 40vh;
+  }
+
+  .reviews-content {
+    padding: 0 20px;
+    margin-top: -90px !important;
+  }
+
+  .review {
+    margin-right: auto !important;
+    width: 100%;
+    padding: 50px 0px;
   }
 }

@@ -194,3 +194,7 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 	require get_template_directory() . '/inc/jetpack.php';
 }
 
+add_post_type_support('page', 'category');
+add_post_type_support('page', 'excerpt');
+
+

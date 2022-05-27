@@ -1,10 +1,10 @@
-<?php /* Template Name:  Mails  */
+<?php /* Template Name:  Success  */
 
 get_header();
 ?>
 
 <div id="primary" class="content-area">
-		<main id="main" data-barba="container" data-barba-namespace="mail" class="mail">
+		<main id="main" data-barba="container" data-barba-namespace="success" class="success ugo-black-bg">
 
 		<section class="bg-gradient mail-container container pb4">
 			
@@ -30,9 +30,9 @@ get_header();
 					<p class="white">Total pagado: <span id="payment-total"></span></p>
 			</div>
 
-			<div class="main-cta-mail pv2 ph3 bg-white" id="back-to-app">
+			<a href="" class="main-cta-mail db pv2 ph3 bg-white no-deco" id="back-to-app">
 				<p class="black fw7">Volver a la app</p>
-			</div>
+			</a>
 
 			</section>
 
@@ -95,6 +95,9 @@ get_header();
 				}
 
 			</style>
+
+			<script src="https://sdk.mercadopago.com/js/v2"></script>	
+		
     </main>
 	</div>
 

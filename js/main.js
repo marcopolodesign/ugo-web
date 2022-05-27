@@ -201,7 +201,7 @@ const runScripts = () => {
         entries.forEach((entry) => {
           if (entry.intersectionRatio >= 0.2) {
             entry.target.classList.add('in-view');
-          } 
+          }
           else {
             if (pageName.classList.contains('shop')) {
               entry.target.classList.remove('in-view');
@@ -210,8 +210,8 @@ const runScripts = () => {
         });
       },
       {
-        
-        threshold: [0.25,1],
+
+        threshold: [0.25, 1],
       }
     );
 
@@ -221,18 +221,18 @@ const runScripts = () => {
 
     homeContent.forEach(content => {
       let children = Array.prototype.slice.call(content.children);
-        children.forEach((c, index)=> {
-          const delay = index * -80;   
-          content.style.transitionDelay = delay + 650 + 'ms';
-        })
+      children.forEach((c, index) => {
+        const delay = index * -80;
+        content.style.transitionDelay = delay + 650 + 'ms';
+      })
     })
   };
 
   function googleAnalytics() {
     gtag('event', 'page_view', {
-      page_location: 'https://art.mirandabosch.com',
+      page_location: 'https://www.ugo.com.ar',
       page_path: window.location.pathname,
-      send_to: 'G-409NEZJV2Y',
+      send_to: 'G-9WN369K0SS',
     })
   }
 
@@ -368,13 +368,13 @@ const runScripts = () => {
     fbq('track', 'PageView');
 
     const wappTracker = () => {
-        let trackers = document.querySelectorAll('a.no-deco');
+      let trackers = document.querySelectorAll('a.no-deco');
 
-        trackers.forEach(t => {
-          t.addEventListener('click' ,()=> {
-            fbq('track', 'Purchase_Ver Disponibilidad WS');
-          })
+      trackers.forEach(t => {
+        t.addEventListener('click', () => {
+          fbq('track', 'Purchase_Ver Disponibilidad WS');
         })
+      })
     }
     wappTracker();
   }
@@ -413,13 +413,41 @@ const runScripts = () => {
 
   }
 
+  const stepsiPhone = ()=> {
+    let steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+    let holder = document.querySelectorAll('.steps-image img');
+
+    steps[0].classList.remove('not-active');
+    holder[0].classList.remove('not-active');
+
+    let n;
+
+    steps.forEach(s => {
+      s.addEventListener('mouseenter' , (index) => {
+        n = steps.indexOf(s);
+
+        steps.forEach(s => {
+          s.classList.add('not-active')
+        })
+
+        holder.forEach(h => {
+          h.classList.add('not-active')
+        })
+        
+        steps[n].classList.remove('not-active');
+        holder[n].classList.remove('not-active');
+
+      })
+    })
+  }
+
 
   const initScripts = () => {
     if (pageName.classList.contains('home')) {
       // postAnimations();
     }
 
-    bgColor();
+    // bgColor();
 
     if (checkoutForm) {
       checkoutDetails();
@@ -434,12 +462,20 @@ const runScripts = () => {
 
 
     }
+
+    // Reusable FN's
+
+    let hasStepsBlock = document.querySelector('.steps-container');
+
+    if (hasStepsBlock) {
+      stepsiPhone();
+    }
   };
 
   // postAnimations();
   initScripts();
   fbTrack();
-  // googleAnalytics();
+  googleAnalytics();
   allCursor();
   postAnimations();
 
@@ -481,6 +517,77 @@ const moreAnchors = () => {
   //     removeHoverCursor();
   //   });
   // });
+};
+
+let pos = 2;
+const moveCarrousel = () => {
+  let arrow = document.querySelector('.foward-arrow');
+  let leftArrow = document.querySelector('.back-arrow');
+
+  let container = document.querySelectorAll('.marco-carrousel>div:first-child');
+  let isFoward = false;
+  let isBack = false;
+  let distance = document.querySelector('.carrousel-image').clientWidth;
+
+  window.addEventListener('resize', () => {
+    distance = document.querySelector('.carrousel-image').clientWidth;
+  });
+
+
+  let maxMovement = document.querySelectorAll('.carrousel-image').length - 1;
+
+  container[0].style.left = (distance * -1) + "px";
+
+
+  arrow.addEventListener('click', () => {
+    leftArrow.classList.remove('o-0');
+    leftArrow.classList.remove('pointers-none');
+
+    if (isBack) {
+      pos = pos + 1;
+      isBack = false;
+    }
+
+    isFoward = true;
+
+    container.forEach((c) => {
+      if (pos <= 2) {
+        c.style.left = pos * (distance * -1) + 'px';
+        newPos = c.style.left;
+        console.log(newPos);
+      }
+    });
+
+    if (pos <= maxMovement) {
+      pos++;
+    }
+
+    console.log(pos);
+  });
+
+  leftArrow.addEventListener('click', () => {
+    if (isFoward) {
+      pos = pos - 1;
+      isBack = true;
+      isFoward = false;
+    }
+    container.forEach((c) => {
+      if (pos >= 1) {
+        c.style.left = pos * (distance * -1) + distance + 'px';
+      }
+    });
+
+
+    if (pos === 0) {
+      leftArrow.classList.add('o-0');
+      pos = 0;
+      console.log('is-nlll')
+    } else {
+      pos--;
+    }
+
+    console.log(pos);
+  });
 };
 
 const logo = () => {
@@ -809,6 +916,7 @@ const filterByLinks = () => {
 };
 
 const Menu = () => {
+  if (!pageName.classList.contains('success')) {
   const onScroll = () => {
     let container = document.querySelector('header');
     let prevScroll = 0;
@@ -827,6 +935,7 @@ const Menu = () => {
     });
   };
   onScroll();
+}
 };
 
 Menu();
@@ -841,114 +950,8 @@ const interview = () => {
   })
 }
 
-const sebas = () => {
-  let path = window.location.pathname;
-  let sebasOpener = document.querySelector('#sebas-container');
-  let sebasSubmit = document.querySelector('#sebas-forever')
-
-  console.log(Cookies.get('name'))
-
-  if (Cookies.get('name') === 'sebas') {
-    console.log('sebas!');
-  } else {
-    sebasOpener.classList.remove('o-0');
-    sebasOpener.classList.remove('pointers-none');
-    sebasOpener.classList.add('flex');
-    sebasSubmit.addEventListener('click', () => {
-      sebasOpener.classList.add('o-0');
-      sebasOpener.classList.add('pointers-none');
-      Cookies.set('name', 'sebas', { expires: 365, path: '/' })
-    });
-  }
-}
 
 
-const openingsCookies = () => {
-  let path = window.location.pathname;
-  let preOpening = document.querySelector('.pre-opening-container');
-  let openingSumbit = document.querySelector('#mc-embedded-subscribe')
-  let response = document.querySelector('#mce-success-response');
-  let responseError = document.querySelector('#mce-error-response');
-  let html = document.querySelector('html');
-  let body = document.querySelector('body');
-
-
-  path = path.split('/')
-  let newCookie = path[2];
-
-  let logo = document.querySelector('.logo');
-  console.log(Cookies.get('opening'))
-  if (Cookies.get('opening') === newCookie) {
-    console.log('cookied!');
-    // pre-opening show
-    preOpening.classList.add('o-0');
-    preOpening.classList.add('pointers-none');
-    body.style.height = "";
-    html.style.height = ''
-
-  }
-  else {
-
-    preOpening.classList.remove('o-0');
-    preOpening.classList.remove('pointers-none');
-    body.style.height = "100%";
-    body.style.overflow = "hidden";
-    html.style.height = '100%'
-
-    openingSumbit.addEventListener('click', (e) => {
-      setTimeout(() => {
-        // preopening hide
-        if (response.style.display != 'none') {
-          console.log('click');
-          preOpening.classList.add('o-0');
-          preOpening.classList.add('pointers-none');
-          Cookies.set('opening', newCookie, { expires: 365, path: '/' })
-
-          body.style.height = "";
-          html.style.height = '';
-          body.style.overflow = "";
-
-
-
-        } else if (responseError.innerText.indexOf('already subscribed') >= 0 || responseError.innerText.indexOf('too many recent') >= 0) {
-          responseError.classList.add('dn')
-          preOpening.classList.add('o-0');
-          preOpening.classList.add('pointers-none');
-          Cookies.set('opening', newCookie, { expires: 365, path: '/' })
-          body.style.height = "";
-          html.style.height = '';
-          body.style.overflow = "";
-
-
-
-        }
-        else {
-          alert('Hubo un error en tu solicitud. Por favor refresca la página y volvé a intentarlo');
-          window.location.replace(window.location.href);
-        }
-      }, 1000);
-    });
-  }
-}
-
-const obrasDisponibles = () => {
-  let obrasTrigger = document.querySelector('#obras-trigger');
-  let obras = document.querySelector('.obras-disponibles');
-  let closeObras = document.querySelector('#close-obras');
-
-  if (obras) {
-    obrasTrigger.addEventListener('click', () => {
-      obras.classList.add('open');
-      closeObras.classList.remove('o-0');
-      closeObras.classList.remove('pointers-none');
-    })
-    closeObras.addEventListener('click', () => {
-      obras.classList.remove('open');
-      closeObras.classList.add('o-0');
-      closeObras.classList.add('pointers-none');
-    })
-  }
-}
 
 
 const contact = () => {
@@ -995,7 +998,7 @@ const contact = () => {
   });
 };
 
-const animateHome = () =>{
+const animateHome = () => {
   let background = document.querySelector('.bg-color-ball');
   let children = Array.prototype.slice.call(document.querySelector('.home-starter > div').children);
   let image = document.querySelector('.home-starter div.absolute-cover')
@@ -1007,43 +1010,43 @@ const animateHome = () =>{
     },
   });
   homeTimeline
-  .to(background, {y: 0, duration: 1, ease: Power4.easeOut},0)
-  .to(image, {opacity: 1, y: 0, duration: 1, ease: Power4.easeOut}, 1.2)
-  .to(children, {opacity: 1, y: 0, stagger: 0.1, duration: 1,}, 1.6);
+    .to(background, { y: 0, duration: 1, ease: Power4.easeOut }, 0)
+    .to(image, { opacity: 1, y: 0, duration: 1, ease: Power4.easeOut }, 1.2)
+    .to(children, { opacity: 1, y: 0, stagger: 0.1, duration: 1, }, 1.6);
 }
 
 const gallery = () => {
   let gal = document.querySelector('.marco-gallery');
   let cursor = document.querySelector('.cursor')
 
-  gal.addEventListener('mouseenter', ()=> {
+  gal.addEventListener('mouseenter', () => {
     cursor.classList.add('is-scroll-h');
   })
 
-  gal.addEventListener('mouseleave', ()=> {
+  gal.addEventListener('mouseleave', () => {
     cursor.classList.remove('is-scroll-h');
   })
 }
 
 
 
-const animateMarco = () =>{
+const animateMarco = () => {
   let background = document.querySelector('.bg-color-ball');
   let children = Array.prototype.slice.call(document.querySelector('.home-starter > *').children);
   let image = document.querySelector('.home-starter img');
 
 
-const marcoTL = gsap.timeline({
-  defaults: {
-    ease: Expo.easeOut,
-    delay: 1,
-  },
-});
-marcoTL
-.set (image, {opacity: 0, y: "60px", height: 100})
-.to(background, {width: '3000px', height: '3000px', duration: 2.5, ease: Power4.easeOut},0)
-.to(children, {opacity: 1, y: 0, stagger: 0.1, duration: 1,}, 0.55)
-// .to(image, {opacity: 1, y: 0, duration: 1, ease: Power4.easeOut}, 0.75)
+  const marcoTL = gsap.timeline({
+    defaults: {
+      ease: Expo.easeOut,
+      delay: 1,
+    },
+  });
+  marcoTL
+    .set(image, { opacity: 0, y: "60px", height: 100 })
+    .to(background, { width: '3000px', height: '3000px', duration: 2.5, ease: Power4.easeOut }, 0)
+    .to(children, { opacity: 1, y: 0, stagger: 0.1, duration: 1, }, 0.55)
+  // .to(image, {opacity: 1, y: 0, duration: 1, ease: Power4.easeOut}, 0.75)
 
 }
 
@@ -1051,18 +1054,18 @@ const carrousel = () => {
   let slider = document.querySelector('.marco-carrousel > div');
   let controllers = Array.prototype.slice.call(document.querySelectorAll('.dot'));
 
-  controllers.forEach((c,i) => {
-    c.addEventListener('click', ()=> {
+  controllers.forEach((c, i) => {
+    c.addEventListener('click', () => {
       slider.style.transitionDelay = "0s !important"
       controllers.forEach(c => {
         c.classList.remove('active')
       });
       c.classList.add('active');
-     if (i < 0) {
-       slider.style.left = "80vw"
-     } else {
-       slider.style.left = i * -86 + "vw";
-     }
+      if (i < 0) {
+        slider.style.left = "80vw"
+      } else {
+        slider.style.left = i * -86 + "vw";
+      }
     })
   })
 }
@@ -1126,7 +1129,7 @@ barba.init({
             .to(preLoad, { x: '-100%', opacity: 1, duration: 2.3 }, 0)
             .to(next.container, { opacity: 1, x: '0' }, 0.5);
         });
-      },  
+      },
     },
 
   ],
@@ -1135,16 +1138,17 @@ barba.init({
       namespace: 'home',
       afterEnter(data) {
         animateHome();
-        gallery();
+
+        moveCarrousel();
 
       },
     },
     {
       namespace: 'marco',
       afterEnter(data) {
-       animateMarco();
+        animateMarco();
       },
-    }, 
+    },
   ],
   debug: true,
 });
@@ -1169,5 +1173,115 @@ window.addEventListener('resize', () => {
 });
 
 
+const instagram = () => {
+  let fields = 'id,username, media_type, media_url, timestamp, permalink, comments'
+
+  const accessToken = 'IGQVJXRlFtV0JQaDNnNGFob3BOcjZAoSHByX3BsQ0FhN21nV0tZAQzdvaWkzLVp2SGZACLU5HR2FOUkVhZAnViWHdDMjBydG5CMU1QRV9wMUdXRzV4ZA3FlMXlZANVR2RHAxOWVqUXBzLUF1QXZAjZA2locU5QeAZDZD';
 
 
+  const superHiApi = `https://api.superhi.com/api/test/token/instagram?access_token=${accessToken}`
+
+
+  const sectionTag = document.querySelector('.instagram-feed');
+  let newToken;
+
+  const refreshToken = () => {
+    return fetch (superHiApi)
+    .then((response)=> response.json())
+    .then((token)=> {
+     return token.access_token
+    }
+   ); 
+  }
+  refreshToken();
+
+  const getGram = async () => {
+    newToken = await refreshToken()
+
+  const apiUrl = `https://graph.instagram.com/me/media?fields=${fields}&access_token=${newToken}`;
+
+  
+  return fetch(apiUrl, {
+    count: 5
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      sectionTag.innerHTML = '';
+       data.data.slice(0, 5).forEach((post) => {
+        if (post.media_type === "VIDEO") {
+          sectionTag.innerHTML =
+          sectionTag.innerHTML +
+          `<div class="flex flex-column">
+            <a rel="noreferrer noopener" class="relative w-100" target="_blank" href="${post.permalink}">
+            <video preload="true" autoplay="true" muted="true" loop="true" src="${post.media_url}"></video>
+            </a>
+          </div>`;
+        } else { 
+          sectionTag.innerHTML =
+            sectionTag.innerHTML +
+            `<div class="flex flex-column">
+                <a class="relative w-100" target="_blank" href="${post.permalink}">
+              <div class='absolute-cover cover no-repeat bg-center' style='background-image: url("${post.media_url}")'></div>
+              </a>
+            </div>
+          `;
+        }
+        });
+    
+      setTimeout(() => {
+        let width = document.querySelector('.instagram-feed div a').clientWidth;
+        document.querySelectorAll('.instagram-feed div a').forEach((post) => {
+          post.style.height = width + 'px';
+        });
+
+        document.querySelectorAll('.instagram-feed div video').forEach((post) => {
+          post.style.height = width + 'px';
+        });
+        
+      }, 1000);
+      window.addEventListener('resize', () => {
+        width = document.querySelector('.instagram-feed div a').clientWidth;
+        console.log(width);
+        document.querySelectorAll('.instagram-feed div a').forEach((post) => {
+          post.style.height = width + 'px';
+        });
+
+        document.querySelectorAll('.instagram-feed div video').forEach((post) => {
+          post.style.height = width + 'px';
+        });
+
+      });
+    });
+  }
+  getGram()
+};
+
+instagram();
+
+
+
+const getPaymentID = () => {
+
+  if (pageName.classList.contains('success')) {
+      let id = window.location.search;
+      let params = new URLSearchParams(id) 
+
+
+      let totalAmount = params.get('total_amount')
+      let status = params.get('status');
+      let linkingUrl = params.get('linking_url');
+      let paymentId = params.get('payment_id');
+
+      // insert inside HTML
+
+      document.querySelector('#price-header').innerHTML = totalAmount
+      document.querySelector('#payment-id').innerHTML = paymentId
+      document.querySelector('#payment-status').innerHTML = status
+      document.querySelector('#payment-total').innerHTML = totalAmount
+      document.querySelector('#back-to-app').setAttribute('href', linkingUrl);
+     
+
+      console.log(status)
+}
+}
+getPaymentID();
