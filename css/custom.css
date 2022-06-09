@@ -117,6 +117,11 @@ header.scrolled svg path {
   color: #fff;
 }
 
+img.icon {
+  height: 60px !important;
+  width: auto !important;
+}
+
 /* Home Desktop */
 
 .home-starter {
@@ -392,6 +397,42 @@ main.paseadores {
   bottom: 5%;
 }
 
+.app-features > * {
+  transform-origin: center;
+  transform: scale(0);
+  transition: all 0.45s ease;
+
+}
+
+
+.app-features > *.transform {
+  transform: scale(1);
+}
+
+.round-image {
+  width: 40vw;
+  height:40vw;
+  border-radius: 100%;
+  overflow: hidden;
+}
+
+.round-item {
+  flex: 1 1 0;
+}
+
+.round-item:last-child {
+  margin-right: 0;;
+}
+
+.next-section-container {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.next-section-gradient {
+  background: linear-gradient(270deg, #F4B5CD 46.14%, rgba(244, 181, 205, 0) 107.96%);
+border-radius: 20px;
+}
 
 /* Insta Desktop */
 
@@ -616,5 +657,12 @@ main.paseadores {
 
   .instagram-feed > div {
     width: 100%;
+  }
+}
+
+
+@media (max-width: 580px) {
+  .column-mobile-reverse {
+    flex-direction: column-reverse;;
   }
 }

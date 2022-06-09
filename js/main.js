@@ -10,7 +10,7 @@ let allAnchors;
 
 const runScripts = () => {
   pageName = document.querySelector('[data-barba=container]');
-  console.log(pageName);
+  // console.log(pageName);
   docuHeight = document.body.clientHeight;
 
   function allCursor() {
@@ -1144,9 +1144,31 @@ barba.init({
       },
     },
     {
-      namespace: 'marco',
+      namespace: 'app',
       afterEnter(data) {
-        animateMarco();
+        let featuresContainer = document.querySelector('.app-features');
+        let elements = Array.prototype.slice.call(featuresContainer.children);
+        console.log(featuresContainer.offsetHeight);
+        console.log(featuresContainer.offsetTop);
+        
+        
+        document.addEventListener('scroll', (e)=> {
+          let scroll = window.scrollY + window.innerHeight / 1.3;
+         
+          if (scroll > featuresContainer.offsetTop && featuresContainer.offsetTop + featuresContainer.offsetHeight  > scroll - 600) {
+            // let percentScrolled = window.scrollY / window.innerHeight;
+         
+            elements.forEach((el, index) => {
+              el.classList.add('transform');
+              const delay = index * 100;
+              el.style.transitionDelay = delay  + 'ms';
+            })
+          } else {
+            elements.forEach(el => {
+              el.classList.remove('transform')
+            })
+          }
+        })
       },
     },
   ],
@@ -1285,3 +1307,5 @@ const getPaymentID = () => {
 }
 }
 getPaymentID();
+
+

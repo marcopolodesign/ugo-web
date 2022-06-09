@@ -1,4 +1,4 @@
-<div class="fixed z-5 ma5 top-0 left-0 reserve-container ugo-black-bg">
+<div class="fixed z-5 ma5 top-0 left-0 reserve-container flex column-mobile-reverse ugo-black-bg">
     <div class="w-70-ns">
 
     </div>

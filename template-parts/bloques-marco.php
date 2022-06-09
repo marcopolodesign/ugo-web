@@ -217,7 +217,7 @@
 
       <?php elseif( get_row_layout() == 'image_fs' ): ?>
 
-      <div class="fs-image">
+      <div class="fs-image pv5">
         <img src="<?php the_sub_field('image');?>" >
       </div>
 
@@ -246,7 +246,72 @@
         </div>
 
 
-      <?php elseif( get_row_layout() == 'cards' ): ?>
+          <?php elseif( get_row_layout() == 'next_section' ): ?>
+            
+            <div class="mv5 container">
+              <div class="next-section-container relative ph4-ns ">
+                <div class="relative z-3 next-section-content flex flex-column items-end justify-end pv6 measure mr-0 ml-auto">
+                  <?php the_sub_field('next_content');
+
+                  if (get_sub_field('has_links')):
+                    get_template_part('template-parts/content/stores-links'); 
+                  endif; ?>
+                  
+                </div>
+
+                <div class='next-section-gradient w-60 h-100 z-2 absolute top-0 right-0'></div>
+                <div class="absolute-cover z--1" style="background-image: url(<?php the_sub_field('image');?>)"></div>
+              </div>
+            </div>
+
+
+        <?php elseif( get_row_layout() == 'bloque_info_round' ): 
+            $textWidth = 'w-60-ns';
+          ?>
+
+          <div class="bloque-round-container flex jic container mv5">
+            <?php if(get_sub_field('image')): 
+              $textWidth = 'w-40-ns';
+              ?>
+            <div class="w-60-ns round-image relative">
+                <div class="absolute-cover" style='background-image: url(<?php the_sub_field("image");?>)' ></div>
+            </div>
+            <?php endif;?>
+
+            <div class="center <?php echo $textWidth; ?>">
+              <?php the_sub_field('texto');?>
+              <div class="flex column-mobile">
+              <?php if( have_rows('round_items')) : while ( have_rows('round_items') ) : the_row();?>
+                <div class="round-item mr4-ns">
+                  <?php if(get_sub_field('round-item-icon')): ?>
+                    <img class="icon mb2" src="<?php the_sub_field("round-item-icon");?>" >
+                    <?php endif;?>
+                    <div class="white f6"><?php the_sub_field('round_item_info');?></div>
+                </div>
+              <?php endwhile; endif;?>
+              </div>
+            </div>
+          </div>
+
+
+          <?php elseif( get_row_layout() == 'text_image' ):
+							$reverse = get_sub_field('reverse');
+							if ($reverse) :
+								$reverse = 'row-reverse';
+              endif; ?>
+
+							<div class="flex <?php echo $reverse; ?> justify-center items-center app-mock-container container column-mobile">
+								<div class="flex w-40-ns center h-100 pa5-ns">
+									<img src=<?php the_sub_field('image'); ?> class="m-auto">
+								</div>
+
+								<div class="w-40-ns center">
+									<?php the_sub_field('text'); ?>
+								</div>
+							</div>
+
+
+        <?php elseif( get_row_layout() == 'cards' ): ?>
 
         <div class="cards-container pv5 ph5-ns">
           <h1 class="ugo-pink ttu tc f1 main-font w-50-ns center"><?php the_sub_field('cards_title');?></h1>
