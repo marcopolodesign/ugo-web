@@ -204,7 +204,7 @@
       <div class="items-timeline-container pv5 ph5-ns">
         <h1 class="ugo-pink ttu tc f1 main-font w-50-ns center"><?php the_sub_field('timeline_title');?></h1>
 
-        <div class="items-timeline-inner flex justify-between items-stretch mt4">
+        <div class="items-timeline-inner flex justify-between items-stretch mt4 column-mobile">
 
         <?php if( have_rows('item_timeline_item')) : while ( have_rows('item_timeline_item') ) : the_row();?>
               <div class="timeline-item relative mh3 center w-20-ns mh5-ns">

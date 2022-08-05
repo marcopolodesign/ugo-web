@@ -7,7 +7,7 @@ get_header();
 <div id="primary" class="content-area">
 		<main id="main" data-barba="container" data-barba-namespace="app" class="app pv5 bg-black">
 
-        <section class="app-starter container flex jic pv5" id="app-top">
+        <section class="app-starter container flex jic pv5 column-mobile" id="app-top">
             <div class="w-50-ns app-image relative">
                 <div class="w-70-ns center ph3">
                     <img class="ph4" src="<?php the_field('imagen_principal');?>">
@@ -25,19 +25,12 @@ get_header();
                 <h1 class="ugo-pink main-font f1">Somos La forma más segura de pasear a tu perro.</h1>
                 <h2 class="f5 white mt2 fw6 lh-copy mt2">Elegí el paseador que más te guste. Trackeá tu perro en tiempo real mientras pasea. Revisá sus paseos anteriores y planificá sus proximos paseos. Todo desde un mismo lugar. <br><br>Eso es UGo! - la nueva forma de que tus perros paseen.</h2>
 
-                <div class="app-download-cta flex jic mt4">
-                    <a class="apple-store w-50-ns">
-                        <img src="/wp-content/uploads/2022/05/Download_on_the_App_Store_Badge_ES_RGB_blk_100217.svg">
-                    </a>
-                    <a class="google-play w-50-ns">
-                        <img src="/wp-content/uploads/2022/05/google-play-badge.png">
-                    </a>
-                </div>
+               <?php get_template_part('template-parts/download-app'); ?>
             </div>
 
         </section>
 
-        <section class="app-features flex justify-between pa5-ns container-mobile relative">
+        <section class="app-features flex justify-between pa5-ns container-mobile column-mobile relative">
             <div class="flex flex-column jic w-30-ns ph4 relative z-2">
                 <div class="mr-0 ml-auto">
                     <img src="<?php the_field('imagen_app_feature');?>">

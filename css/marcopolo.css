@@ -13,7 +13,7 @@
 
 body {
   margin: auto;
-  color: #000;
+  color: #fff;;
   font-weight: normal;
   font-family: 'Montserrat', sans-serif;
 }
@@ -1141,7 +1141,11 @@ span.white {
     top: 47%;
   }
 
-  .timeline-item h3 {
+  .timeline-item {
+    padding-right: 60px;
+  }
+
+  .timeline-item h3, .timeline-item p, .timeline-item >div  {
     text-align: left;
     padding-left: 20px;
   }
