@@ -13,13 +13,13 @@
 
 </div><!-- #content -->
 
-<section class="instagram-feed-container mv5 container-xs">
+<section class="instagram-feed-container pv5 container-xs">
 	<div class="flex jic column-mobile gram-text-container">
-		<a href="http://instagram.com/ugo.argentina" target="_blank" class="ttu main-color db mb4 fw7 f3 tc db flex justify-center items-center column-mobile">
+		<a href="https://www.instagram.com/ugo.houseparadise/" target="_blank" class="ttu main-color db mb4 fw7 f3 tc db flex justify-center items-center column-mobile">
 			<?php get_template_part('template-parts/content/insta');?>
 			<h2 class="ttu f3 white ml3 mt1 gram-text">Seguinos!</h2>	
 		</a>
-		<h2 class="ttu f3 ugo-pink ml3 mt1">@ugo.argentina</h2>	
+		<h2 class="ttu f3 ugo-pink ml3-ns mt1">@ugo.houseparadise</h2>	
 	</div>
 	
 		<div class="instagram-feed flex flex-wrap justify-between column-mobile">
@@ -53,6 +53,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <?php wp_footer(); ?>
+
+<?php if (is_page(6)): ?>
+	<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/locales/es.js"></script>
+<?php endif;?>
+	
+
 
 </body>
 </html>

@@ -527,7 +527,7 @@ const moveCarrousel = () => {
   let container = document.querySelectorAll('.marco-carrousel>div:first-child');
   let isFoward = false;
   let isBack = false;
-  let distance = document.querySelector('.carrousel-image').clientWidth;
+  let distance = document.querySelector('.gallery-home-image').clientWidth;
 
   window.addEventListener('resize', () => {
     distance = document.querySelector('.carrousel-image').clientWidth;
@@ -1000,7 +1000,7 @@ const contact = () => {
 
 const animateHome = () => {
   let background = document.querySelector('.bg-color-ball');
-  let children = Array.prototype.slice.call(document.querySelector('.home-starter > div').children);
+  let children = Array.prototype.slice.call(document.querySelector('.hp-starter > div').children);
   let image = document.querySelector('.home-starter div.absolute-cover')
 
   const homeTimeline = gsap.timeline({
@@ -1073,6 +1073,150 @@ const carrousel = () => {
 carrousel();
 
 
+const homeGallery = () => {
+  // set up some general x-position and tweening speeds
+  let aimX = 0
+  let currentSpeed = 0.1
+  let aimSpeed = 0.5
+  
+  // pick the section and div from the HTML
+  const section = document.querySelector(".gallery-home")
+  const holder = section.querySelector(".gallery-home-image")
+  
+  // // we need to fill moreeee so lets clone
+  // // we need three here but could be two if each holder is bigger than the page width
+  // const clone = holder.cloneNode(true)
+  // section.appendChild(clone)
+  
+  // const clone2 = holder.cloneNode(true)
+  // section.appendChild(clone2)
+  
+  // now collect all 3 holders
+  const holders = section.querySelectorAll(".gallery-home-image");
+  
+  // and calculate a single width and total width of them
+  const holderWidth = holder.clientWidth
+  const totalWidth = holderWidth * holders.length
+  
+  // we need to animate each frame
+  const animate = function () {
+    // add tweening speed with a damping of 0.05
+    currentSpeed += (aimSpeed - currentSpeed) * 0.01
+    
+    // change the x position based on current speed
+    aimX = aimX + currentSpeed
+     
+    // for each of the content divs 
+    holders.forEach((holder, index) => {
+      // make a general left position based on...
+      // the general x position
+      // then add in a spacing for each one,
+      // e.g. 0, 1000 and 2000 if we have 0 aimX and 1000px divs
+      let leftPosition = (-1 * aimX + index * holderWidth)
+      // they need to loop though, otherwise they'll just go off screen forever    
+      // so lets add an offset to push them back over
+      let offset = Math.floor((leftPosition + holderWidth) / totalWidth) * totalWidth
+      // then add that offset based on the total width
+      // negative as we're reducing the position
+      leftPosition += (-1 * offset)
+      // set a position
+      holder.style.left = leftPosition + "px"
+    })
+    
+    // do each frame
+    requestAnimationFrame(animate)
+  }
+  
+  // change the aimspeed to be lower
+  // so that the current speed tweens towards this
+  section.addEventListener("mousemove", function (event) {
+    // if you just wanna stop on hover...
+    // aimSpeed = 0
+    // -1 on left edge, 0 in middle, 1 on right edge
+    let normalize = (2 * (event.pageX / window.innerWidth) - 1)
+    // 5 to -5
+    aimSpeed = -2 * normalize
+  })
+  
+  //
+  // and back up to default on mouseout
+  section.addEventListener("mouseout", function () {
+    aimSpeed = 0.5
+  })
+  
+  animate()
+}
+
+const marquee = () => {
+  let svg = document.querySelector('.marquee').innerHTML
+  let marqueeTitle = new Array(6).fill(svg).join(" ");
+
+  document.querySelectorAll('.marquee').forEach(m => {
+    m.innerHTML = marqueeTitle
+  })
+}
+
+// const wallpapers = gsap.utils.toArray('.wallpaper-images-container > div');
+//     const wallpaperTL = gsap.timeline({ repeat: -1, });
+//     wallpapers.forEach((w, i) => {
+//         wallpaperTL
+//             // .set(w, { clipPath: 'inset (100% 0 0 )' })
+//             .to(w, { clipPath: "inset(0)", duration: .6, ease: 'power1.out' })
+//             .to(w, { duration: 9.8 })
+//     });
+
+//     var i = 0
+
+
+
+const paradiseSlider = () => {
+  let images = document.querySelectorAll('.hp-slider > div');
+  let color;
+
+  // let hpImages = gsap.timeline({
+  //   defaults: {
+  //     ease: "power4.inOut",
+  //     duration: 0.8,
+  //   }, 
+  //   repeat: -1,
+  //   repeatDelay: 5,
+  // })
+  
+
+  images[images.length - 1].classList.add('active')
+
+
+
+  i = 0;
+
+  setInterval(() => {
+    images.forEach((img, index) => {
+        if (i != index) {
+          img.classList.remove('active');
+        }
+
+
+    images[i].classList.add('active');
+    color = images[i].getAttribute('color');
+    
+    document.querySelector('.hp-starter > div:last-child').style.backgroundColor = color;
+    })
+
+    if ( i >= images.length - 1) {
+      i = 0
+    } else {
+      i++;
+    }
+
+
+  }, 5000);
+
+
+}
+
+
+
+
 barba.init({
   timeout: 5000,
   prevent: ({ el }) => el.classList.contains('barba-prevent'),
@@ -1137,9 +1281,11 @@ barba.init({
     {
       namespace: 'hp',
       afterEnter(data) {
-        animateHome();
-
-        moveCarrousel();
+        // animateHome();
+        homeGallery();
+        marquee();
+        paradiseSlider();
+        // moveCarrousel();
 
       },
     },
@@ -1250,29 +1396,29 @@ const instagram = () => {
         }
         });
     
-      setTimeout(() => {
-        let width = document.querySelector('.instagram-feed div a').clientWidth;
-        document.querySelectorAll('.instagram-feed div a').forEach((post) => {
-          post.style.height = width + 'px';
-        });
+      // setTimeout(() => {
+      //   let width = document.querySelector('.instagram-feed div a').clientWidth;
+      // //   document.querySelectorAll('.instagram-feed div a').forEach((post) => {
+      // //     post.style.height = width + 'px';
+      // //   });
 
-        document.querySelectorAll('.instagram-feed div video').forEach((post) => {
-          post.style.height = width + 'px';
-        });
+      //   document.querySelectorAll('.instagram-feed div video').forEach((post) => {
+      //     post.style.height = width + 50 + 'px';
+      //   });
         
-      }, 1000);
-      window.addEventListener('resize', () => {
-        width = document.querySelector('.instagram-feed div a').clientWidth;
-        console.log(width);
-        document.querySelectorAll('.instagram-feed div a').forEach((post) => {
-          post.style.height = width + 'px';
-        });
+      // }, 1000);
+      // window.addEventListener('resize', () => {
+      //   width = document.querySelector('.instagram-feed div a').clientWidth;
+      //   console.log(width);
+      //   document.querySelectorAll('.instagram-feed div a').forEach((post) => {
+      //     post.style.height = width + 'px';
+      //   });
 
-        document.querySelectorAll('.instagram-feed div video').forEach((post) => {
-          post.style.height = width + 'px';
-        });
+      //   document.querySelectorAll('.instagram-feed div video').forEach((post) => {
+      //     post.style.height = width + 'px';
+      //   });
 
-      });
+      // });
     });
   }
   getGram()

@@ -808,13 +808,13 @@ footer {
 }
 
 .form-container input {
-  background: unset;
+  /* background: unset;
   border: 0 !important;
   border-bottom: 1px solid white !important;
   outline: 0 !important;
   margin-bottom: 20px;
   padding-bottom: 5px;
-  color: white;
+  color: white; */
 }
 
 #mce-success-response,
