@@ -34,14 +34,21 @@ get_header();
 
 		<?php  
 			get_template_part('template-parts/reserve'); 
-			get_template_part('template-parts/reserve-message'); 
+			get_template_part('template-parts/reserve-hp/reserve-message'); 
 		?>
-		
 
+	
+
+		<script src="wp-content/themes/ugo-web/js/datepicker-full.min.js"></script>
+		<script src="wp-content/themes/ugo-web/js/house-paradise.js"></script>
+
+		
+	
 		</main><!-- #main -->
 	</div><!-- #primary -->
 
 
+	
 
 <?php
 get_footer();

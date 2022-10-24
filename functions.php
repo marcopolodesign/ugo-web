@@ -151,9 +151,9 @@ function ugo_scripts() {
 
 
 	if (is_page(6)) :
-		wp_enqueue_style('ugo-cal', get_template_directory_uri() . '/css/datepicker.min.css');
+		// wp_enqueue_style('ugo-cal', get_template_directory_uri() . '/css/datepicker.min.css');
 
-		wp_enqueue_style('ugo-hp', get_template_directory_uri() . '/css/hp.css');
+		// wp_enqueue_style('ugo-hp', get_template_directory_uri() . '/css/hp.css');
 
 	endif;
 
@@ -169,8 +169,8 @@ function ugo_scripts() {
 	wp_enqueue_script( 'ugo-main', get_template_directory_uri() . '/js/main.js',  array( 'jquery' ), '0.5.2' , true);
 
 	if (is_page(6)) :
-		wp_enqueue_script( 'ugo-date-picker', get_template_directory_uri() . '/js/datepicker-full.min.js',  array( 'jquery' ), '0.5.2' , true);
-		wp_enqueue_script( 'ugo-hp', get_template_directory_uri() . '/js/house-paradise.js',  array( 'jquery' ), '0.5.2' , true);
+		// wp_enqueue_script( 'ugo-date-picker', get_template_directory_uri() . '/js/datepicker-full.min.js',  array( 'jquery' ), '0.5.2' , true);
+		// wp_enqueue_script( 'ugo-hp', get_template_directory_uri() . '/js/house-paradise.js',  array( 'jquery' ), '0.5.2' , true);
 	endif;
 
 

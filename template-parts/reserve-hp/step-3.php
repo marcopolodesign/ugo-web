@@ -1,6 +1,6 @@
 <div class="transport-caption flex items-center pa3">
     <?php get_template_part('template-parts/content/transport');?> 
-    <p class="ugo-pink ml3 w-max">Los viajes de ida y vuelta se realizan todos los Lunes, Miércoles y Viernes</p>
+    <p class="ugo-pink ml3 w-max">Los viajes de ida y vuelta se realizan todos los Lunes, Miércoles y Viernes hábiles de la semana.</p>
 </div>
 
 <div class="flex w-90" id="range">
@@ -21,7 +21,7 @@
         <div class="daily-rate-inner flex flex-column">
             <h2 class="daily-price tc hp-yellow">$<span>....</span></h2>
             <div class="regular-price tc">
-                <h3 class="grey underline f5 m-auto mb0">$3000</h3>
+                <h3 class="grey strike f5 m-auto mb0">$3000</h3>
                 <p class="f6">Precio Regular</p>
             </div>
         </div>

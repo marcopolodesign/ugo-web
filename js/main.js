@@ -445,22 +445,8 @@ const runScripts = () => {
   const initScripts = () => {
     if (pageName.classList.contains('home')) {
       // postAnimations();
-    }
-
+    
     // bgColor();
-
-    if (checkoutForm) {
-      checkoutDetails();
-
-
-      setTimeout(() => {
-        document.querySelector('.wc_payment_method.payment_method_woo-mercado-pago-basic label').innerHTML = `<p class="tc mb3>Pagar con tu cuenta de Mercado Pago. Al tocar "finalizar compra" serás redirigido al portal de Mercado pago para pagar </p>
-            <img src="https://mbgallery.local/wp-content/plugins/woocommerce-mercadopago/includes/../assets/images/mercadopago.png" alt="Paga con el medio de pago que prefieras">
-            `;
-      }, 5000);
-
-
-
     }
 
     // Reusable FN's
@@ -1433,6 +1419,8 @@ const getPaymentID = () => {
   if (pageName.classList.contains('success')) {
       let id = window.location.search;
       let params = new URLSearchParams(id) 
+
+      console.log(params)
 
 
       let totalAmount = params.get('total_amount')

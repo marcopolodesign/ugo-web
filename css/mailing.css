@@ -1,0 +1,20 @@
+
+@media (max-width: 580px) {
+    .mail-container {
+        max-width: unset;
+    }
+
+    .summary-stay {
+        padding: 20px
+    }
+
+    .summary-stay > div > div {
+        flex-direction: column;
+    }
+
+    .summary-stay > div > div > div  {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+}

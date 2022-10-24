@@ -13,7 +13,10 @@
   --hp-teal: #9C90D0;
   --mainFont: 'VIM SM';
   --mainGradient: linear-gradient(180deg, #f4b5cd 27.35%, #ff619d 84.4%);
-  border-radius: 0px 0px 40px 40px;
+  /* border-radius: 0px 0px 40px 40px; */
+
+  --smooth: all 0.45s cubic-bezier(0.4, 0, 0, 1);
+
 }
 
 @font-face {

@@ -154,6 +154,7 @@ p {
     right: 20px;
     height: 40px;
     width: 40px;
+    z-index: 999;
 
     border-radius: 40px;
     background-color: #fff;
@@ -325,6 +326,10 @@ option {
     font-weight: 500;
     font-size: 22px;
     margin-bottom: 20px;
+}
+
+.social-container {
+    margin-bottom: 200px !important;
 }
 
 .social-container > div, .daily-rate-container, .stay-summary-container {
@@ -591,6 +596,12 @@ h2.daily-price {
 .pay-now-container {
     background: linear-gradient(180deg, #f4b5cd 27.35%, #ff619d 84.4%);
     padding: 20px;
+    cursor: pointer;
+    transition: var(--smooth);
+}
+
+.pay-now-container:hover {
+    transform: scale(1.02);
 }
 
 .pay-now-container h2 {
@@ -607,6 +618,28 @@ h2.daily-price {
     background-color: #6C6C6C;
     padding: 20px;
 }
+
+/* MP CallBack */
+
+.mp-callback-container {
+    background-color: rgba(0,0,0,0.8);
+    z-index: 99;
+}
+
+.mp-callback-container .summary-stay-container {
+    background-color: unset !important;
+    margin: auto
+}
+
+.mp-callback-container .summary-owner {
+    display: none;
+}
+
+.mp-callback-container span {
+    text-transform: capitalize;
+}
+
+
 
 @media (max-width: 768px) {
 
@@ -783,6 +816,11 @@ h2.daily-price {
     }
 
 
+/* MP CALLBACK MOBILE */
+
+.mp-callback-container .summary-stay-container {
+    display: block !important;
+}
 
   
 }

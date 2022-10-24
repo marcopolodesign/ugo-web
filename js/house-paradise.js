@@ -1,3 +1,16 @@
+document.getElementsByTagName("head")[0].insertAdjacentHTML(
+    "beforeend",
+    "<link rel=\"stylesheet\" href=\"wp-content/themes/ugo-web/css/datepicker.min.css\" />"    
+);
+
+document.getElementsByTagName("head")[0].insertAdjacentHTML(
+    "beforeend",
+    "<link rel=\"stylesheet\" href=\"wp-content/themes/ugo-web/css/hp.css\" />"    
+);
+
+
+
+
 let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app/';
 let infoEndPoint = 'input-main';
 
@@ -469,6 +482,7 @@ const calendar = () => {
         weekStart: 1,
         minDate: date,
         clearBtn: true,
+        // format: ("dd/mm/yyyy")
 
     });
 
@@ -477,18 +491,30 @@ const calendar = () => {
 
     let enterDate;
     let exitDate;
-    let transportFare = 350;
+    let transportFare = 2500;
     calInputs.forEach(input => {
         input.addEventListener('changeDate', function (e, details) { 
             enterDate = document.querySelectorAll('#range input')[0].value
-            document.querySelector('#summary-start-date').innerHTML = enterDate;
-
             enterDate = new Date(enterDate);
+
+           let enterDateES = enterDate.getDate() + "/" + (enterDate.getMonth() + 1) +  "/" + enterDate.getFullYear();
+        //    document.querySelectorAll('#range input')[0].value = enterDateES;
+            console.log(enterDateES)
+
+           document.querySelector('#summary-start-date').innerHTML = enterDateES;
+
+
+         
+            // console.log(enterDate)
 
             exitDate = document.querySelectorAll('#range input')[1].value
             document.querySelector('#summary-end-date').innerHTML = exitDate;
 
+
             exitDate = new Date(exitDate);
+            let exitDateES = exitDate.getDate() + "/" + (exitDate.getMonth() + 1) +  "/" + exitDate.getFullYear();
+
+            // console.log(exitDate)
 
 
             let difference = exitDate.getTime() - enterDate.getTime();
@@ -515,9 +541,11 @@ const calendar = () => {
             document.querySelector('.title-nights').innerHTML = `${price} por ${totalDays} noches`;
             document.querySelector('.price-nights').innerHTML = `$${price * totalDays} `;
             document.querySelector('.price-transport').innerHTML = "$" + transportFare;
-            document.querySelector('#grand-total span').innerHTML = (price * totalDays) 
+            document.querySelector('#grand-total span').innerHTML = (price * totalDays) + transportFare;
 
             document.querySelector('span#final-number').innerHTML = (price * totalDays) + transportFare;
+            // document.querySelector('span#final-number-upfront').innerHTML = ((price * totalDays) + transportFare) * 0.2;
+
             document.querySelector('span.final-number').innerHTML = (price * totalDays) + transportFare;
 
             allDays = totalDays;
@@ -567,12 +595,32 @@ let open = () => {
             document.querySelector('.reserve-bg').classList.remove('dn'), 'pointers-none'
         })
     })
+
+    if (window.location.href.indexOf('#reserve') >= 0) {
+        document.querySelector('.reserve-container').classList.remove('o-0', 'pointers-none');
+        document.querySelector('.reserve-bg').classList.remove('dn'), 'pointers-none'
+    }
 }
 
 open();
 
 
-document.querySelector('.mail-cta').addEventListener('click', ()=> {
+document.querySelectorAll('.pay-now-container').forEach(pay => {
+    pay.addEventListener('click', ()=> {
+
+        let mpTitle;
+
+        if (pay.classList.contains('upfront')) {
+            reserveInfo.aob.price = reserveInfo.aob.price * 0.2;
+             mpTitle = `Pago del 20% del total de la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise`
+             reserveInfo.aob.purchased = 'anticipo';
+             reserveInfo.aob.status = "Anticipo pagado";
+        } else {
+            mpTitle = `Pago para la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise` 
+            reserveInfo.aob.purchased = 'full';
+            reserveInfo.aob.status = "A retirar";
+        }
+
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -595,6 +643,8 @@ document.querySelector('.mail-cta').addEventListener('click', ()=> {
             "aob_date_start": new Date(reserveInfo.aob.date0),
             "aob_date_end": new Date(reserveInfo.aob.date1),
             "aob_price": reserveInfo.aob.price,
+            "aob_purchased" : reserveInfo.aob.purchased,
+            "status" : reserveInfo.aob.status,
         });
 
         var requestOptions = {
@@ -605,11 +655,9 @@ document.querySelector('.mail-cta').addEventListener('click', ()=> {
         };
 
         fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .then( ()=> {
-
-
+        .then(response => response.json())
+        .then( (result)=> {
+            console.log(result)
             fetch(
                 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app/hp-payments/createpreference',
                 {
@@ -618,13 +666,14 @@ document.querySelector('.mail-cta').addEventListener('click', ()=> {
                     'Content-Type': 'application/json',
                   },
                   body: JSON.stringify({
-                    title: `Pago para la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise`,
+                    title: mpTitle,
                     description: 'test desc',
                     price: reserveInfo.aob.price,
                     quantity: 1,
                     owner_name: reserveInfo.owner.nombre,
                     owner_surname: reserveInfo.owner.apellido,
                     owner_email: reserveInfo.owner.mail,
+                    reserve: result._id
                   }),
                 }
               ).then(response => response.json())
@@ -632,5 +681,122 @@ document.querySelector('.mail-cta').addEventListener('click', ()=> {
     
         })
         .catch(error => console.log('error', error));
+    })
+})
+
+
+document.querySelector('.mail-now-container').addEventListener('click', ()=> {
+
+    reserveInfo.aob.purchased = "consulta";
+    reserveInfo.aob.status = "Pendiente de pago";
+
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+        "owner_name": reserveInfo.owner.nombre,
+        "owner_surname": reserveInfo.owner.apellido,
+        "owner_phone": reserveInfo.owner.telefono,
+        "owner_email":reserveInfo.owner.mail,
+        "owner_dni": reserveInfo.owner.dni,
+        "dog_genre": reserveInfo.dog.genero,
+        "dog_raza": reserveInfo.dog.raza,
+        "dog_social": reserveInfo.dog.social,
+        "dog_age": parseFloat(reserveInfo.dog.edad),
+        "dog_name": reserveInfo.dog.nombre,
+        "dog_castrado": reserveInfo.dog.castrado,
+        "dog_behaviour": reserveInfo.dog.behaviour,
+        "dog_vaccine": reserveInfo.dog.checkbox10,
+        "dog_deworming": reserveInfo.dog.checkbox11,
+        "aob_date_start": new Date(reserveInfo.aob.date0),
+        "aob_date_end": new Date(reserveInfo.aob.date1),
+        "aob_price": reserveInfo.aob.price,
+        "aob_purchased" : reserveInfo.aob.purchased, 
+        "status" : reserveInfo.aob.status,
+    });
+
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
+
+    fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
+    .then(response => response.text())
+    .then(result => console.log(result))
+    .then( ()=> {
+        document.querySelector('.reserve-input-container').classList.add('dn') 
+        document.querySelector('.message-success').classList.remove('dn') 
+    })
+    .catch(error => console.log('error', error));
 
 })
+
+// Confirmation Message
+
+let isMessage = document.location.search
+let urlMessage = window.location.href
+
+
+if (urlMessage.indexOf("?payment") >= 0) {
+    let title = document.querySelector('.mp-callback-container .callback-header h2')
+       document.querySelector('.mp-callback-container').classList.remove('dn')
+       document.querySelector('.mp-callback-container').classList.add('flex', 'flex-column')
+
+       let params = new URLSearchParams(isMessage) 
+       let success = params.get('status');
+ 
+
+       if (success == 'approved') {
+            title.innerHTML = `Gracias por tu compra! Tu reserva quedó confirmada. Un asesor de House Paradise se pondrá en contacto a la brevedad!`
+
+            fetch(`${url}reserves-hps/${params.get('reserve')}`, requestOptions)
+            .then(response => response.json())
+            .then((response) => {
+                console.log(response)
+
+            let dogName = response.dog_name;
+            let dogAge = response.dog_age;
+            let dogRaze = response.dog_raza;
+     
+            let startDate = response.aob_date_start
+            let endDate = response.aob_date_end
+            let mail = response.hp_payment.owner_email;
+            let price = response.aob_price
+       
+     
+            document.querySelectorAll('.mp-callback-container .summary-dog span')[0].innerHTML = dogName;
+            document.querySelectorAll('.mp-callback-container .summary-dog span')[1].innerHTML = dogAge;
+            document.querySelectorAll('.mp-callback-container .summary-dog span')[2].innerHTML = dogRaze;
+            document.querySelector('.mp-callback-container #summary-start-date').innerHTML = startDate;
+            document.querySelector('.mp-callback-container #summary-end-date').innerHTML = endDate;
+     
+            document.querySelector('.mp-callback-container span.final-number').innerHTML = price;
+            });
+      
+
+       } else {
+
+        document.querySelector('.cb-header-icon').innerHTML = `
+            <svg width="105" height="105" viewBox="0 0 105 105" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="52.5" cy="52.5" r="52.5" fill="#EA4335"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M74.598 33.1717C76.1601 34.7338 76.1601 37.2664 74.598 38.8285L37.8284 75.5981C36.2663 77.1602 33.7336 77.1602 32.1716 75.5981C30.6095 74.036 30.6095 71.5033 32.1716 69.9412L68.9411 33.1717C70.5032 31.6096 73.0359 31.6096 74.598 33.1717Z" fill="white"/>
+                <rect x="53" y="65.8486" width="16.7563" height="16.7563" transform="rotate(-135 53 65.8486)" fill="#EA4335"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M32.1712 33.1716C33.7333 31.6095 36.266 31.6095 37.8281 33.1716L74.5976 69.9411C76.1597 71.5032 76.1597 74.0359 74.5976 75.598C73.0355 77.1601 70.5029 77.1601 68.9408 75.598L32.1712 38.8284C30.6091 37.2663 30.6091 34.7337 32.1712 33.1716Z" fill="white"/>
+            </svg>
+            `
+
+            document.querySelector('.mp-callback-container .summary-stay-container').style.display = 'none'
+            title.innerHTML = `Ups! Ocurrió un problema al realizar tu compra. Por favor, <span><a href="/#reserve" class="ugo-pink">volvé a intentarlo</a></span>`
+
+       }
+
+      
+document.querySelector('.close-mp-modal').addEventListener('click', ()=> {
+    document.querySelector('.mp-callback-container').classList.remove('flex', 'flex-column')
+    document.querySelector('.mp-callback-container').classList.add('dn')
+})
+
+
+}
