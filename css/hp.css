@@ -207,6 +207,10 @@ select.input-text {
 color: #6C6C6C !important;
 }
 
+select.selected.input-text {
+    color: var(--pink) !important;
+    }
+
 option {
     text-transform: capitalize;
     color: var(--darkGrey);

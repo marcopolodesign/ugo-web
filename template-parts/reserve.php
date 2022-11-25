@@ -5,7 +5,7 @@
     <p class="breadcrumb">UGo! Home > House Paradise > Sobre tu perro</p>
     <h3 class="hp-title">
       Bienvenido a House Paradise! Estás tomando los primeros pasos para darle
-      las mejores vacaciones a tu perro a partir de $2000 por día.
+      las mejores vacaciones a tu perro a partir de $2650 por día.
     </h3>
     <div class="steps-master mt4 flex flex-row justify-between pl2-ns pr5-ns">
       <!-- Aca van los steps -->
@@ -24,7 +24,7 @@
       </div>
 
       <div class="form-final">
-        <h2 class="w-90-ns">Todo listo! Podes pagar ahora el total, pagar un anticipo del 20% o elegir que te contactemos en menos de 24hrs para confirmar la reserva.</h2>
+        <h2 class="w-90-ns">Último paso! Hace click aquí abajo para enviar tu solicitud para que un representante de UGo! House Paradise se contacte con vos a la brevedad. Muchas graciasssss!!<span class="dn">Podes pagar ahora el total, pagar un anticipo del 20% o elegir que te contactemos en menos de 24hrs para confirmar la reserva.</span></h2>
         <div class="discount-code dn items-center">
             <input class="input-text" placeholder="Tenes un código de descuento? Ingresalo aquí">
             <p id="discount-verify" class="tc fw5">Verificar cupón</p>

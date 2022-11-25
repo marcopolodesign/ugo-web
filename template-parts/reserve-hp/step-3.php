@@ -6,12 +6,12 @@
 <div class="flex w-90" id="range">
     <div>
         <p>Fecha de entrada</p>
-        <input type="text" name="start" class="input-text start-date w-40" placeholder="Elegí fecha de entrada">
+        <input type="text" name="start" value="" class="input-text start-date w-40" placeholder="Elegí fecha de entrada">
     </div>
 
     <div>
         <p>Fecha de Salida</p>
-        <input type="text" name="end" class="input-text end-date w-40" placeholder="Elegí fecha de salida">
+        <input type="text" name="end" value="" class="input-text end-date w-40" placeholder="Elegí fecha de salida">
     </div>
 </div>
 
@@ -21,7 +21,7 @@
         <div class="daily-rate-inner flex flex-column">
             <h2 class="daily-price tc hp-yellow">$<span>....</span></h2>
             <div class="regular-price tc">
-                <h3 class="grey strike f5 m-auto mb0">$3000</h3>
+                <h3 class="grey strike f5 m-auto mb0">$4000</h3>
                 <p class="f6">Precio Regular</p>
             </div>
         </div>

@@ -166,6 +166,7 @@ const nextScreen = () => {
             })
 
         } else if (formStep === 1) {
+           
             inputs.forEach((input,index) => {
                 if (index > 4 && index <= 9) {
                     let value = input.value;
@@ -213,7 +214,8 @@ const nextScreen = () => {
                 let values = {[`date${index}`] : date.value}
                 reserveInfo.aob = {...reserveInfo.aob, ...values}
 
-                reserveInfo.aob.price = parseFloat(document.querySelector('#final-number').innerHTML)
+               
+                reserveInfo.aob.price = finalPricing;
 
             })
             console.log(reserveInfo);
@@ -383,7 +385,7 @@ const dogDetails = () => {
 
         let socialResponses = [];
 
-        social.forEach(level => {
+        social.forEach((level, i) => {
             let socialLevel = document.createElement('div')
             let grade = document.createElement('h4')
             socialLevel.appendChild(grade);
@@ -452,6 +454,9 @@ const dogDetails = () => {
 
       behaviourContainer.appendChild(responsesContainer)
       socialContainer.appendChild(behaviourContainer);
+
+
+      changeSelects();
     })
 
     .catch(error => console.log('error', error));
@@ -466,6 +471,9 @@ const completeSummary = (source,target) => {
     })
 }
 
+let enterDateES;
+let exitDateES
+let finalPricing;
 
 const calendar = () => {
     let totalDays;
@@ -482,7 +490,7 @@ const calendar = () => {
         weekStart: 1,
         minDate: date,
         clearBtn: true,
-        // format: ("dd/mm/yyyy")
+        format: ("dd/mm/yyyy")
 
     });
 
@@ -495,58 +503,62 @@ const calendar = () => {
     calInputs.forEach(input => {
         input.addEventListener('changeDate', function (e, details) { 
             enterDate = document.querySelectorAll('#range input')[0].value
-            enterDate = new Date(enterDate);
-
-           let enterDateES = enterDate.getDate() + "/" + (enterDate.getMonth() + 1) +  "/" + enterDate.getFullYear();
-        //    document.querySelectorAll('#range input')[0].value = enterDateES;
-            console.log(enterDateES)
-
-           document.querySelector('#summary-start-date').innerHTML = enterDateES;
-
-
-         
-            // console.log(enterDate)
-
+        
+           document.querySelector('#summary-start-date').innerHTML = enterDate;
+    
             exitDate = document.querySelectorAll('#range input')[1].value
             document.querySelector('#summary-end-date').innerHTML = exitDate;
 
 
-            exitDate = new Date(exitDate);
-            let exitDateES = exitDate.getDate() + "/" + (exitDate.getMonth() + 1) +  "/" + exitDate.getFullYear();
+            enterDateES = enterDate.split('/');
 
-            // console.log(exitDate)
+            enterDateES = enterDateES[1] + "/" + enterDateES[0] + '/' + enterDateES[2];
+            enterDateES =  new Date(enterDateES);
 
 
-            let difference = exitDate.getTime() - enterDate.getTime();
+             exitDateES = exitDate.split('/');
+
+            exitDateES = exitDateES[1] + "/" + exitDateES[0] + '/' + exitDateES[2];
+            console.log(exitDateES)
+            exitDateES =  new Date(exitDateES);
+
+            console.log(exitDateES)
+
+            let difference = exitDateES.getTime() - enterDateES.getTime();
 
             totalDays = Math.ceil(difference / (1000 * 3600 * 24));
-            console.log(totalDays + ' daysin House Paradise  ');
+            console.log(totalDays + ' days in House Paradise  ');
             
             let hasDiscount = false;
 
             if (totalDays <= 3) {
-                 price = 3000;
+                 price = 4000;
             } else if (totalDays > 3 && totalDays < 6) {
-                price = 2400
+                price = 3100
                 hasDiscount = true;
             } else if (totalDays > 6 && totalDays < 15) {
-                price = 2200;
+                price = 2800;
                 hasDiscount = true;
             } else if (totalDays > 15) {
-                price = 2000;
+                price = 2650;
                 hasDiscount = true;
             }
 
-            document.querySelector('.daily-price span').innerHTML = price
-            document.querySelector('.title-nights').innerHTML = `${price} por ${totalDays} noches`;
-            document.querySelector('.price-nights').innerHTML = `$${price * totalDays} `;
-            document.querySelector('.price-transport').innerHTML = "$" + transportFare;
-            document.querySelector('#grand-total span').innerHTML = (price * totalDays) + transportFare;
+            document.querySelector('.daily-price').innerHTML = formatPrice(price);
 
-            document.querySelector('span#final-number').innerHTML = (price * totalDays) + transportFare;
+            console.log(formatPrice(price));
+
+            document.querySelector('.title-nights').innerHTML = `${formatPrice(price)} por ${totalDays} noches`;
+            document.querySelector('.price-nights').innerHTML = formatPrice(price * totalDays);
+            document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
+            document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
+
+            document.querySelector('span#final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
             // document.querySelector('span#final-number-upfront').innerHTML = ((price * totalDays) + transportFare) * 0.2;
 
-            document.querySelector('span.final-number').innerHTML = (price * totalDays) + transportFare;
+            finalPricing = (price * totalDays) + transportFare;
+            document.querySelector('span.final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
+            document.querySelector('.final-summery-title span').innerHTML = ` por ${totalDays} días`
 
             allDays = totalDays;
             });
@@ -590,6 +602,14 @@ let open = () => {
 
     a.forEach(trigger => {
         trigger.addEventListener('click', (e)=> {
+
+        gtag('event', 'open_reserve', {
+            page_location: 'https://www.ugo.com.ar',
+            page_path: window.location.pathname,
+            send_to: 'G-9WN369K0SS',
+            // value: e.target,
+        })
+
             e.preventDefault();
             document.querySelector('.reserve-container').classList.remove('o-0', 'pointers-none');
             document.querySelector('.reserve-bg').classList.remove('dn'), 'pointers-none'
@@ -608,6 +628,7 @@ open();
 document.querySelectorAll('.pay-now-container').forEach(pay => {
     pay.addEventListener('click', ()=> {
 
+        console.log(reserveInfo.dog.edad)
         let mpTitle;
 
         if (pay.classList.contains('upfront')) {
@@ -634,14 +655,14 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
             "dog_genre": reserveInfo.dog.genero,
             "dog_raza": reserveInfo.dog.raza,
             "dog_social": reserveInfo.dog.social,
-            "dog_age": parseFloat(reserveInfo.dog.edad),
+            "dog_age": reserveInfo.dog.edad.toString(),
             "dog_name": reserveInfo.dog.nombre,
             "dog_castrado": reserveInfo.dog.castrado,
             "dog_behaviour": reserveInfo.dog.behaviour,
             "dog_vaccine": reserveInfo.dog.checkbox10,
             "dog_deworming": reserveInfo.dog.checkbox11,
-            "aob_date_start": new Date(reserveInfo.aob.date0),
-            "aob_date_end": new Date(reserveInfo.aob.date1),
+            "aob_date_start": enterDateES,
+            "aob_date_end": nexitDateES,
             "aob_price": reserveInfo.aob.price,
             "aob_purchased" : reserveInfo.aob.purchased,
             "status" : reserveInfo.aob.status,
@@ -702,14 +723,14 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
         "dog_genre": reserveInfo.dog.genero,
         "dog_raza": reserveInfo.dog.raza,
         "dog_social": reserveInfo.dog.social,
-        "dog_age": parseFloat(reserveInfo.dog.edad),
+        "dog_age": reserveInfo.dog.edad,
         "dog_name": reserveInfo.dog.nombre,
         "dog_castrado": reserveInfo.dog.castrado,
         "dog_behaviour": reserveInfo.dog.behaviour,
         "dog_vaccine": reserveInfo.dog.checkbox10,
         "dog_deworming": reserveInfo.dog.checkbox11,
-        "aob_date_start": new Date(reserveInfo.aob.date0),
-        "aob_date_end": new Date(reserveInfo.aob.date1),
+        "aob_date_start": enterDateES,
+        "aob_date_end": exitDateES,
         "aob_price": reserveInfo.aob.price,
         "aob_purchased" : reserveInfo.aob.purchased, 
         "status" : reserveInfo.aob.status,
@@ -800,3 +821,43 @@ document.querySelector('.close-mp-modal').addEventListener('click', ()=> {
 
 
 }
+
+const conversion = () => {
+    let triggers = document.querySelectorAll('.final-options > div')
+
+    triggers.forEach(t => {
+        t.addEventListener('click', ()=> {
+            gtag('event', 'convert', {
+                page_location: 'https://www.ugo.com.ar',
+                page_path: window.location.pathname,
+                send_to: 'G-9WN369K0SS',
+                value: t.classList[0].toString(),
+            })
+        })
+    })
+}
+
+
+const changeSelects = () => {
+    document.querySelectorAll('select').forEach(s => {
+        s.addEventListener('click' , ()=> {
+            s.classList.add('selected')
+            console.log(s)
+        })    
+    })
+
+}
+
+
+const formatPrice = (number) => {
+    let ars = Intl.NumberFormat("es-AR", {
+        style: "currency",
+        currency: "ARS",
+        decimal: 0,
+        maximumSignificantDigits: 3
+    });
+
+    return (ars.format(number))
+}
+
+

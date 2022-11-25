@@ -50,8 +50,8 @@
 
         <div class="hr"></div>
         <div class="flex flex-row items-center justify-between summary-dog">
-          <h2 class="black f4">Total</h2>
-          <h2 class="black f4">$<span class="final-number"></span></h2>
+          <h2 class="black f4 final-summery-title">Total <span></span></h2>
+          <h2 class="black f4"><span class="final-number"></span></h2>
         </div>
 
       </div>
