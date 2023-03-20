@@ -1,6 +1,6 @@
 :root {
   --grey: #707070;
-  --lightGrey: #ccc;
+  --mplightGrey: #C4C4C4;
   --red: #d0011b;
   --blue: #030342;
   --gtsuper: 'GT Super Display', Georgia, serif;
@@ -87,6 +87,10 @@ div img {
   transition: width 0.2s ease, height 0.2s ease;
   pointer-events: none;
   /* transition-delay: all 0.5s !important; */
+}
+
+.bg-mp-lightgrey {
+  background-color: var(--mplightGrey)
 }
 
 .cursor.red {

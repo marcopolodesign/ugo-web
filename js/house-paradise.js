@@ -28,6 +28,10 @@ let formOwner = document.querySelector('.form-owner')
 let ownerSummary = document.querySelectorAll('.summary-owner span');
 let dogSummary = document.querySelectorAll('.summary-dog span');
 
+let prevButton = document.querySelectorAll('.btn-prev-hp');
+let button = document.querySelector('.btn-next-hp');
+
+
 let ownerInputs;
 let dogsInputs;
 let calendarInputs;
@@ -54,6 +58,14 @@ const loadSteps = () => {
         } else {
             div.classList.add('hidden');
             div.classList.remove('active')
+        }
+
+        if (formStep === 0 ) {
+            prevButton[1].classList.add('dn');
+            button.parentElement.style.width = "100%";
+        } else {
+            prevButton[1].classList.remove('dn');
+            button.parentElement.style.width = "";
         }
     })
 
@@ -132,8 +144,6 @@ const loadPopUp = () => {
 loadPopUp();
 
 const nextScreen = () => {
-    let button = document.querySelector('.btn-next-hp');
-    let prevButton = document.querySelector('.btn-prev-hp');
 
     let hasFilled = false;
 
@@ -205,6 +215,8 @@ const nextScreen = () => {
                
                 } 
             }) 
+
+
         } else if (formStep === 2) {
             // Calendario 
 
@@ -213,19 +225,29 @@ const nextScreen = () => {
             calendarDates.forEach((date, index) => {
                 let values = {[`date${index}`] : date.value}
                 reserveInfo.aob = {...reserveInfo.aob, ...values}
-
-               
                 reserveInfo.aob.price = finalPricing;
-
             })
+         
+
             console.log(reserveInfo);
+
+            document.querySelector('.reserve-input-container').classList.add("ending")
+            document.querySelector('.summary-stay-container').classList.add("ending")
+
         } 
 
         if (hasFilled) {
-            formStep++;
-            if (formStep >= formContent.length) {
-                formStep --;
-            }
+            console.log(formStep)
+            console.log(formContent.length - 1)
+           if (formStep <= formContent.length - 1 ) {
+            formStep++
+           }
+           console.log(formStep)
+
+
+            // if (formStep >= formContent.length) {
+            //     formStep --;
+            // }
             loadScreens();
             console.log(reserveInfo);
 
@@ -236,15 +258,26 @@ const nextScreen = () => {
         }       
     })
 
-    prevButton.addEventListener('click', () => {
-        if (formStep > 0) {
-            formStep--;
-            if (formStep >= formContent.length) {
-                formStep ++;
+    prevButton.forEach((prev, index) => {
+        prev.addEventListener('click', () => {
+
+            if (index === 0) {
+                document.querySelector('.reserve-input-container').classList.remove("ending")
+                document.querySelector('.summary-stay-container').classList.remove("ending")
             }
-    
-            loadScreens();
-        }
+            if (formStep > 0) {
+                formStep--;
+                if (formStep >= formContent.length -1) {
+                    formStep ++;
+                }
+        
+                loadScreens();
+            }
+
+            console.log(formStep)
+
+
+    })
        
     });
 
@@ -281,7 +314,7 @@ const dogDetails = () => {
     let inputs = response.inputDogs;
     inputs.map((i, index) => {
         let input;
-        console.log(i)
+        // console.log(i)
         if (i.type === "select" && i.placeholder != 'raza') {
             
             input = document.createElement('SELECT');
@@ -289,19 +322,17 @@ const dogDetails = () => {
             let placeholder = document.createElement('OPTION')
             placeholder.setAttribute('selected', '');
             placeholder.setAttribute('disabled', '')
-            if (i.placeholder === 'castrado?') {
+            if (i.placeholder === 'castrado') {
                 placeholder.innerHTML = `Está ${i.placeholder}?`;
+                input.classList.add('input-castrado')
             } else {
                 placeholder.innerHTML = i.placeholder;
-
             }
+
+            input.classList.add('input-text');
             input.appendChild(placeholder);
 
-
             i.selectOptions.forEach((o, n) => {
-                console.log(o)
-               
-
                 let option = document.createElement('OPTION')
                 option.setAttribute('value', o.value);
                 option.innerHTML = o.nombre;
@@ -309,17 +340,33 @@ const dogDetails = () => {
                 input.appendChild(option);
             })
             
-          
 
-        } else {
+        } else if (i.type === "date") {
+
+            // Create a div insteado of an input 
+            input = document.createElement('div');
+            let dateInput = document.createElement('input');
+            let celoCaption = document.createElement('p');
+
+            celoCaption.innerHTML = i.placeholder;
+
+            dateInput.setAttribute('type', i.type);
+            dateInput.classList.add('input-text')
+
+            input.classList.add('o-0', 'pointers-none', 'celo-date')
+
+            input.appendChild(celoCaption);
+            input.appendChild(dateInput);
+        }
+         else {
             input = document.createElement('INPUT');
+            input.classList.add('input-text');
         }
 
         input.setAttribute('type', i.type);
 
 
         input.setAttribute('placeholder', i.placeholder);
-        input.classList.add('input-text');
         input.setAttribute("required", "")
 
             
@@ -457,6 +504,8 @@ const dogDetails = () => {
 
 
       changeSelects();
+
+      dogInputConditionals()
     })
 
     .catch(error => console.log('error', error));
@@ -499,7 +548,7 @@ const calendar = () => {
 
     let enterDate;
     let exitDate;
-    let transportFare = 2500;
+    let transportFare = 4000;
     calInputs.forEach(input => {
         input.addEventListener('changeDate', function (e, details) { 
             enterDate = document.querySelectorAll('#range input')[0].value
@@ -534,13 +583,13 @@ const calendar = () => {
             if (totalDays <= 3) {
                  price = 4000;
             } else if (totalDays > 3 && totalDays < 6) {
-                price = 3100
+                price = 4000
                 hasDiscount = true;
             } else if (totalDays > 6 && totalDays < 15) {
-                price = 2800;
+                price = 4000;
                 hasDiscount = true;
             } else if (totalDays > 15) {
-                price = 2650;
+                price = 4000;
                 hasDiscount = true;
             }
 
@@ -554,7 +603,7 @@ const calendar = () => {
             document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
 
             document.querySelector('span#final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
-            // document.querySelector('span#final-number-upfront').innerHTML = ((price * totalDays) + transportFare) * 0.2;
+            document.querySelector('span#final-number-upfront').innerHTML = ((price * totalDays) + transportFare) * 0.2;
 
             finalPricing = (price * totalDays) + transportFare;
             document.querySelector('span.final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
@@ -636,11 +685,20 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
              mpTitle = `Pago del 20% del total de la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise`
              reserveInfo.aob.purchased = 'anticipo';
              reserveInfo.aob.status = "Anticipo pagado";
+
         } else {
             mpTitle = `Pago para la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise` 
             reserveInfo.aob.purchased = 'full';
             reserveInfo.aob.status = "A retirar";
         }
+
+        let celoDate =  document.querySelector('.celo-date input').value;
+    
+        if (!celoDate) {
+            celoDate = '2022-12-18';
+        }
+    
+    
 
 
         var myHeaders = new Headers();
@@ -655,16 +713,17 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
             "dog_genre": reserveInfo.dog.genero,
             "dog_raza": reserveInfo.dog.raza,
             "dog_social": reserveInfo.dog.social,
-            "dog_age": reserveInfo.dog.edad.toString(),
+            "dog_age": reserveInfo.dog.edad,
             "dog_name": reserveInfo.dog.nombre,
             "dog_castrado": reserveInfo.dog.castrado,
+            "date_celo" : celoDate,
             "dog_behaviour": reserveInfo.dog.behaviour,
             "dog_vaccine": reserveInfo.dog.checkbox10,
             "dog_deworming": reserveInfo.dog.checkbox11,
             "aob_date_start": enterDateES,
-            "aob_date_end": nexitDateES,
+            "aob_date_end": exitDateES,
             "aob_price": reserveInfo.aob.price,
-            "aob_purchased" : reserveInfo.aob.purchased,
+            "aob_purchased" : reserveInfo.aob.purchased, 
             "status" : reserveInfo.aob.status,
         });
 
@@ -711,6 +770,12 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
     reserveInfo.aob.purchased = "consulta";
     reserveInfo.aob.status = "Pendiente de pago";
 
+    let celoDate =  document.querySelector('.celo-date input').value;
+    
+    if (!celoDate) {
+        celoDate = '2022-12-18';
+    }
+
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -726,6 +791,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
         "dog_age": reserveInfo.dog.edad,
         "dog_name": reserveInfo.dog.nombre,
         "dog_castrado": reserveInfo.dog.castrado,
+        "date_celo" : celoDate,
         "dog_behaviour": reserveInfo.dog.behaviour,
         "dog_vaccine": reserveInfo.dog.checkbox10,
         "dog_deworming": reserveInfo.dog.checkbox11,
@@ -748,6 +814,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
     .then(result => console.log(result))
     .then( ()=> {
         document.querySelector('.reserve-input-container').classList.add('dn') 
+        document.querySelector('.reserve-input-container').classList.remove('flex') 
         document.querySelector('.message-success').classList.remove('dn') 
     })
     .catch(error => console.log('error', error));
@@ -860,4 +927,15 @@ const formatPrice = (number) => {
     return (ars.format(number))
 }
 
+
+
+const dogInputConditionals = () => {
+    let castradoTrigger = document.querySelector('.input-castrado');
+
+    castradoTrigger.addEventListener('change', (e) => {
+            if (e.target.value === 'no') {
+                document.querySelector('div.celo-date').classList.remove('o-0', 'pointers-none')
+            }
+    })
+}
 

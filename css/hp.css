@@ -135,14 +135,17 @@ p {
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
+  }
 
+  .hp-reserve-controller {
+    border-top: 1px solid #fff;
   }
 
   .btn-next-hp {
     color: #fff;
     appearance: none;
     border: none;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     cursor: pointer;
     padding: 22px;
     background: linear-gradient(180deg, #f4b5cd 27.35%, #ff619d 84.4%);
@@ -183,6 +186,11 @@ p {
   padding-left: 12px;
   color: var(--pink);
   font-weight: 600;
+}
+
+
+.celo-date .input-text {
+    width: 50%;
 }
 
 .input-text.incomplete::placeholder {
@@ -325,6 +333,10 @@ option {
     border-radius: 8px;
 }
 
+div.celo-date {
+    margin-top: 0 !important;
+}
+
 .form-container h2 {
     color: white;
     font-weight: 500;
@@ -417,8 +429,8 @@ transition: var(--smooth);
     bottom: 9%;
     left: 20px;
     padding: 22px;
+    /* border-radius: 8px; */
     background-color: var(--darkGrey);
-    border-radius: 8px;
 }
 
 #range > div {
@@ -643,7 +655,21 @@ h2.daily-price {
     text-transform: capitalize;
 }
 
+.reserve-input-container.ending .hp-reserve-controller {
+    display: none;
+}
 
+/* Hover classes */
+
+.hover-main:hover, .hover-main:hover p {
+    color: var(--pink)
+}
+
+@media (min-width: 768px) {
+    .wrap-desktop {
+        flex-wrap: wrap;
+    }
+}
 
 @media (max-width: 768px) {
 
@@ -767,7 +793,7 @@ h2.daily-price {
     .reserve-container {
         width: 100%;
     height: 100%;
-    flex-direction: column-reverse;
+    flex-direction: column;
     border: 0px;
     border-radius: 0px;
     }
@@ -786,8 +812,30 @@ h2.daily-price {
         height: unset;
     }
 
+.hp-reserve-controller  {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+
+.reserve-input-container {
+    padding-top: 40px !important;
+
+}
+
+.reserve-input-container.ending {
+    overflow: initial;
+}
+
+ .summary-stay-container.ending  {
+    display: block;
+}
 
 
+
+.breadcrumb {
+    display: none;
+}
     .next-button, .prev-button {
         bottom: 0;
         width: 50%;
@@ -800,10 +848,7 @@ h2.daily-price {
         border-radius: 0;
     }
 
-    .prev-button p {
-        line-height: 1.15;
-        text-align: center;
-    }
+ 
 
     .next-button button {
         border-radius: 0;
@@ -817,6 +862,14 @@ h2.daily-price {
 
     .final-options > div {
         width: 100%;
+    }
+
+    #range {
+        flex-direction: column;
+    }
+
+    .message-success {
+        padding: 100px 20px !important;
     }
 
 
@@ -932,3 +985,9 @@ h2.daily-price {
 
 }
 
+
+/* 
+
+input[type="date"] {
+    display: none;
+} */

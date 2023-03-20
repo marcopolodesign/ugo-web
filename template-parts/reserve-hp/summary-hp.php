@@ -1,4 +1,4 @@
-<div class="w-90-ns summary-stay relative overflow-hidden pt5 ph4-ns m-auto">
+<div class="w-90-ns summary-stay relative pt5 ph4-ns m-auto">
       <h4 class="f3 black">Resumen de Estadia</h4>
 
       <div class="mt4 summary-owner">
