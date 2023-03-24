@@ -1,8 +1,8 @@
 <div class="fixed z-5 reserve-container flex column-mobile-reverse ugo-black-bg overflow-scroll o-0 pointers-none">
   <!--  column-mobile-reverse -->
   <div class="close-modal black">X</div>
-  <div class="w-60-ns pt5   flex flex-column justify-between relative overflow-y-scroll reserve-input-container">
-    <div class="pl4-ns">
+  <div class="w-60-ns flex flex-column justify-between relative overflow-y-scroll reserve-input-container">
+    <div class="pl4-ns pt5">
       <p class="breadcrumb">UGo! Home > House Paradise > Sobre tu perro</p>
       <h3 class="hp-title">
         Bienvenido a House Paradise! Estás tomando los primeros pasos para darle
@@ -31,17 +31,34 @@
               <p id="discount-verify" class="tc fw5">Verificar cupón</p>
           </div>
 
-          <div class="flex items-stretch final-options column-mobile wrap-desktop">
-              <div class="pay-now-container dn mr4-ns">
+          <div class="flex items-stretch final-options column-mobile wrap-desktop justify-between">
+              <!-- <div class="pay-now-container dn mr4-ns">
                 <h2 class="m-auto tc">Cliente recurrente? Pagar la totalidad de la estadía correspondiente a $<span id="final-number"></span> vía Mercado Pago.</h2>
+              </div> -->
+
+              <div class="pay-now-container upfront flex flex-column jic">
+                <div class="icon-header flex">
+                    <div class="m-auto">
+                      <?php get_template_part('template-parts/content/upfront-reserve'); ?>
+                    </div>
+                </div>
+
+                <p class="m-auto tc">Confirmar la estadía pagando anticipadamente un 20% correspondiente a $<span class="fw6 underline" id="final-number-upfront"></span>  vía Mercado Pago</p>
+
+                <div class="upfront-cta flex items-center justify-center pa3">
+                    <?php get_template_part('template-parts/content/mp-reserve'); ?>
+                    <p class="ml3 lh1">Pagar anticipo vía Mercado Pago</p>
+                  </div>
+
               </div>
 
-              <div class="pay-now-container upfront dn mr4-ns">
-                <h2 class="m-auto tc">Confirmar la estadía pagando anticipadamente un 20% correspondiente a $<span id="final-number-upfront"></span>  vía Mercado Pago</h2>
-              </div>
 
-
-              <div class="mail-now-container hover-main flex flex-column w-100 anchor" style="width: 100%;">
+              <div class="mail-now-container hover-main flex flex-column w-100">
+                  <div class="icon-header flex">
+                    <div class="m-auto">
+                      <?php get_template_part('template-parts/content/mail-reserve'); ?>
+                    </div>
+                  </div>
                   <p class="tc">Te enviaremos un desglose con tu pedido por mail, y un asesor de UGo! te contactará para que le hagas todas las preguntas que necesites!</p>
 
                   <div class="mail-cta flex items-center justify-center pa3">
@@ -69,6 +86,8 @@
         </div>
 
     </div>
+
+    <div class="absolute w-100 h-100 dn confirmation-await"></div>
    
   </div>
 

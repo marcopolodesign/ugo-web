@@ -31,6 +31,8 @@ let dogSummary = document.querySelectorAll('.summary-dog span');
 let prevButton = document.querySelectorAll('.btn-prev-hp');
 let button = document.querySelector('.btn-next-hp');
 
+let confirmationPop = document.querySelector('.confirmation-await');
+
 
 let ownerInputs;
 let dogsInputs;
@@ -191,11 +193,12 @@ const nextScreen = () => {
                      let values = {[attr] : input.value}
                     reserveInfo.dog = {... reserveInfo.dog, ...values}
                    }
-                } else if (index > 9 && index <= 11) {
+                } else if (index > 10 && index <= 12) {
                  
                     let values = {[`checkbox${index}`] : input.checked}
                     reserveInfo.dog = {...reserveInfo.dog, ...values}
           
+                    console.log(values)
                     // Social responses
                     let socialRes = document.querySelector('.selected-social p');
 
@@ -602,7 +605,7 @@ const calendar = () => {
             document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
             document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
 
-            document.querySelector('span#final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
+            // document.querySelector('span#final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
             document.querySelector('span#final-number-upfront').innerHTML = ((price * totalDays) + transportFare) * 0.2;
 
             finalPricing = (price * totalDays) + transportFare;
@@ -718,8 +721,8 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
             "dog_castrado": reserveInfo.dog.castrado,
             "date_celo" : celoDate,
             "dog_behaviour": reserveInfo.dog.behaviour,
-            "dog_vaccine": reserveInfo.dog.checkbox10,
-            "dog_deworming": reserveInfo.dog.checkbox11,
+            "dog_vaccine": reserveInfo.dog.checkbox11,
+            "dog_deworming": reserveInfo.dog.checkbox12,
             "aob_date_start": enterDateES,
             "aob_date_end": exitDateES,
             "aob_price": reserveInfo.aob.price,
@@ -793,8 +796,8 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
         "dog_castrado": reserveInfo.dog.castrado,
         "date_celo" : celoDate,
         "dog_behaviour": reserveInfo.dog.behaviour,
-        "dog_vaccine": reserveInfo.dog.checkbox10,
-        "dog_deworming": reserveInfo.dog.checkbox11,
+        "dog_vaccine": reserveInfo.dog.checkbox11,
+        "dog_deworming": reserveInfo.dog.checkbox12,
         "aob_date_start": enterDateES,
         "aob_date_end": exitDateES,
         "aob_price": reserveInfo.aob.price,
@@ -809,10 +812,14 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
     redirect: 'follow'
     };
 
+    confirmationPop.classList.remove('dn');
+  
+
     fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
     .then(response => response.text())
     .then(result => console.log(result))
-    .then( ()=> {
+    .then( () => {
+        confirmationPop.classList.add('dn');
         document.querySelector('.reserve-input-container').classList.add('dn') 
         document.querySelector('.reserve-input-container').classList.remove('flex') 
         document.querySelector('.message-success').classList.remove('dn') 

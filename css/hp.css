@@ -602,22 +602,34 @@ h2.daily-price {
     padding: 13px;
 }
 
+.final-options {
+    margin-top: 55px !important;
+}
+
 .final-options > div {
     border-radius: 8px;
     background-color: var(--darkGrey);
-    width: 50%;
+    width: 48%;
 }
 
 
 .pay-now-container {
-    background: linear-gradient(180deg, #f4b5cd 27.35%, #ff619d 84.4%);
-    padding: 20px;
-    cursor: pointer;
-    transition: var(--smooth);
+    /* background: linear-gradient(180deg, #f4b5cd 27.35%, #ff619d 84.4%); */
+    border: 2px solid var(--pink);
+    /* padding: 20px; */
 }
 
-.pay-now-container:hover {
+.final-options > div {
+    transition: var(--smooth);
+    cursor: pointer;
+}
+
+.final-options > div:hover {
     transform: scale(1.02);
+}
+
+.final-options > div:hover > p {
+   color: var(--pink)
 }
 
 .pay-now-container h2 {
@@ -625,14 +637,42 @@ h2.daily-price {
     color: #fff;
 }
 
-.mail-now-container >  p {
+.mail-now-container {
+    border: 2px solid #707070;
+}
+
+.icon-header {
+    width: 72px;
+    height: 72px;
+    border-radius: 100px;
+    background-color: #707070;
+    align-self: center;
+    transform: translateY(-50%);
+    margin-bottom: -44px;
+}
+
+.pay-now-container.upfront .icon-header {
+    background-color: var(--pink);
+}
+
+.final-options > div >  p {
     padding: 20px;
 }
 
-.mail-cta {
-    border-radius: 0px 0px 8px 8px;
+.mail-cta, .upfront-cta {
+    /* border-radius: 0px 0px 8px 8px; */
     background-color: #6C6C6C;
     padding: 20px;
+    width: 100%;
+}
+
+.upfront-cta {
+    background-color: var(--pink);
+}
+
+.confirmation-await {
+    z-index: 99;
+    background: #ffffff4f;
 }
 
 /* MP CallBack */
