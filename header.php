@@ -18,6 +18,9 @@
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<script src="https://unpkg.com/@barba/core"></script>
 
+	<script src="https://apis.google.com/js/api.js"></script>
+
+	
 	<!-- Facebook Pixel Code -->
 	<script>
 	!function(f,b,e,v,n,t,s)
@@ -62,9 +65,11 @@
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'ugo' ); ?></a>
 
-	<?php if (is_page(6)) : ?>
+	<?php if (is_page(array( 6, 230 ))) : ?>
 	<header id="masthead" class="site-header flex absolute top-0 left-0 z-4 container w-100 pv3 justify-between">
-		<?php get_template_part('template-parts/content/hp-logo-min'); ?>
+		<a class="barba-prevent" href="/">
+			<?php get_template_part('template-parts/content/hp-logo-min'); ?>
+		</a>
 		<a href="https://api.whatsapp.com/send?phone=+5491157808539&text=Hola!%20Estoy%20interesado%20en%20darle%20las%20mejores%20vacaciones%20a%20mi%20perro!" target="_blank" class="no-deco flex f4 w-max jic anchor">
 			<?php // get_template_part('template-parts/content/whapp'); ?>
 			<p class="ml2 messina white f6 has-after pt1">Reservar ahora</p>

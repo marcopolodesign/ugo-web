@@ -49,9 +49,17 @@
         </div>
 
         <div class="hr"></div>
+          <div class="summary-discount-container dn">
+            <p class="text-gray">Descuento</p>
+           <span id="summary-discount" class="b"></span>
+          </div>
+        <div class="hr dn"></div>
         <div class="flex flex-row items-center justify-between summary-dog">
           <h2 class="black f4 final-summery-title">Total <span></span></h2>
+         <div class="flex flex-column items-end">
           <h2 class="black f4"><span class="final-number"></span></h2>
+          <h2 class="black f4"><span class="discount-final-number dn"></span></h2>
+         </div>
         </div>
 
       </div>

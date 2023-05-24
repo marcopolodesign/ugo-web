@@ -1443,3 +1443,48 @@ const getPaymentID = () => {
 getPaymentID();
 
 
+
+const faqQuestions = () => {
+
+  const faq = document.querySelectorAll('.faq-item');  
+  faq.forEach(q => {
+    let isExpanded = q.getAttribute('area-expanded');
+    q.addEventListener('click', (e)=> {
+      let answer = q.querySelector('.faq-answer');
+      let answerContent = answer.querySelector('p');
+      let arrow = q.querySelector('svg');
+
+      let height = answer.querySelector('p').clientHeight ;   
+
+      let faq = gsap.timeline({
+        defaults: {
+          easing: Expo.EaseOut,
+          duration: 0.2,
+        },
+      })
+
+      if (!isExpanded) {
+        faq
+        // .to(arrow, {transform: 'rotate(-90deg)'})
+        .to (answer, { opacity: 0})  
+        .to (answerContent, {marginTop: '0px', marginBottom: "0px"}, 0)
+        .to (answer, {maxHeight: "0", opacity: 0}, 0.05)
+      
+
+          isExpanded = true;  
+      } else {
+        faq
+        // .to(arrow, {transform: 'rotate(0deg)'})
+        .to (answer, {maxHeight: height})
+        .to (answer, { opacity: 1}, 0)
+        .to (answerContent, {marginTop: '10px', marginBottom: "10px"}, 0)
+        isExpanded = false;  
+      }          
+      q.setAttribute('area-expanded', !isExpanded);
+
+    })
+  })
+}
+
+
+faqQuestions();

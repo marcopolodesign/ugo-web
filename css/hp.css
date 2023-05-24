@@ -25,7 +25,7 @@ a p {
     text-transform: uppercase;
 }
 
-p {
+p, *::placeholder {
     font-family: 'Lausanne' !important;
 }
 
@@ -188,6 +188,10 @@ p {
   font-weight: 600;
 }
 
+.input-textarea {
+    width: 100%;
+}
+
 
 .celo-date .input-text {
     width: 50%;
@@ -209,6 +213,10 @@ border: 1px solid var(--pink) !important
 .input-text::placeholder, .input-text option {
     text-transform: capitalize;
     color: var(--darkGrey)
+}
+
+.input-textarea::placeholder, .input-text option {
+    text-transform: none;
 }
 
 select.input-text {
@@ -344,7 +352,7 @@ div.celo-date {
     margin-bottom: 20px;
 }
 
-.social-container {
+.aob-container {
     margin-bottom: 200px !important;
 }
 
@@ -365,8 +373,21 @@ div.celo-date {
 }
 
 .behaviour-container > div {
-    justify-content: space-between;
     align-items: center;
+}
+
+.bite-container, .swim-container {
+    width: max-content;
+}
+
+
+.bite-container .behaviour-type:first-child, .swim-container .behaviour-type:first-child { 
+    margin-right: 10px;
+}
+
+
+.social-container div:nth-child(2) > div {
+ justify-content: space-between;
 }
 
 .behaviour-container h4 {
@@ -587,9 +608,10 @@ h2.daily-price {
 }
 
 .discount-code .input-text {
-    width: 80%;
+    width: 70%;
     margin-bottom: 0px;
     margin-right: 0px;
+    border-radius: 8px 0px 0px 8px;
 }
 
 .discount-code > p {
@@ -600,6 +622,8 @@ h2.daily-price {
     color: black;
     flex: 1 0 0;
     padding: 13px;
+    justify-content: center;
+    align-items: center;
 }
 
 .final-options {
@@ -695,8 +719,13 @@ h2.daily-price {
     text-transform: capitalize;
 }
 
-.reserve-input-container.ending .hp-reserve-controller {
+.reserve-input-container.ending .hp-reserve-controller, .reserve-input-container.ending .steps-master {
     display: none;
+}
+
+.terms-container {
+    border-radius: 8px;
+    border: 2px solid #6C6C6C;
 }
 
 /* Hover classes */

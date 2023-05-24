@@ -5,7 +5,7 @@ document.getElementsByTagName("head")[0].insertAdjacentHTML(
 
 document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "beforeend",
-    "<link rel=\"stylesheet\" href=\"wp-content/themes/ugo-web/css/hp.css\" />"    
+    "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-web/css/hp.css\" />"    
 );
 
 
@@ -37,10 +37,11 @@ let confirmationPop = document.querySelector('.confirmation-await');
 let ownerInputs;
 let dogsInputs;
 let calendarInputs;
+let totalDays;
 
 let allDays;
 
-
+const HPavailability = [];
 
 let formStep = 0;
 let formContent = document.querySelectorAll('.form-container > div');
@@ -151,6 +152,10 @@ const nextScreen = () => {
 
     let lead = true;
 
+    let incompleteFields;
+ 
+   
+
     button.addEventListener('click', () => {
 
         let inputs = Array.prototype.slice.call(document.forms[0]);
@@ -173,9 +178,17 @@ const nextScreen = () => {
                 
                    }
 
+
                 //    Hay que hacer en base al classList y si alguno tiene ponerle incomplete se pasa a hasFilled = false;
                 }
             })
+        incompleteFields = document.forms[0].querySelectorAll('.incomplete');
+
+        if (incompleteFields.length <= 0) {
+            hasFilled = true
+        } else {
+            hasFilled = false;
+        }
 
         } else if (formStep === 1) {
            
@@ -184,21 +197,39 @@ const nextScreen = () => {
                     let value = input.value;
                    if (!value) {
                     input.classList.add('incomplete')
-                    hasFilled = false;
+                    // hasFilled = false;
                    } else {
                     hasFilled = true;
-                    input.classList.remove('incomplete')
+                    // input.classList.remove('incomplete')
 
                     let attr = input.getAttribute('placeholder');
                      let values = {[attr] : input.value}
                     reserveInfo.dog = {... reserveInfo.dog, ...values}
                    }
+
+                   
                 } else if (index > 10 && index <= 12) {
                  
                     let values = {[`checkbox${index}`] : input.checked}
                     reserveInfo.dog = {...reserveInfo.dog, ...values}
           
                     console.log(values)
+
+                    let cirugiaRes = document.querySelectorAll('.dog-textarea input')[0]
+
+                    if (cirugiaRes) {
+                        cirugiaRes = cirugiaRes.value;
+                        reserveInfo.dog.cirugia = cirugiaRes;
+                    }
+
+                    let alergiesRes = document.querySelectorAll('.dog-textarea input')[1]
+
+                    if (alergiesRes) {
+                        alergiesRes = alergiesRes.value;
+                        reserveInfo.dog.alergia = alergiesRes;
+                    }
+
+            
                     // Social responses
                     let socialRes = document.querySelector('.selected-social p');
 
@@ -214,8 +245,34 @@ const nextScreen = () => {
                         reserveInfo.dog.behaviour = behaviourRes;
                     }
                 
-  
+                       let biteRes = document.querySelector('.bite-container h4.behaviour-type.selected');
+                       if (biteRes) {
+                          biteRes = biteRes.innerHTML;
+                           reserveInfo.dog.bite = biteRes;
+                       }
+
+                       let swimRes = document.querySelector('.swim-container h4.behaviour-type.selected');
+                       if (swimRes) {
+                        swimRes = swimRes.innerHTML;
+                           reserveInfo.dog.swim = swimRes;
+                       }
+
+                       //aob responses
                
+
+                       let foodRes = document.querySelectorAll('.aob-container input')[0];
+                       if (foodRes) {
+                        foodRes = foodRes.value;
+                           reserveInfo.dog.food = foodRes;
+                       }
+
+                       let commentsRes = document.querySelectorAll('.aob-container input')[1];
+                       if (commentsRes) {
+                        commentsRes = commentsRes.value;
+                           reserveInfo.dog.comments = commentsRes;
+                       }
+
+
                 } 
             }) 
 
@@ -231,22 +288,32 @@ const nextScreen = () => {
                 reserveInfo.aob.price = finalPricing;
             })
          
+            if (totalDays <= 0 || totalDays === undefined) {
+                // alert('seleccioná fechas')
+                hasFilled  = false;
+                document.querySelectorAll('#range input').forEach(date => {date.classList.add('incomplete')})
+            } else {
+                hasFilled = true;
+                document.querySelectorAll('#range input').forEach(date => {date.classList.remove('incomplete')})
+            }
+
+            console.log(totalDays)
 
             console.log(reserveInfo);
 
-            document.querySelector('.reserve-input-container').classList.add("ending")
-            document.querySelector('.summary-stay-container').classList.add("ending")
-
+            if (hasFilled) {
+                document.querySelector('.reserve-input-container').classList.add("ending")
+                document.querySelector('.summary-stay-container').classList.add("ending")
+            }
         } 
 
         if (hasFilled) {
-            console.log(formStep)
-            console.log(formContent.length - 1)
+            // console.log(formStep)
+            // console.log(formContent.length - 1)
            if (formStep <= formContent.length - 1 ) {
             formStep++
            }
-           console.log(formStep)
-
+        //    console.log(formStep)
 
             // if (formStep >= formContent.length) {
             //     formStep --;
@@ -309,12 +376,16 @@ const dogDetails = () => {
 
     let data;
     let socialContainer;
+    let comida;
+    let comments;
   fetch(`https://u-go-backend-deveop-lc9t2.ondigitalocean.app/${dogEndPoint}`, requestOptions)
   .then(response => response.json())
   .then((response)=> {
      data = response;
-    //  console.log(data)
+     console.log(data)
     let inputs = response.inputDogs;
+     comida = response.Comida;
+     comments = response.Comentarios;
     inputs.map((i, index) => {
         let input;
         // console.log(i)
@@ -356,7 +427,7 @@ const dogDetails = () => {
             dateInput.setAttribute('type', i.type);
             dateInput.classList.add('input-text')
 
-            input.classList.add('o-0', 'pointers-none', 'celo-date')
+            input.classList.add('o-0', 'pointers-none', 'celo-date', 'dn')
 
             input.appendChild(celoCaption);
             input.appendChild(dateInput);
@@ -388,8 +459,10 @@ const dogDetails = () => {
         healthContainer.appendChild(title)
 
         let dogHealth = data.healthDogs;
-            dogHealth.forEach(h => {
+            dogHealth.forEach((h, i) => {
                 let inputContainer = document.createElement('div');
+
+                if (i <= 1) {
                 inputContainer.classList.add('flex');
                 inputContainer.classList.add('dog-checkbox')
     
@@ -407,6 +480,17 @@ const dogDetails = () => {
                 inputContainer.appendChild(healthInput);
     
                 healthContainer.appendChild(inputContainer);
+            } else {
+                inputContainer.classList.add('dog-textarea');
+                let healthInput = document.createElement('input');
+                healthInput.setAttribute('type', 'input');
+                healthInput.placeholder = h.question;
+
+                healthInput.classList.add('input-textarea', 'w-100', 'input-text');
+
+                inputContainer.appendChild(healthInput);
+                healthContainer.appendChild(inputContainer);
+            }
             })
             
         formContent[1].appendChild(healthContainer)    
@@ -417,7 +501,7 @@ const dogDetails = () => {
         socialContainer = document.createElement('div');
         socialContainer.classList.add('social-container');
 
-        let title = document.createElement("h3");
+        let title = document.createElement("h2");
         title.innerHTML = `Por último, algunas preguntas sobre su sociabilización`;
 
         formContent[1].appendChild(title);
@@ -468,18 +552,27 @@ const dogDetails = () => {
     }).then(() => {
         let behaviour = data.social_comportamiento
 
+        behaviour.forEach((b, i) => {
+
         let behaviourContainer = document.createElement('div');
         behaviourContainer.classList.add('behaviour-container')
+
+        if (i === 1 ) {
+            behaviourContainer.classList.add('bite-container')
+        }
+        else if (i === 2) {
+            behaviourContainer.classList.add('swim-container')
+        }
         let behaviourTitle = document.createElement('p')
 
-        behaviourTitle.innerHTML = behaviour[0].questions;
+        behaviourTitle.innerHTML = b.questions;
 
         behaviourContainer.appendChild(behaviourTitle);
 
         let responsesContainer = document.createElement('div');
 
        let responses = [];
-       behaviour[0].options.map((response, index) => {
+       b.options.map((response, index) => {
             let r = document.createElement("h4");
      
             r.classList.add('behaviour-type');
@@ -504,9 +597,38 @@ const dogDetails = () => {
 
       behaviourContainer.appendChild(responsesContainer)
       socialContainer.appendChild(behaviourContainer);
-
-
       changeSelects();
+    })
+
+
+
+    aobContainer = document.createElement('div');
+    aobContainer.classList.add('aob-container');
+
+    let title = document.createElement("h2");
+    title.innerHTML = `Otros datos sobre tu mascota!`;
+    aobContainer.appendChild(title)
+
+
+    let foodInput = document.createElement('input');
+    foodInput.setAttribute('type', 'input');
+    foodInput.placeholder = comida
+
+    foodInput.classList.add('input-textarea', 'w-100', 'input-text');
+
+
+    let commentsInput = document.createElement('input');
+    commentsInput.setAttribute('type', 'input');
+    commentsInput.placeholder = comments
+
+    commentsInput.classList.add('input-textarea', 'w-100', 'input-text');
+
+
+    aobContainer.appendChild(foodInput);
+    aobContainer.appendChild(commentsInput);
+
+
+    formContent[1].appendChild(aobContainer)
 
       dogInputConditionals()
     })
@@ -526,10 +648,47 @@ const completeSummary = (source,target) => {
 let enterDateES;
 let exitDateES
 let finalPricing;
+let transportFare = 4000;
+let price;
+
+
+const getSheet = () => {
+    var id = '1il0HUktHwxaF_wDfpAjH-N9sxoT_sd_k73Z_v3_KDhk';
+    var gid = '0'
+    var url = `https://docs.google.com/spreadsheets/d/1il0HUktHwxaF_wDfpAjH-N9sxoT_sd_k73Z_v3_KDhk/gviz/tq?tqx=out:json&tq&gid=755951076`;
+    fetch(url)
+  .then(response => response.text())
+  .then(data => {
+    // Extract the JSON data using a regular expression pattern
+    const match = data.match(/google\.visualization\.Query\.setResponse\((.*)\)/);
+    
+    if (match) {
+      const jsonData = JSON.parse(match[1]);
+
+      let HPdata = jsonData.table.rows;
+
+      HPdata.forEach(dates => {
+       let availability = dates.c
+            const obj = {
+                date: availability[0].f,
+                availability: availability[1].v
+            };
+            HPavailability.push(obj);
+      })
+      // Use the JSON data as needed
+    } else {
+      throw new Error('Unable to extract JSON data from the response.');
+    }
+  })
+  .catch(error => {
+    console.error('Error retrieving data:', error);
+  });
+}
+
+
 
 const calendar = () => {
-    let totalDays;
-    let price;
+    
     let date = new Date();
 
     const elem = document.getElementById('range');
@@ -543,76 +702,113 @@ const calendar = () => {
         minDate: date,
         clearBtn: true,
         format: ("dd/mm/yyyy")
-
     });
 
     let calInputs = document.querySelectorAll('#range input');
 
-
     let enterDate;
     let exitDate;
-    let transportFare = 4000;
+
+    getSheet();
+    console.log(HPavailability)
+ 
     calInputs.forEach(input => {
         input.addEventListener('changeDate', function (e, details) { 
+            input.classList.remove('incomplete');
+
+            // Grab initial dates
             enterDate = document.querySelectorAll('#range input')[0].value
-        
-           document.querySelector('#summary-start-date').innerHTML = enterDate;
-    
+            document.querySelector('#summary-start-date').innerHTML = enterDate;
             exitDate = document.querySelectorAll('#range input')[1].value
             document.querySelector('#summary-end-date').innerHTML = exitDate;
 
-
+            // Translate to Spanish enterDate
             enterDateES = enterDate.split('/');
-
             enterDateES = enterDateES[1] + "/" + enterDateES[0] + '/' + enterDateES[2];
             enterDateES =  new Date(enterDateES);
 
 
-             exitDateES = exitDate.split('/');
-
+            // Translate to Spanish exitDate
+            exitDateES = exitDate.split('/');
             exitDateES = exitDateES[1] + "/" + exitDateES[0] + '/' + exitDateES[2];
-            console.log(exitDateES)
             exitDateES =  new Date(exitDateES);
 
             console.log(exitDateES)
 
-            let difference = exitDateES.getTime() - enterDateES.getTime();
+            if (enterDate != exitDate) {
+                let difference = exitDateES.getTime() - enterDateES.getTime();
+                totalDays = Math.ceil(difference / (1000 * 3600 * 24));
+                
+                // console.log(totalDays + ' days in House Paradise  ');
+                
+                
+                const showPrice = (price) => {
+                    document.querySelector('.daily-price').innerHTML = formatPrice(price);
+    
+                    document.querySelector('.title-nights').innerHTML = `${formatPrice(price)} por ${totalDays} noches`;
+                    document.querySelector('.price-nights').innerHTML = formatPrice(price * totalDays);
+                    document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
+                    document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
+        
+                    // document.querySelector('span#final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
+                    document.querySelector('span#final-number-upfront').innerHTML = formatPrice(((price * totalDays) + transportFare) * 0.2);
+                    
+        
+                    finalPricing = (price * totalDays) + transportFare;
+                    document.querySelector('span.final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
+                    document.querySelector('.final-summery-title span').innerHTML = ` por ${totalDays} días`
+        
+                    allDays = totalDays;
+                }
+    
+                const matchingObject = HPavailability.find(item => item.date.toString() === exitDate);
 
-            totalDays = Math.ceil(difference / (1000 * 3600 * 24));
-            console.log(totalDays + ' days in House Paradise  ');
-            
-            let hasDiscount = false;
 
-            if (totalDays <= 3) {
-                 price = 4000;
-            } else if (totalDays > 3 && totalDays < 6) {
-                price = 4000
-                hasDiscount = true;
-            } else if (totalDays > 6 && totalDays < 15) {
-                price = 4000;
-                hasDiscount = true;
-            } else if (totalDays > 15) {
-                price = 4000;
-                hasDiscount = true;
+                // Chequear cuales noches son 
+
+
+                function getDateRange(startDate, endDate) {
+                    const dates = [];
+                    let currentDate = new Date(startDate);
+                  
+                    while (currentDate <= endDate) {
+                      dates.push(new Date(currentDate));
+                      currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                  
+                    return dates;
+                  }
+
+                  const dateRange = getDateRange(enterDateES, exitDateES);
+                    console.log(dateRange);
+    
+                console.log(matchingObject);
+    
+                if (matchingObject) {
+                    price = 8000;
+                } else {
+                    price = 4000;
+                }
+
+
+                                // Get today's date
+                const today = new Date();
+
+                // Assuming the user-selected date is stored in the variable 'selectedDate'
+                // const selectedDate = ; // Replace with your actual variable
+
+                // Calculate the difference in days
+                const timeDifference = enterDateES.getTime() - today.getTime();
+                const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+
+                console.log(daysDifference)
+    
+                showPrice(price)
             }
 
-            document.querySelector('.daily-price').innerHTML = formatPrice(price);
+          
 
-            console.log(formatPrice(price));
-
-            document.querySelector('.title-nights').innerHTML = `${formatPrice(price)} por ${totalDays} noches`;
-            document.querySelector('.price-nights').innerHTML = formatPrice(price * totalDays);
-            document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
-            document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
-
-            // document.querySelector('span#final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
-            document.querySelector('span#final-number-upfront').innerHTML = ((price * totalDays) + transportFare) * 0.2;
-
-            finalPricing = (price * totalDays) + transportFare;
-            document.querySelector('span.final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
-            document.querySelector('.final-summery-title span').innerHTML = ` por ${totalDays} días`
-
-            allDays = totalDays;
             });
             
     })
@@ -637,8 +833,79 @@ const calendar = () => {
 }
 
 
+
 calendar();
 
+const discounts = () => {
+    let promotions = [
+        {name: 'MEJORESAMIGOS', discount : 15},
+        {name: 'AMIGUIS', discount : 15},
+        {name: 'PARAISO', discount : 20}
+    ]
+
+    let verify = document.querySelector('#discount-verify');
+
+    verify.addEventListener('click', ()=> {
+        let cupon = document.querySelector('.discount-code input').value.toUpperCase();
+
+        const matchingProduct = promotions.find(product => product.name === cupon);
+
+        if (matchingProduct) {
+            let discount = matchingProduct.discount;
+            // alert(`tenes un descuento de ${matchingProduct.discount}`)
+
+            let discounted = finalPricing - finalPricing * (1 - discount/100);
+            finalPricing = finalPricing * (1 - discount/100);
+            
+            console.log(finalPricing);
+
+       
+         
+                // Change the validation field
+                document.querySelectorAll('.discount-container div')[0].classList.toggle('dn')
+                document.querySelectorAll('.discount-container div')[0].classList.toggle('flex')
+                document.querySelectorAll('.discount-container div')[1].classList.toggle('dn')
+                document.querySelectorAll('.discount-container div')[1].classList.toggle('flex')
+         
+            // Change the description in the validation field
+            document.querySelector('.discount-success > p').innerHTML = `Cupón cargado correctamente! Recibiste un ${discount}% de descuento equivalente a ${formatPrice(discounted)} sobre el total de tu reserva.`
+
+
+            // If cupon is deleted 
+
+            document.querySelector('.discount-cupon-success svg').addEventListener('click', ()=> {
+                changeDiscountFields();
+            })
+
+            
+          
+            // Change the final number 
+            document.querySelector('span.discount-final-number').innerHTML = formatPrice(finalPricing);
+            document.querySelector('span.final-number').style.textDecoration = 'line-through';
+            document.querySelector('.final-summery-title span').innerHTML = ` con descuento por ${totalDays} días`
+
+
+            // Change for the reservation
+            reserveInfo.aob.price = finalPricing
+
+            // Make the final number visibile
+            document.querySelector('span.discount-final-number').classList.remove('dn');
+            document.querySelector('.summary-discount-container').classList.remove('dn');
+            document.querySelector('.summary-discount-container').classList.add('flex' , 'jic');
+            document.querySelectorAll('.hr')[3].classList.remove('dn')
+
+
+            // Change the 10% in the summary
+            document.querySelector('.summary-discount-container span').innerHTML = matchingProduct.discount + "%"
+        } else {
+            document.querySelector('.discount-code input').style.border = "1px solid red";
+        }
+
+        console.log(cupon)
+    })
+}
+
+discounts();
 
 let close = () => {
     closeModal.addEventListener('click', ()=> {
@@ -677,6 +944,9 @@ let open = () => {
 open();
 
 
+var raw;
+
+
 document.querySelectorAll('.pay-now-container').forEach(pay => {
     pay.addEventListener('click', ()=> {
 
@@ -700,9 +970,6 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
         if (!celoDate) {
             celoDate = '2022-12-18';
         }
-    
-    
-
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -728,7 +995,14 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
             "aob_price": reserveInfo.aob.price,
             "aob_purchased" : reserveInfo.aob.purchased, 
             "status" : reserveInfo.aob.status,
+            "dog_bite" : reserveInfo.dog.bite,
+            "dog_swim" : reserveInfo.dog.swim,
+            "dog_cirugia" : reserveInfo.dog.cirugia,
+            "dog_alergia" : reserveInfo.dog.alergia,
+            "dog_food" : reserveInfo.dog.food,
+            "dog_comments" : reserveInfo.dog.comments
         });
+        
 
         var requestOptions = {
         method: 'POST',
@@ -770,62 +1044,78 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
 
 document.querySelector('.mail-now-container').addEventListener('click', ()=> {
 
-    reserveInfo.aob.purchased = "consulta";
-    reserveInfo.aob.status = "Pendiente de pago";
+    let checked = false;
+    let terms = document.querySelector('input.terms');
+    checked = terms.checked;
 
-    let celoDate =  document.querySelector('.celo-date input').value;
+    if (!checked){ 
+        alert('por favor, confirmá nuestros términos y condiciones')
+    } else {
+        reserveInfo.aob.purchased = "consulta";
+        reserveInfo.aob.status = "Pendiente de pago";
+
+        let celoDate =  document.querySelector('.celo-date input').value;
+        
+        if (!celoDate) {
+            celoDate = '2022-12-18';
+        }
+
+        var raw = JSON.stringify({
+            "owner_name": reserveInfo.owner.nombre,
+            "owner_surname": reserveInfo.owner.apellido,
+            "owner_phone": reserveInfo.owner.telefono,
+            "owner_email":reserveInfo.owner.mail,
+            "owner_dni": reserveInfo.owner.dni,
+            "dog_genre": reserveInfo.dog.Género,
+            "dog_raza": reserveInfo.dog.raza,
+            "dog_social": reserveInfo.dog.social,
+            "dog_age": reserveInfo.dog.edad,
+            "dog_name": reserveInfo.dog.nombre,
+            "dog_castrado": reserveInfo.dog.castrado,
+            "date_celo" : celoDate,
+            "dog_behaviour": reserveInfo.dog.behaviour,
+            "dog_vaccine": reserveInfo.dog.checkbox11,
+            "dog_deworming": reserveInfo.dog.checkbox12,
+            "aob_date_start": enterDateES,
+            "aob_date_end": exitDateES,
+            "aob_price": reserveInfo.aob.price,
+            "aob_purchased" : reserveInfo.aob.purchased, 
+            "status" : reserveInfo.aob.status,
+            "dog_bite" : reserveInfo.dog.bite,
+            "dog_swim" : reserveInfo.dog.swim,
+            "dog_cirugia" : reserveInfo.dog.cirugia,
+            "dog_alergia" : reserveInfo.dog.alergia,
+            "dog_food" : reserveInfo.dog.food,
+            "comments" : reserveInfo.dog.comments
+        });
+        
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
     
-    if (!celoDate) {
-        celoDate = '2022-12-18';
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        confirmationPop.classList.remove('dn');
+    
+
+        fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .then( () => {
+            confirmationPop.classList.add('dn');
+            document.querySelector('.reserve-input-container').classList.add('dn') 
+            document.querySelector('.reserve-input-container').classList.remove('flex') 
+            document.querySelector('.message-success').classList.remove('dn') 
+        })
+        .catch(error => console.log('error', error));
+
     }
-
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    var raw = JSON.stringify({
-        "owner_name": reserveInfo.owner.nombre,
-        "owner_surname": reserveInfo.owner.apellido,
-        "owner_phone": reserveInfo.owner.telefono,
-        "owner_email":reserveInfo.owner.mail,
-        "owner_dni": reserveInfo.owner.dni,
-        "dog_genre": reserveInfo.dog.genero,
-        "dog_raza": reserveInfo.dog.raza,
-        "dog_social": reserveInfo.dog.social,
-        "dog_age": reserveInfo.dog.edad,
-        "dog_name": reserveInfo.dog.nombre,
-        "dog_castrado": reserveInfo.dog.castrado,
-        "date_celo" : celoDate,
-        "dog_behaviour": reserveInfo.dog.behaviour,
-        "dog_vaccine": reserveInfo.dog.checkbox11,
-        "dog_deworming": reserveInfo.dog.checkbox12,
-        "aob_date_start": enterDateES,
-        "aob_date_end": exitDateES,
-        "aob_price": reserveInfo.aob.price,
-        "aob_purchased" : reserveInfo.aob.purchased, 
-        "status" : reserveInfo.aob.status,
-    });
-
-    var requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow'
-    };
-
-    confirmationPop.classList.remove('dn');
-  
-
-    fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
-    .then(response => response.text())
-    .then(result => console.log(result))
-    .then( () => {
-        confirmationPop.classList.add('dn');
-        document.querySelector('.reserve-input-container').classList.add('dn') 
-        document.querySelector('.reserve-input-container').classList.remove('flex') 
-        document.querySelector('.message-success').classList.remove('dn') 
-    })
-    .catch(error => console.log('error', error));
-
 })
 
 // Confirmation Message
@@ -941,8 +1231,10 @@ const dogInputConditionals = () => {
 
     castradoTrigger.addEventListener('change', (e) => {
             if (e.target.value === 'no') {
-                document.querySelector('div.celo-date').classList.remove('o-0', 'pointers-none')
+                document.querySelector('div.celo-date').classList.remove('o-0', 'pointers-none', 'dn')
             }
     })
 }
+
+
 

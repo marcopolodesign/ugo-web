@@ -598,6 +598,50 @@ border-radius: 20px;
   color: #ccc;
 }
 
+/* Page main template */
+
+@font-face {
+  font-family: 'Faro';
+  src: url('fonts/Faro-DisplayLucky.woff');
+  /* font-weight: 900; */
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('fonts/Lausanne-300.woff');
+  /* font-weight: 900; */
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
+
+.ugo-page-template {
+  background-color: var(--black);
+  color: #fff;
+}
+
+.ugo-page-template article {
+  padding-top: 160px;
+}
+
+.ugo-page-template h1 {
+  color: var(--pink);
+  font-family: 'Faro';
+
+  text-align: center;
+}
+
+.ugo-page-template p {
+  font-family: "Lausanne";
+  line-height: 1.65;
+  margin-bottom: 10px;
+}
+
 @media (max-width: 768px) {
   .column-mobile {
     flex-direction: column;
