@@ -170,18 +170,17 @@ const nextScreen = () => {
                    } else {
                     hasFilled = true;
 
+                    // Add to object
                     let attr = input.getAttribute('placeholder');
-                     let values = 
-                     {[attr] : input.value}
+                    let values = {[attr] : input.value}
                     reserveInfo.owner = {... reserveInfo.owner, ...values}
-                    input.classList.remove('incomplete')
-                
+                    input.classList.remove('incomplete')                
                    }
-
-
-                //    Hay que hacer en base al classList y si alguno tiene ponerle incomplete se pasa a hasFilled = false;
                 }
             })
+
+            // make the incompleteFields if below a reusable function
+
         incompleteFields = document.forms[0].querySelectorAll('.incomplete');
 
         if (incompleteFields.length <= 0) {
@@ -194,20 +193,26 @@ const nextScreen = () => {
            
             inputs.forEach((input,index) => {
                 if (index > 4 && index <= 9) {
-                    let value = input.value;
-                   if (!value) {
-                    input.classList.add('incomplete')
-                    // hasFilled = false;
-                   } else {
-                    hasFilled = true;
-                    // input.classList.remove('incomplete')
 
-                    let attr = input.getAttribute('placeholder');
-                     let values = {[attr] : input.value}
-                    reserveInfo.dog = {... reserveInfo.dog, ...values}
+                    let value = input.value;    
+                    if (!value) {
+                        input.classList.add('incomplete')
+                        hasFilled = false;
+                    } else {
+                        input.classList.remove('incomplete')
+                        let attr = input.getAttribute('placeholder');
+                        let values = {[attr] : input.value}
+                        reserveInfo.dog = {... reserveInfo.dog, ...values}
+                    }
+
+                   incompleteFields = document.forms[0].querySelectorAll('.incomplete');
+
+                   if (incompleteFields.length <= 0) {
+                       hasFilled = true
+                   } else {
+                       hasFilled = false;
                    }
 
-                   
                 } else if (index > 10 && index <= 12) {
                  
                     let values = {[`checkbox${index}`] : input.checked}
@@ -287,7 +292,6 @@ const nextScreen = () => {
                 reserveInfo.aob = {...reserveInfo.aob, ...values}
                 reserveInfo.aob.price = finalPricing;
             })
-         
             if (totalDays <= 0 || totalDays === undefined) {
                 // alert('seleccioná fechas')
                 hasFilled  = false;
@@ -308,21 +312,12 @@ const nextScreen = () => {
         } 
 
         if (hasFilled) {
-            // console.log(formStep)
-            // console.log(formContent.length - 1)
            if (formStep <= formContent.length - 1 ) {
             formStep++
+            hasFilled = false;
            }
-        //    console.log(formStep)
-
-            // if (formStep >= formContent.length) {
-            //     formStep --;
-            // }
             loadScreens();
             console.log(reserveInfo);
-
-      
-
         } else {
             alert('Por favor, completar todos los campos!')
         }       
@@ -785,13 +780,13 @@ const calendar = () => {
                 console.log(matchingObject);
     
                 if (matchingObject) {
-                    price = 8000;
+                    price = 4000;
                 } else {
                     price = 4000;
                 }
 
 
-                                // Get today's date
+                // Get today's date
                 const today = new Date();
 
                 // Assuming the user-selected date is stored in the variable 'selectedDate'
@@ -857,19 +852,18 @@ const discounts = () => {
             let discounted = finalPricing - finalPricing * (1 - discount/100);
             finalPricing = finalPricing * (1 - discount/100);
             
-            console.log(finalPricing);
-
-       
-         
-                // Change the validation field
-                document.querySelectorAll('.discount-container div')[0].classList.toggle('dn')
-                document.querySelectorAll('.discount-container div')[0].classList.toggle('flex')
-                document.querySelectorAll('.discount-container div')[1].classList.toggle('dn')
-                document.querySelectorAll('.discount-container div')[1].classList.toggle('flex')
+            // console.log(finalPricing);         
+            // Change the validation field
+            document.querySelectorAll('.discount-container div')[0].classList.toggle('dn')
+            document.querySelectorAll('.discount-container div')[0].classList.toggle('flex')
+            document.querySelectorAll('.discount-container div')[1].classList.toggle('dn')
+            document.querySelectorAll('.discount-container div')[1].classList.toggle('flex')
          
             // Change the description in the validation field
             document.querySelector('.discount-success > p').innerHTML = `Cupón cargado correctamente! Recibiste un ${discount}% de descuento equivalente a ${formatPrice(discounted)} sobre el total de tu reserva.`
 
+
+            document.querySelector('#discount-legend').innerHTML = cupon;
 
             // If cupon is deleted 
 
@@ -945,8 +939,6 @@ open();
 
 
 var raw;
-
-
 document.querySelectorAll('.pay-now-container').forEach(pay => {
     pay.addEventListener('click', ()=> {
 
@@ -1235,6 +1227,3 @@ const dogInputConditionals = () => {
             }
     })
 }
-
-
-

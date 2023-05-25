@@ -7,7 +7,7 @@
     <div class="discount-success dn jic pa3">
         <p class="lh-1 w-70-ns"></p>
         <div class="discount-cupon-success pv2 ph4 relative">
-            <p class="tc pink">BFF</p>
+            <p id="discount-legend" class="tc pink">BFF</p>
             <?php get_template_part('template-parts/content/close'); ?>
         </div>
     </div>
