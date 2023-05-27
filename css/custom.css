@@ -38,6 +38,39 @@ p {
   font-family: var(--mainFont);
 }
 
+
+@font-face {
+  font-family: 'Faro';
+  src: url('fonts/Faro-DisplayLucky.woff');
+  /* font-weight: 900; */
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: 'Lausanne';
+  src: url('fonts/Lausanne-300.woff');
+  /* font-weight: 900; */
+  font-style: normal;
+  font-display: swap;
+}
+
+
+h1, a p, h2, .faro {
+  font-family: 'Faro' !important;
+}
+
+
+a p {
+  text-transform: uppercase;
+}
+
+p, *::placeholder, input {
+  font-family: 'Lausanne' !important;
+}
+
+
 .ugo-pink {
   color: var(--pink);
 }

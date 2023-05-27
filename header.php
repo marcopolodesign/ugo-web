@@ -65,7 +65,7 @@
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'ugo' ); ?></a>
 
-	<?php if (is_page(array( 6, 230 ))) : ?>
+	<?php if (is_page(array( 6, 230, 415, 417 ))) : ?>
 	<header id="masthead" class="site-header flex absolute top-0 left-0 z-4 container w-100 pv3 justify-between">
 		<a class="barba-prevent" href="/">
 			<?php get_template_part('template-parts/content/hp-logo-min'); ?>

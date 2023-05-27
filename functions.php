@@ -157,6 +157,13 @@ function ugo_scripts() {
 
 	endif;
 
+	if (is_page(array(415,417))) :
+		wp_enqueue_script( 'ugo-hp', get_template_directory_uri() . '/js/hp-admin.js',  array( 'jquery' ), '0.5.2' , true);
+	endif;
+	if (is_page(array(417))) :
+		wp_enqueue_style('ugo-hp', get_template_directory_uri() . '/css/hp.css');
+	endif;
+
 
 	wp_enqueue_script( 'ugo-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
 
