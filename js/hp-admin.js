@@ -69,7 +69,15 @@ const logoutButton = document.getElementById('log-out');
 const loadUser = async () => {
     let user = localStorage.getItem('user');
     user ? user = user = JSON.parse(user) : window.location.href = '/sign-in';
-    getDogs(user);
+    console.log(user._id);
+
+    const response = await fetch(`${url}/users/${user._id}`);
+    if (response.ok) {
+        const user = await response.json();
+        getDogs(user);
+        userHeader(user);
+    }
+   
 }
 
 
@@ -79,31 +87,79 @@ const getDogs = async (user) => {
 
       // Populate the dog list 
         let dogList = document.querySelector('.pets-container-inner');
-
+        user.dogs = user.dogs.reverse()
         fillDogs(user.dogs, dogList);
   
       // Retrieve data from /reserves-hps endpoint
       const response = await fetch(`${url}/reserves-hps?[owner_email][$eq]=${user.email}`);
-      if (response.ok) {
-        const data = await response.json();
-  
+      const data = await response.json();
+        if (response.ok && !localStorage.getItem('imported-dogs')) {
         // Check if user's email matches owner_email in the response
         const reservations = data.filter((reservation) => reservation.owner_email === user.email);
         console.log('Reservations:', reservations);
-  
-        // Perform other actions with the retrieved data
-        // ...
-      } else {
-        console.log('Error retrieving data from /reserves-hps:', response.status);
+
+        document.querySelector('.p-d-content').innerHTML =  
+        `<h3 class="hp-yellow f2 faro">${reservations[0].dog_name}</h3>
+        <p class="hp-yellow">${reservations[0].dog_genre}, ${reservations[0].dog_age} ${Number(reservations[0].dog_age) > 1 ? 'años' : 'año'}</p>`
+        
+        hpReserveDog(reservations[0]);
+      } 
+      
+      if (response.ok && !localStorage.getItem('imported-reserves')) {
+        const reservations = data.filter((reservation) => reservation.owner_email === user.email);
+        console.log('Reservations:', reservations);
+
+        let reserveList = document.querySelector('.new-reserve-list');
+        
+        fillReserves(reservations, reserveList)
       }
     } else {
       console.log('User does not have dogs');
     }
 };
 
+const fillReserves = async (reserves, list) => {
+    reserves.forEach(reserve => {
+        let dogImage = reserve.avatar ? reserve.avatar.url : "/wp-content/uploads/2022/08/Rectangle-861.jpg";
+
+        const result = calculateDates(reserve.aob_date_start, reserve.aob_date_end);
+
+
+        let previousReserve = `
+            <div class="hp-reserve-item hp-br hp-teal-bg pa3 w-100 mb4">
+                <div class="hp-reserve-header flex jic">
+                    <div class="flex jic">
+                        <div class="relative reserve-img cover bg-center" style="background-image: url('${dogImage}')"></div>
+                        <h2 class="faro ml1">${reserve.dog_name}</h2>
+                        <h5 class="ttu ml3 reserve-status ph2 pv1 lausanne lh1 hp-teal" style="background-color: #4F4483; font-size: 11px; border-radius: 2px;padding-top: 5.2px;">${reserve.aob_purchased}</h5>
+                    </div>
+                    ${ (reserve.aob_purchased != 'COMPLETADO') ? 
+                     `<div class="edit-reserve">
+                        <p>Editar</p>
+                    </div>` : ''
+                    }
+                </div>
+
+                <div class="flex reserve-dates mv3">
+                    <div class="flex flex-column hp-teal">
+                        <p class="lh1">Desde</p>
+                        <h2 class="hp-teal lh1 f2">${result.startDate}—</h2>
+                    </div>
+                    <div class="flex flex-column hp-teal">
+                        <p class="lh1">Hasta</p>
+                        <h2 class="hp-teal lh1 f2">${result.endDate}</h2>
+                </div>
+                </div>
+                <p class="white">Total a pagar por ${result.diffDays} noches ${formatPrice(reserve.aob_price)}</p>
+
+            </div>
+        `
+        list.innerHTML = list.innerHTML + previousReserve;
+    })
+}
+
 const fillDogs = async (dogs, list) => {
-    dogs.forEach(dog => {   
-        
+    dogs.forEach(dog => {        
         let dogImage = dog.avatar ? dog.avatar.url : "/wp-content/uploads/2022/08/Rectangle-861.jpg"
         let newDog = `<div class="pet-container pa3 mr4 mb4">
                 <div class="pet-content pa2">
@@ -111,8 +167,8 @@ const fillDogs = async (dogs, list) => {
                         <div class="relative z-3 flex flex-column justify-between h-100">
                             <p class="tr">Editar</p>
                             <div class="pet-name">
-                                <h3 class="black f2">${dog.name}</h3>
-                                <p>${dog.sex} ${dog.age} ${dog.age < 1 ? 'años' : 'año'}</p>flex-wrap
+                                <h3 class="black f2 faro">${dog.name}</h3>
+                                <p>${dog.sex} ${dog.age} ${Number(dog.age) > 1 ? 'años' : 'año'}</p>
                             </div>
                         </div>
                         <div class="absolute-cover bg-gradient z-2"></div>
@@ -531,18 +587,183 @@ const newDogInputs = () => {
     })
 }
 
+const userHeader = (user) => {
+    let header = document.querySelector('header');
+    // Delete the Reserve CTA
+    let newHeaderLinks = document.createElement('div');
+    newHeaderLinks.classList.add('new-header-links' , 'flex' , 'jic');
+
+    // Create the userName element and add it to the header
+    let userName = document.createElement('p');
+    userName.innerHTML = `Hola ${user.first_name}!`;
+    userName.classList.add('mr3', 'fw6');
+    newHeaderLinks.appendChild(userName);
+
+    // Create the logout button and add it to the header
+    
+    let logoutButton = document.createElement('p');
+    logoutButton.innerHTML = 'Cerrar sesión';
+    logoutButton.classList.add('no-deco', 'pointer', 'ml-2');
+    newHeaderLinks.appendChild(logoutButton);
+
+    logoutButton.addEventListener('click', logOut);
+
+    header.appendChild(newHeaderLinks);
+
+    header.querySelector('a.no-deco').innerHTML = ""
+}
 
 
 function capitalizeFirstLetter(str) {
     return str.replace(/^\w/, (c) => c.toUpperCase());
   }
 
+const hpReserveDog= (dog) => {
+
+// Open pop up
+document.querySelector('.previous-dogs-container').classList.remove('dn');
+
+document.querySelector('.confirm-new-pd').addEventListener('click', () => {
+    document.querySelector('.new-dog-pop').classList.remove('dn');
+    document.querySelector('.new-dog-pop').classList.add('flex');
+
+    // Populate the inputs
+    document.querySelector('.input-text.nombre').value = dog.dog_name;
+    document.querySelector('.input-text.edad').value = dog.dog_age;
+    document.querySelector('.input-text.raza').value = dog.dog_raza;
+    // Selects
+    document.querySelector('select.Género').prepend(document.querySelector(`option[value="${dog.dog_genre}"]`))
+    document.querySelector(`option[value="${dog.dog_genre}"]`).selected = true;
+    document.querySelector('select.Género').setAttribute('placeholder',dog.dog_genre.toUpperCase());
+    
+    let castradoInput = document.querySelector('select.castrado');
+    castradoInput.querySelector(`option[value="${dog.dog_castrado}"]`).selected = true;
+
+    if (dog.dog_castrado === 'yes') {         
+        castradoInput.setAttribute('placeholder', "Si");
+    } else {
+        castradoInput.setAttribute('placeholder', 'No')
+    }
+
+    // Check inputs
+    if (dog.dog_deworming === 'true') {
+        document.querySelectorAll('.input-checkbox')[0].checked = true
+    }
+
+    if (dog.dog_vaccine === 'true') {
+        document.querySelectorAll('.input-checkbox')[1].checked = true
+    } 
+    
+    // Textareas
+
+    document.querySelectorAll('.dog-textarea input')[0].value = dog.dog_cirugia
+    document.querySelectorAll('.dog-textarea input')[1].value = dog.dog_alergia
+
+    let socialLevels = document.querySelectorAll('div.social-level > div > div ')
+    // Social Levels
+    let foundIndex = -1;
+    socialLevels.forEach((div, index) => {
+        const p = div.querySelector('p');
+        if (p && p.innerText === dog.dog_social) {
+            foundIndex = index;
+            return; // Exit the loop if a match is found
+        }
+
+        });
+    socialLevels[foundIndex].classList.add('selected-social')
+
+    let searchWords = [`${dog.dog_behaviour}`, `${dog.dog_bite}`, `${dog.dog_swim}`]
+    // AOB
+    let behaviourContainers = document.querySelectorAll('.behaviour-container');
+
+    behaviourContainers.forEach((bContainer, index) => {
+        bContainer.querySelectorAll('h4').forEach(h => {
+            console.log(h.innerText)
+            const matchedWord = searchWords.find(word => h.innerText.toLowerCase().includes(word));
+            console.log(matchedWord)
+            if (matchedWord) {
+                h.classList.add('selected')
+            }
+        })
+    })
+
+    if (dog.dog_bite) {
+        document.querySelectorAll('.bite-container h4')[0].classList.add('selected')
+    } else {
+        document.querySelectorAll('.bite-container h4')[1].classList.add('selected')
+    }
+
+    if (dog.dog_swim) {
+        document.querySelectorAll('.swim-container h4')[0].classList.add('selected')
+    } else {
+        document.querySelectorAll('.swim-container h4')[1].classList.add('selected')
+    }
+    
+    document.querySelectorAll('.input-textarea')[2].value = dog.dog_food
+    document.querySelectorAll('.input-textarea')[3].value = dog.comments
+    
+})
+
+// Close the pop up
+document.querySelector('.close-pdc').addEventListener('click', () => {
+    document.querySelector('.previous-dogs-container').classList.add('dn');
+    localStorage.setItem('imported-dogs', true)
+})
+}
+
+const addReserve = () => {
+    formStep = 2;
+    document.querySelector('.reserve-container').classList.remove('o-0', 'pointers-none');
+    document.querySelector('.reserve-bg').classList.remove('dn'), 'pointers-none'
+}
+
+const calculateDates = (startDate, endDate) => {
+    const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
+
+  // Convert the English-formatted dates to Date objects
+  const startDateObj = new Date(startDate);
+  const endDateObj = new Date(endDate);
+
+  // Calculate the difference in days
+  const diffDays = Math.round(Math.abs((endDateObj - startDateObj) / oneDay));
+
+  // Format the dates in Spanish (DD/MM/YYYY)
+  const formattedStartDate = formatDate(startDateObj);
+  const formattedEndDate = formatDate(endDateObj);
+
+  // Return the formatted dates and the difference in days
+  return {
+    startDate: formattedStartDate,
+    endDate: formattedEndDate,
+    diffDays: diffDays
+  };
+}
+
+function formatDate(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${day}.${month}`;
+}
+
+const formatPrice = (number) => {
+    let ars = Intl.NumberFormat("es-AR", {
+        style: "currency",
+        currency: "ARS",
+        decimal: 0,
+        maximumSignificantDigits: 3
+    });
+
+    return (ars.format(number))
+}
+
+
 if (window.location.pathname === '/portal/') {
     console.log('Loading user data...');
     loadUser();
     newDogInputs();
-
-    logoutButton.addEventListener('click', logOut);
+    document.querySelector('.new-reserve').addEventListener('click', addReserve)
 }
 
 if (window.location.pathname === '/sign-in/') { 

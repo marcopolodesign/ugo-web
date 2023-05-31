@@ -11,6 +11,7 @@
   --hp-blue: #2897D0;
   --hp-yellow: #ffffd9;
   --hp-teal: #9C90D0;
+  --hp-brown: #B46200;
   --mainFont: 'VIM SM';
   --mainGradient: linear-gradient(180deg, #f4b5cd 27.35%, #ff619d 84.4%);
   /* border-radius: 0px 0px 40px 40px; */
@@ -101,6 +102,14 @@ p, *::placeholder, input {
 
 .hp-teal-bg {
   background-color: var(--hp-teal);
+}
+
+.hp-brown {
+  color: var(--hp-brown)
+}
+
+.hp-dark-brown-bg {
+  background-color: #B46200;
 }
 
 .hp-teal {

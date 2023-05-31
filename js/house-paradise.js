@@ -745,7 +745,7 @@ const calendar = () => {
                     document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
                     document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
         
-                    // document.querySelector('span#final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
+                    document.querySelector('span#final-number').innerHTML = (price * totalDays) + transportFare;
                     document.querySelector('span#final-number-upfront').innerHTML = formatPrice(((price * totalDays) + transportFare) * 0.2);
                     
         
@@ -1005,31 +1005,42 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
 
         fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
         .then(response => response.json())
-        .then( (result)=> {
-            console.log(result)
-            fetch(
-                'https://u-go-backend-deveop-lc9t2.ondigitalocean.app/hp-payments/createpreference',
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    title: mpTitle,
-                    description: 'test desc',
-                    price: reserveInfo.aob.price,
-                    quantity: 1,
-                    owner_name: reserveInfo.owner.nombre,
-                    owner_surname: reserveInfo.owner.apellido,
-                    owner_email: reserveInfo.owner.mail,
-                    reserve: result._id
-                  }),
-                }
-              ).then(response => response.json())
-              .then(result => window.location.replace(result.init_point))
-    
+        .then(result => {
+          console.log(result);
+          fetch(
+            'https://u-go-backend-deveop-lc9t2.ondigitalocean.app/hp-payments/createpreference',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                title: mpTitle,
+                description: 'test desc',
+                price: reserveInfo.aob.price,
+                quantity: 1,
+                owner_name: reserveInfo.owner.nombre,
+                owner_surname: reserveInfo.owner.apellido,
+                owner_email: reserveInfo.owner.mail,
+                reserve: result._id
+              }),
+            }
+          )
+          .then(response => response.json())
+          .then(result => {
+            // Handle the result of the second POST request
+            console.log(result);
+            // window.location.replace(result.init_point);
+          })
+          .catch(error => {
+            // Handle the error of the second POST request
+            console.log('Error performing the second POST request:', error);
+          });
         })
-        .catch(error => console.log('error', error));
+        .catch(error => {
+          // Handle the error of the first POST request
+          console.log('Error performing the first POST request:', error);
+        });
     })
 })
 
