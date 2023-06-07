@@ -1,18 +1,16 @@
-<?php get_header(); ?>
+<?php get_header('hp'); ?>
 
 <main id="main" data-barba="container" data-barba-namespace="portal" class="portal no-mt ugo-pink-bg">
+<?php $isAuth = true;  ?>
 
 <script>
     const user = JSON.parse(localStorage.getItem('user'));
     console.log(user);
-    // if (user) {
-    //     <?php $isAuth = true; ?>
-    // } else {
-    //     window.location.href = '/sign-in';
-    // }
 </script>
 
-    <div class="flex justify-between min-h-100-vh pt6 container flex-wrap">
+
+
+    <div class="flex justify-between pv6 container flex-wrap">
        <div class="pets-container w-50-ns">
             <div class="pets-header mb4 flex jic overflow-hidden">
                 <h2 class="black">Mis mascotas</h2>
@@ -51,11 +49,9 @@
        <div class="reservas-container w-40-ns">
           <h2 class="black mb4">Mis reservas</h2>
 
-            <div class="flex flex-wrap mb4 new-reserve-list">
+            <div class="flex flex-wrap mb4 new-reserve-list"></div>
 
-            </div>
-
-            <div class="new-reserve pa3 flex">
+            <div class="new-reserve-trigger pa3 flex pointer">
                 <div class="m-auto flex items-center justify-center">
                     <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect x="0.448242" y="0.544189" width="54.1318" height="54.1305" rx="27.0653" fill="#4F4483"/>
@@ -73,6 +69,11 @@
    
     </div>
 
+    <div class="old-reservations container">
+        <h3 class="black mb4">Reservas pasadas</h2>
+        <div class="old-reservations-inner flex flex-wrap"></div>
+    </div>
+
 
     <div class="new-dog-pop fixed flex-column ph6 pv5 dn">
         <div class="new-dog-content m-auto pa5 w-100">
@@ -83,6 +84,44 @@
 
     </div>
 
+
+    <div class="new-reserve-pop fixed ph6 pv5 dn flex-column">
+        <div class="reserve-content m-auto pa5 w-100">
+            <div class="reserve-header flex items-center mb5">
+                <h2 id="reserve-title-ph"class=" white f2 w-40-ns">Para quién es la reserva?</h2>
+                <div class="breadcrumbs flex">
+                    <p id="summary-dog-name"><?php echo $dogName; ?></p>
+                    <div class="flex">
+                        <p><span id="summary-start-date"></span> — <span id="summary-end-date"></span></p>
+                    </div>
+                    <p id="summary-nights"></p>
+                    <p id="summary-price"></p>
+                </div>
+            </div>
+
+            <div class="reserve-steps-container">
+                <div class="step-1"></div>
+                <div class="step-2 dn">
+                    <?php get_template_part('template-parts/portal/step-2'); ?>
+                    <?php get_template_part('template-parts/reserve-hp/discount'); ?>
+
+                </div>
+
+                <div class="step-3 dn">
+                    <?php get_template_part('template-parts/reserve-hp/step-4'); ?>
+                </div>
+            </div>
+        </div>
+
+        <?php get_template_part('template-parts/reserve-hp/mail-success'); ?>
+
+        <div class="advance-step ttu pointer"><h2>Siguiente</h2></div>
+
+    </div>
+
+    <div class="w-100 h-100 dn fixed top-0 left-0 confirmation-await"></div>
+
+   
 
 <style>
 
@@ -138,12 +177,12 @@
         margin-bottom: 10px;
     }
 
-    .new-reserve {
+    .new-reserve-trigger {
         background-color: var(--hp-teal);
         border-radius:8px;
     }
 
-    .new-dog-pop {
+    .new-dog-pop, .new-reserve-pop {
         background-color: rgba(0,0,0,0.75);
         width: 100vw;
         height: 100vh;
@@ -153,7 +192,7 @@
         z-index: 100;
     }
 
-    .new-dog-content {
+    .new-dog-content, .reserve-content {
         background-color: #000;
         border-radius: 8px;
 
@@ -165,7 +204,7 @@
         margin-bottom: 20px;
     }
 
-    .submit-new-dog h2 {
+    .submit-new-dog h2, .advance-step h2 {
         width: 100%;
         background-color: var(--pink);
         padding: 20px 15px;
@@ -177,18 +216,55 @@
     margin-bottom: 30px !important;
 }
 
-.reserve-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 100px;
-    border: 1px solid #fff;
+    .reserve-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 100px;
+        border: 1px solid #fff;
 
+    }
+
+    .reserve-dates * {
+        color: #4F4483;
+    }
+
+    .reserve-content .transport-caption {
+        margin-bottom: 30px;
+    }
+
+    .reserve-content .breadcrumbs p {
+        padding: 10px 20px;
+        border-radius: 100px;
+        background-color: var(--pink);
+        color: #C2537D;
+        margin-left: 10px;
+    }
+
+    .reserve-steps-container .step-3 .discount-container {
+        display: none;
+    }
+
+    .reserve-steps-container .form-final h2 {
+        margin-bottom: 20px;
+    }
+
+    .new-reserve-pop .message-success.active {
+        background-color: #000;
+        border-radius:8px;
+        width:100%;
+        height:100%;
+        margin:auto;
+        display:flex;
+        justify-content:center;
+    }
+
+
+@media(max-width: 1200px) {
+    .ph6 {
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
+    }
 }
-
-.reserve-dates * {
-    color: #4F4483;
-}
-
 </style>
 
 </main><!-- #main & End Barba Container-->

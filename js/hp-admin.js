@@ -1,4 +1,5 @@
-let url = 'http://localhost:1337';
+// let url = 'http://localhost:1337';
+let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
 
 async function createAccount(email, password) {
     const response = await fetch(`${url}/users`, {
@@ -80,43 +81,64 @@ const loadUser = async () => {
    
 }
 
-
 const getDogs = async (user) => {
     if (user && user.dogs) {
-      console.log('User has dogs:', user.dogs);
+    console.log(user)
+      
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow', 
+      
+      };
+
+      let reserves  = await fetch (`${url}/reserves-hps?[owner][$eq]=${user.id}&_sort=aob_date_start:desc`, requestOptions).then(response => response.json())
+      console.log('User has reserves:',reserves);
 
       // Populate the dog list 
         let dogList = document.querySelector('.pets-container-inner');
         user.dogs = user.dogs.reverse()
-        fillDogs(user.dogs, dogList);
-  
-      // Retrieve data from /reserves-hps endpoint
-      const response = await fetch(`${url}/reserves-hps?[owner_email][$eq]=${user.email}`);
-      const data = await response.json();
-        if (response.ok && !localStorage.getItem('imported-dogs')) {
-        // Check if user's email matches owner_email in the response
-        const reservations = data.filter((reservation) => reservation.owner_email === user.email);
-        console.log('Reservations:', reservations);
-
-        document.querySelector('.p-d-content').innerHTML =  
-        `<h3 class="hp-yellow f2 faro">${reservations[0].dog_name}</h3>
-        <p class="hp-yellow">${reservations[0].dog_genre}, ${reservations[0].dog_age} ${Number(reservations[0].dog_age) > 1 ? 'años' : 'año'}</p>`
-        
-        hpReserveDog(reservations[0]);
-      } 
-      
-      if (response.ok && !localStorage.getItem('imported-reserves')) {
-        const reservations = data.filter((reservation) => reservation.owner_email === user.email);
-        console.log('Reservations:', reservations);
 
         let reserveList = document.querySelector('.new-reserve-list');
-        
-        fillReserves(reservations, reserveList)
-      }
+
+        fillDogs(user.dogs, dogList);
+        fillReserves(reserves, reserveList);
+
+        var reserveOptions = {
+            body: JSON.stringify({
+                _sort: 'date:asc'
+              })
+        }
+
+        // Retrieve data from /reserves-hps endpoint
+        let response = await fetch(`${url}/reserves-hps?[owner_email][$eq]=${user.email}`);
+        const data = await response.json();
+        if (response.ok && !localStorage.getItem('imported-dogs')) {
+            // Check if user's email matches owner_email in the response
+            const reservations = data.filter((reservation) => reservation.owner_email === user.email);
+            console.log('Reservations:', reservations);
+
+            document.querySelector('.p-d-content').innerHTML =  
+            `<h3 class="hp-yellow f2 faro">${reservations[0].dog_name}</h3>
+            <p class="hp-yellow">${reservations[0].dog_genre}, ${reservations[0].dog_age} ${Number(reservations[0].dog_age) > 1 ? 'años' : 'año'}</p>`
+            
+            hpReserveDog(reservations[0]);
+      } 
+      
+        // Get old Reserves
+        if (response.ok && !localStorage.getItem('imported-reserves')) {
+            const reservations = data.filter((reservation) => reservation.owner_email === user.email);
+            // console.log('Reservations:', reservations);
+
+        //    await reserves.then(fillReserves(reservations, reserveList));    
+        }
+
+   
     } else {
       console.log('User does not have dogs');
     }
 };
+
+let addedStartDates = []; // Array to store the added start dates
 
 const fillReserves = async (reserves, list) => {
     reserves.forEach(reserve => {
@@ -124,13 +146,13 @@ const fillReserves = async (reserves, list) => {
 
         const result = calculateDates(reserve.aob_date_start, reserve.aob_date_end);
 
-
+        if (!addedStartDates.includes(result.startDate)) {
         let previousReserve = `
             <div class="hp-reserve-item hp-br hp-teal-bg pa3 w-100 mb4">
                 <div class="hp-reserve-header flex jic">
                     <div class="flex jic">
                         <div class="relative reserve-img cover bg-center" style="background-image: url('${dogImage}')"></div>
-                        <h2 class="faro ml1">${reserve.dog_name}</h2>
+                        <h2 class="faro ml1">${reserve.dog.name ? reserve.dog.name : reserve.dog_name}</h2>
                         <h5 class="ttu ml3 reserve-status ph2 pv1 lausanne lh1 hp-teal" style="background-color: #4F4483; font-size: 11px; border-radius: 2px;padding-top: 5.2px;">${reserve.aob_purchased}</h5>
                     </div>
                     ${ (reserve.aob_purchased != 'COMPLETADO') ? 
@@ -154,7 +176,17 @@ const fillReserves = async (reserves, list) => {
 
             </div>
         `
-        list.innerHTML = list.innerHTML + previousReserve;
+        addedStartDates.push(result.startDate);
+
+        // Make an if statement checking if the reserve.aob_date_end is in the past
+        console.log(reserve.aob_date_end + " " + new Date())
+        if (new Date(reserve.aob_date_end) < new Date()) {
+            document.querySelector('.old-reservations-inner').innerHTML = document.querySelector('.old-reservations-inner').innerHTML + previousReserve;
+        } else {
+            list.innerHTML = list.innerHTML + previousReserve;
+        }
+        }
+
     })
 }
 
@@ -711,32 +743,26 @@ document.querySelector('.close-pdc').addEventListener('click', () => {
 })
 }
 
-const addReserve = () => {
-    formStep = 2;
-    document.querySelector('.reserve-container').classList.remove('o-0', 'pointers-none');
-    document.querySelector('.reserve-bg').classList.remove('dn'), 'pointers-none'
-}
-
 const calculateDates = (startDate, endDate) => {
     const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
 
-  // Convert the English-formatted dates to Date objects
-  const startDateObj = new Date(startDate);
-  const endDateObj = new Date(endDate);
+    // Convert the English-formatted dates to Date objects
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
 
-  // Calculate the difference in days
-  const diffDays = Math.round(Math.abs((endDateObj - startDateObj) / oneDay));
+    // Calculate the difference in days
+    const diffDays = Math.round(Math.abs((endDateObj - startDateObj) / oneDay));
 
-  // Format the dates in Spanish (DD/MM/YYYY)
-  const formattedStartDate = formatDate(startDateObj);
-  const formattedEndDate = formatDate(endDateObj);
+    // Format the dates in Spanish (DD/MM/YYYY)
+    const formattedStartDate = formatDate(startDateObj);
+    const formattedEndDate = formatDate(endDateObj);
 
-  // Return the formatted dates and the difference in days
-  return {
-    startDate: formattedStartDate,
-    endDate: formattedEndDate,
-    diffDays: diffDays
-  };
+    // Return the formatted dates and the difference in days
+    return {
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        diffDays: diffDays
+    };
 }
 
 function formatDate(date) {
@@ -758,12 +784,372 @@ const formatPrice = (number) => {
     return (ars.format(number))
 }
 
+let enterDateES;
+let exitDateES;
+
+let price;
+let finalPricing;
+
+
+const newReserve = () => { 
+    let newReserve = document.querySelector('.new-reserve-pop');
+    newReserve.classList.remove('dn');
+    newReserve.classList.add('flex');
+    let transportFare = 6000;
+
+    const calendar = () => {
+    
+        let date = new Date();
+    
+        const elem = document.getElementById('range');
+        const dateRangePicker = new DateRangePicker(elem, {
+            datesDisabled: [0,2,4,6],
+            daysOfWeekHighlighted: [1,3,5],
+            language: "es",
+            startView: 0,
+            todayHighlight: true,
+            weekStart: 1,
+            minDate: date,
+            clearBtn: true,
+            format: ("dd/mm/yyyy")
+        });
+    
+        let calInputs = document.querySelectorAll('#range input');
+    
+        let enterDate;
+        let exitDate;
+    
+        // getSheet();
+        // console.log(HPavailability)
+     
+        calInputs.forEach(input => {
+            input.addEventListener('changeDate', function (e, details) { 
+                input.classList.remove('incomplete');
+    
+                // Grab initial dates
+                enterDate = document.querySelectorAll('#range input')[0].value
+                document.querySelector('#summary-start-date').innerHTML = enterDate;
+                exitDate = document.querySelectorAll('#range input')[1].value
+                document.querySelector('#summary-end-date').innerHTML = exitDate;
+    
+                // Translate to Spanish enterDate
+                enterDateES = enterDate.split('/');
+                enterDateES = enterDateES[1] + "/" + enterDateES[0] + '/' + enterDateES[2];
+                enterDateES =  new Date(enterDateES);
+    
+    
+                // Translate to Spanish exitDate
+                exitDateES = exitDate.split('/');
+                exitDateES = exitDateES[1] + "/" + exitDateES[0] + '/' + exitDateES[2];
+                exitDateES =  new Date(exitDateES);
+    
+                console.log(exitDateES)
+    
+                if (enterDate != exitDate) {
+                    let difference = exitDateES.getTime() - enterDateES.getTime();
+                    totalDays = Math.ceil(difference / (1000 * 3600 * 24));
+                    
+                    // console.log(totalDays + ' days in House Paradise  ');
+                    
+                    
+                    const showPrice = (price) => {
+                        document.querySelector('.daily-price').innerHTML = formatPrice(price);
+        
+                        document.querySelector('.title-nights').innerHTML = `${formatPrice(price)} por ${totalDays} noches`;
+                        document.querySelector('.price-nights').innerHTML = formatPrice(price * totalDays);
+                        document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
+                        document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
+            
+                        document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
+                        document.querySelector('span#final-number-upfront').innerHTML = formatPrice(((price * totalDays) + transportFare) * 0.2);
+                        
+            
+                        finalPricing = (price * totalDays) + transportFare;
+                        document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
+                        document.querySelector('#summary-nights').innerHTML = ` ${totalDays} noches`;
+                        document.querySelector('#summary-price').innerHTML = formatPrice((price * totalDays) + transportFare);
+
+            
+                        allDays = totalDays;
+                    }
+        
+                    // const matchingObject = HPavailability.find(item => item.date.toString() === exitDate);
+    
+    
+                    // Chequear cuales noches son 
+    
+    
+                    function getDateRange(startDate, endDate) {
+                        const dates = [];
+                        let currentDate = new Date(startDate);
+                      
+                        while (currentDate <= endDate) {
+                          dates.push(new Date(currentDate));
+                          currentDate.setDate(currentDate.getDate() + 1);
+                        }
+                      
+                        return dates;
+                      }
+    
+                      const dateRange = getDateRange(enterDateES, exitDateES);
+                        console.log(dateRange);
+
+                        price = 5000;
+        
+
+                    // Get today's date
+                    const today = new Date();
+    
+                    // Assuming the user-selected date is stored in the variable 'selectedDate'
+                    // const selectedDate = ; // Replace with your actual variable
+    
+                    // Calculate the difference in days
+                    const timeDifference = enterDateES.getTime() - today.getTime();
+                    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    
+    
+                    console.log(daysDifference)
+        
+                    showPrice(price)
+                }
+    
+              
+    
+                });
+                
+        })
+    
+        let isOpen = false;
+        document.querySelectorAll('.datepicker').forEach((picker, index) => {
+            let dates = picker.querySelectorAll('.datepicker-grid')
+            dates.forEach(d => {
+                d.addEventListener('click', ()=> {
+                    if (isOpen) {
+                        picker.classList.remove('active');
+                        picker.style.left = '';
+                        document.querySelectorAll('#range input')[index].classList.remove('in-edit')
+    
+                    } else {
+                        picker.style.left = '315.102px';
+                    }
+                    isOpen = !isOpen;
+                })
+            })
+        })
+
+    
+    }
+
+    let formReserveStep = 0;
+    if (user.dogs.length > 0) {
+        formReserveStep = 1;
+        document.querySelector('#summary-dog-name').innerHTML = user.dogs[0].name
+    }
+
+    let reserveSteps = document.querySelectorAll('.reserve-steps-container > div');
+
+    const stepsReserve = () => {
+        // reserveSteps[formReserveStep].classList.remove('dn');
+        reserveSteps.forEach((s,index) => {
+            if (index === formReserveStep) {
+                s.classList.remove('dn');
+                if (reserveSteps === 1) {
+                    s.classList.add('flex')
+                }
+            } else {
+                s.classList.add('dn');
+                s.classList.remove('flex')
+            }
+        })
+
+    }
+    calendar();
+    stepsReserve();
+
+   
+    const discounts = () => {
+        let promotions = [
+            {name: 'MEJORESAMIGOS', discount : 15},
+            {name: 'AMIGUIS', discount : 15},
+            {name: 'PARAISO', discount : 20}
+        ]
+    
+        let verify = document.querySelector('#discount-verify');
+    
+        verify.addEventListener('click', ()=> {
+            let cupon = document.querySelector('.discount-code input').value.toUpperCase();
+    
+            const matchingProduct = promotions.find(product => product.name === cupon);
+    
+            if (matchingProduct) {
+                let discount = matchingProduct.discount;
+                // alert(`tenes un descuento de ${matchingProduct.discount}`)
+    
+                let discounted = finalPricing - finalPricing * (1 - discount/100);
+                finalPricing = finalPricing * (1 - discount/100);
+                
+                // console.log(finalPricing);         
+                // Change the validation field
+                document.querySelectorAll('.discount-container div')[0].classList.toggle('dn')
+                document.querySelectorAll('.discount-container div')[0].classList.toggle('flex')
+                document.querySelectorAll('.discount-container div')[1].classList.toggle('dn')
+                document.querySelectorAll('.discount-container div')[1].classList.toggle('flex')
+             
+                // Change the description in the validation field
+                document.querySelector('.discount-success > p').innerHTML = `Cupón cargado correctamente! Recibiste un ${discount}% de descuento equivalente a ${formatPrice(discounted)} sobre el total de tu reserva.`
+    
+    
+                document.querySelector('#discount-legend').innerHTML = cupon;
+    
+                // If cupon is deleted 
+    
+                document.querySelector('.discount-cupon-success svg').addEventListener('click', ()=> {
+                    changeDiscountFields();
+                })
+    
+                
+              
+                // Change the final number 
+                document.querySelector('#discount-final-number').innerHTML = formatPrice(finalPricing);
+                document.querySelector('#grand-total').style.textDecoration = 'line-through';
+    
+    
+                // Change for the reservation
+                // reserveInfo.aob.price = finalPricing
+    
+                // Make the final number visibile
+                document.querySelector('#discount-final-number').classList.remove('dn');
+                document.querySelector('.discount-container').classList.remove('dn')
+                document.querySelector('.discount-container').classList.add('flex')
+                // Change the 10% in the summary
+                document.querySelector('.discount-percentage').innerHTML = matchingProduct.discount + "%" ;
+
+
+            } else {
+                document.querySelector('.discount-code input').style.border = "1px solid red";
+            }
+    
+            console.log(cupon)
+        })
+    }
+    
+    discounts();
+
+
+    let nextStep = document.querySelector('.advance-step');
+
+    let reserveTitle = {
+        0 : 'Para quién es la reserva?',
+        1 : 'Elegí las fechas',
+        2 : 'Resumen de tu reserva',
+    }
+
+    nextStep.addEventListener('click', () => {
+        document.querySelector('#reserve-title-ph').innerHTML = reserveTitle[formReserveStep];
+
+        if (formReserveStep <= reserveSteps.length - 1 ) {
+            formReserveStep++;
+            hasFilled = false;
+
+
+            if (formReserveStep <= 2) {
+                nextStep.classList.add('dn');
+            } else {
+                nextStep.classList.remove('dn');
+            }
+           }
+
+        stepsReserve();
+    })
+
+    document.querySelectorAll('.btn-prev-hp').forEach(btn => {
+        document.querySelector('#reserve-title-ph').innerHTML = reserveTitle[formReserveStep];
+
+        btn.addEventListener('click', ()=> {
+            formReserveStep--;
+            stepsReserve();
+            nextStep.classList.remove('dn');
+        })
+
+    })
+
+}
+
+let reserveInfo = {};
+
+const sendReserve = async () => {
+    document.querySelector('.mail-now-container').addEventListener('click', ()=> {
+
+        let checked = false;
+        let terms = document.querySelector('input.terms');
+        checked = terms.checked;
+
+     
+
+        let selectedDog = user.dogs[0].id;
+    
+        if (!checked){ 
+            alert('por favor, confirmá nuestros términos y condiciones')
+        } else {
+            // reserveInfo.aob.purchased = "consulta";
+            // reserveInfo.aob.status = "Pendiente de pago";
+    
+        
+            var raw = JSON.stringify({
+                "owner" : user.id,
+                "dog" : selectedDog,
+                "aob_date_start": enterDateES,
+                "aob_date_end": exitDateES,
+                "aob_price": finalPricing,
+                "aob_purchased" : 'consulta', 
+                "status" : "Pendiente de pago",
+            });
+            
+    
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+    
+        
+            var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+            };
+
+
+            let confirmationPop = document.querySelector('.confirmation-await');
+            confirmationPop.classList.remove('dn');
+        
+    
+            fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
+            .then(response => response.text())
+            .then(result => console.log(result))
+            .then( () => {
+                confirmationPop.classList.add('dn');
+                document.querySelector('.reserve-content').classList.add('dn') 
+                document.querySelector('.reserve-content').classList.remove('flex') 
+                document.querySelector('.message-success').classList.remove('dn') ;
+                document.querySelector('.message-success').classList.add('active') ;
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 8000)
+            })
+            .catch(error => console.log('error', error));
+    
+        }
+    })
+}
+
 
 if (window.location.pathname === '/portal/') {
     console.log('Loading user data...');
     loadUser();
     newDogInputs();
-    document.querySelector('.new-reserve').addEventListener('click', addReserve)
+    sendReserve();
+
+    document.querySelector('.new-reserve-trigger').addEventListener('click', newReserve)
 }
 
 if (window.location.pathname === '/sign-in/') { 

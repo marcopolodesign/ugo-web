@@ -1,4 +1,4 @@
-<?php get_header(); ?>
+<?php get_header('hp'); ?>
 
 <main id="main" data-barba="container" data-barba-namespace="sign-in" class="sign-in no-mt ugo-pink-bg">
 

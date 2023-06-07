@@ -157,11 +157,13 @@ function ugo_scripts() {
 
 	endif;
 
-	if (is_page(array(415,417))) :
+	if (is_page(array(415,417, 'sign-in', 'portal'))) :
 		wp_enqueue_script( 'ugo-hp', get_template_directory_uri() . '/js/hp-admin.js',  array( 'jquery' ), '0.5.2' , true);
 	endif;
-	if (is_page(array(417))) :
+	if (is_page(array('portal'))) :
 		wp_enqueue_style('ugo-hp', get_template_directory_uri() . '/css/hp.css');
+		wp_enqueue_style('ugo-cal', get_template_directory_uri() . '/css/datepicker.min.css');
+		wp_enqueue_script( 'ugo-date-picker', get_template_directory_uri() . '/js/datepicker-full.min.js',  array( 'jquery' ), '0.5.2' , true);
 	endif;
 
 

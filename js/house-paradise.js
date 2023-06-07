@@ -8,7 +8,7 @@ document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-web/css/hp.css\" />"    
 );
 
-
+console.log('hp')
 
 
 let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app/';
@@ -643,7 +643,7 @@ const completeSummary = (source,target) => {
 let enterDateES;
 let exitDateES
 let finalPricing;
-let transportFare = 4000;
+let transportFare = 6000;
 let price;
 
 
@@ -780,9 +780,9 @@ const calendar = () => {
                 console.log(matchingObject);
     
                 if (matchingObject) {
-                    price = 4000;
+                    price = 5000;
                 } else {
-                    price = 4000;
+                    price = 5000;
                 }
 
 
@@ -827,9 +827,8 @@ const calendar = () => {
     })
 }
 
-
-
 calendar();
+
 
 const discounts = () => {
     let promotions = [
@@ -839,6 +838,7 @@ const discounts = () => {
     ]
 
     let verify = document.querySelector('#discount-verify');
+    console.log(verify)
 
     verify.addEventListener('click', ()=> {
         let cupon = document.querySelector('.discount-code input').value.toUpperCase();
@@ -1006,7 +1006,7 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
         fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
         .then(response => response.json())
         .then(result => {
-          console.log(result);
+          console.log(result.json());
           fetch(
             'https://u-go-backend-deveop-lc9t2.ondigitalocean.app/hp-payments/createpreference',
             {
@@ -1089,7 +1089,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "dog_cirugia" : reserveInfo.dog.cirugia,
             "dog_alergia" : reserveInfo.dog.alergia,
             "dog_food" : reserveInfo.dog.food,
-            "comments" : reserveInfo.dog.comments
+            "dog_comments" : reserveInfo.dog.comments
         });
         
 
