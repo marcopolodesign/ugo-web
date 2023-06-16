@@ -77,6 +77,7 @@ const loadUser = async () => {
         const user = await response.json();
         getDogs(user);
         userHeader(user);
+        userInfo(user);
     }
    
 }
@@ -91,7 +92,7 @@ const getDogs = async (user) => {
       
       };
 
-      let reserves  = await fetch (`${url}/reserves-hps?[owner][$eq]=${user.id}&_sort=aob_date_start:desc`, requestOptions).then(response => response.json())
+      let reserves  = await fetch (`${url}/reserves-hps?[owner][$eq]=${user.id}&_sort=aob_date_start:asc`, requestOptions).then(response => response.json())
       console.log('User has reserves:',reserves);
 
       // Populate the dog list 
@@ -129,7 +130,7 @@ const getDogs = async (user) => {
             const reservations = data.filter((reservation) => reservation.owner_email === user.email);
             // console.log('Reservations:', reservations);
 
-        //    await reserves.then(fillReserves(reservations, reserveList));    
+           (fillReserves(reservations, reserveList));    
         }
 
    
@@ -145,6 +146,10 @@ const fillReserves = async (reserves, list) => {
         let dogImage = reserve.avatar ? reserve.avatar.url : "/wp-content/uploads/2022/08/Rectangle-861.jpg";
 
         const result = calculateDates(reserve.aob_date_start, reserve.aob_date_end);
+      
+
+        // let dogName = reserve.dog.name
+        let dogName = reserve.dog_name
 
         if (!addedStartDates.includes(result.startDate)) {
         let previousReserve = `
@@ -152,7 +157,7 @@ const fillReserves = async (reserves, list) => {
                 <div class="hp-reserve-header flex jic">
                     <div class="flex jic">
                         <div class="relative reserve-img cover bg-center" style="background-image: url('${dogImage}')"></div>
-                        <h2 class="faro ml1">${reserve.dog.name ? reserve.dog.name : reserve.dog_name}</h2>
+                        <h2 class="faro ml1">${dogName}</h2>
                         <h5 class="ttu ml3 reserve-status ph2 pv1 lausanne lh1 hp-teal" style="background-color: #4F4483; font-size: 11px; border-radius: 2px;padding-top: 5.2px;">${reserve.aob_purchased}</h5>
                     </div>
                     ${ (reserve.aob_purchased != 'COMPLETADO') ? 
@@ -185,6 +190,8 @@ const fillReserves = async (reserves, list) => {
         } else {
             list.innerHTML = list.innerHTML + previousReserve;
         }
+        } else {
+            document.querySelector('.old-reservations').classList.add('dn');    
         }
 
     })
@@ -193,29 +200,26 @@ const fillReserves = async (reserves, list) => {
 const fillDogs = async (dogs, list) => {
     dogs.forEach(dog => {        
         let dogImage = dog.avatar ? dog.avatar.url : "/wp-content/uploads/2022/08/Rectangle-861.jpg"
-        let newDog = `<div class="pet-container pa3 mr4 mb4">
-                <div class="pet-content pa2">
-                    <div class="pet-header pa3 relative flex flex-column justify-between">
-                        <div class="relative z-3 flex flex-column justify-between h-100">
-                            <p class="tr">Editar</p>
-                            <div class="pet-name">
-                                <h3 class="black f2 faro">${dog.name}</h3>
-                                <p>${dog.sex} ${dog.age} ${Number(dog.age) > 1 ? 'años' : 'año'}</p>
+        let newDog = `
+            <div class="pet-container pa4 mb4 relative hp-br overflow-hidden">
+                <div class="relative z-3">
+                    <div class="pet-content">
+                            <div class="pet-header relative flex flex-column justify-between">
+                                <div class="flex flex-column justify-between h-100">
+                                    <p class="tr">Editar</p>
+                                    <div class="pet-name">
+                                        <h3 class="white f2 faro">${dog.name}</h3>
+                                        <p>${dog.sex} ${dog.age} ${Number(dog.age) > 1 ? 'años' : 'año'}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="absolute-cover bg-gradient z-2"></div>
-                        <div class="absolute-cover bg-center" style='background-image: url(${dogImage}'></div>
-
-                    </div>
+                        <div class="pet-attributes flex flex-wrap items-center mt3">${dog.questions_values.map(attribute => `<p class="ttc">${attribute.slug}</p>`).join('')}</div>
                 </div>
-                <div class="pet-attributes flex flex-wrap items-center mt3">
-                        ${
-                        dog.questions_values.map(attribute => {
-                            return `<p class="ttc">${attribute.slug}</p>`
-                        })
-                        } 
-                    </div>
-                        </div>`
+                
+                <div class="absolute-cover bg-gradient" style="z-index: 2"></div>
+                <div class="absolute-cover bg-center" style='background-image: url(${dogImage}'></div>
+            </div>`
             list.innerHTML = list.innerHTML + newDog;
         })
 }
@@ -645,12 +649,25 @@ const userHeader = (user) => {
     header.querySelector('a.no-deco').innerHTML = ""
 }
 
+const userInfo = (user) => {
+    let userInfoContainer = document.querySelector('.user-info-container');
+
+    let userInfo = `
+    <div class="hp-light-color-bg pa4 hp-br tc">
+        <h2 class="ugo-pink mb3 f1 lh1">${user.first_name} ${user.last_name}</h2>
+        <p class="black mb2">${user.email}</p>
+        <p class="black mb2">${user.phone}</p>
+        <p class="black mb1">Editar</p>
+    </div>"`
+    userInfoContainer.innerHTML = userInfo;
+}
+
 
 function capitalizeFirstLetter(str) {
     return str.replace(/^\w/, (c) => c.toUpperCase());
   }
 
-const hpReserveDog= (dog) => {
+const hpReserveDog = (dog) => {
 
 // Open pop up
 document.querySelector('.previous-dogs-container').classList.remove('dn');
@@ -1083,8 +1100,6 @@ const sendReserve = async () => {
         let checked = false;
         let terms = document.querySelector('input.terms');
         checked = terms.checked;
-
-     
 
         let selectedDog = user.dogs[0].id;
     

@@ -3,76 +3,86 @@
 <main id="main" data-barba="container" data-barba-namespace="portal" class="portal no-mt ugo-pink-bg">
 <?php $isAuth = true;  ?>
 
-<script>
-    const user = JSON.parse(localStorage.getItem('user'));
-    console.log(user);
-</script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+        console.log(user);
+    </script>
 
 
 
     <div class="flex justify-between pv6 container flex-wrap">
-       <div class="pets-container w-50-ns">
-            <div class="pets-header mb4 flex jic overflow-hidden">
-                <h2 class="black">Mis mascotas</h2>
-                <p id="new-pet" class="black underline pointer">Agregar otra</p>
+
+        <div class="w-30-ns hp-br user-info-container sticky top-30 h-max" style="top: 100px"></div>
+
+        <div class="flex flex-column w-60-ns"> 
+             <div class="reservas-container mb4">
+                <h2 class="black mb4">Mis reservas</h2>
+
+                <div class="flex justify-between items-stretch">
+                    <div class="flex flex-wrap new-reserve-list w-70-ns"></div>
+                    <div class="new-reserve-trigger pa3 mb4 flex pointer w-20-ns">
+                        <div class="m-auto flex flex-column items-center justify-center">
+                            <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="0.448242" y="0.544189" width="54.1318" height="54.1305" rx="27.0653" fill="#4F4483"/>
+                            <path d="M27.5156 21.5154V33.7035" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M33.6094 27.6095L21.4213 27.6095" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                        <h3 class="tc mt2" style="color: #FFF;">Nueva reserva</h3>
+                        </div>
+                    </div>
+                </div>
+                
+
+                    <!-- <h2 class="black mt4 pointer" id="log-out">Cerrar sesión</h2> -->
+
             </div>
 
-            <div class="previous-dogs-container pa4 mb4 relative dn">
-                <div class="absolute top-0 right-0 flex pointer close-pdc" style="transform: translate(-50%, -50%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 100px;">
-                    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="14.8527" cy="15.187" r="14.6017" fill="white"/>
-                        <path d="M18.3184 11.7209L11.386 18.6533" stroke="black"/>
-                        <path d="M18.3184 18.6532L11.386 11.7208" stroke="black"/>
-                    </svg>
+            <div class="pets-container mb4">
+                <div class="pets-header mb4 flex jic overflow-hidden">
+                    <h2 class="black">Mis mascotas</h2>
+                    <p id="new-pet" class="black underline pointer">Agregar otra</p>
                 </div>
-                <p class="pr5 hp-brown mb3 lh-copy">Ya mandaste a tu perro a House Paradise? Parece que lo encontramos en nuestra base de datos, confirmá para agregarlo a tus mascotas!</p>
-                <div class="previous-dog-inner pa3 hp-dark-brown-bg flex jic hp-br">
-                    <div class="p-d-content">
-                      
-                    </div>
 
-                    <div class="flex items-center pointer confirm-new-pd">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="0.219727" y="0.0880127" width="19.7036" height="19.7032" rx="9.85158" fill="#FFDBB0"/>
-                            <path d="M13.7822 7.15442L8.21183 12.7248" stroke="#B46200" stroke-width="1.09198" stroke-linecap="round"/>
-                            <path d="M8.21191 12.7248L6.36133 10.6144" stroke="#B46200" stroke-width="1.09198" stroke-linecap="round"/>
+                <div class="previous-dogs-container pa4 mb4 relative dn">
+                    <div class="absolute top-0 right-0 flex pointer close-pdc" style="transform: translate(-50%, -50%); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 100px;">
+                        <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="14.8527" cy="15.187" r="14.6017" fill="white"/>
+                            <path d="M18.3184 11.7209L11.386 18.6533" stroke="black"/>
+                            <path d="M18.3184 18.6532L11.386 11.7208" stroke="black"/>
                         </svg>
-                        <p class="hp-yellow fw6 ml2 lh1">Confirmar</p>
+                    </div>
+                    <p class="pr5 hp-brown mb3 lh-copy">Ya mandaste a tu perro a House Paradise? Parece que lo encontramos en nuestra base de datos, confirmá para agregarlo a tus mascotas!</p>
+                    <div class="previous-dog-inner pa3 hp-dark-brown-bg flex jic hp-br">
+                        <div class="p-d-content">
+                        
+                        </div>
+
+                        <div class="flex items-center pointer confirm-new-pd">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0.219727" y="0.0880127" width="19.7036" height="19.7032" rx="9.85158" fill="#FFDBB0"/>
+                                <path d="M13.7822 7.15442L8.21183 12.7248" stroke="#B46200" stroke-width="1.09198" stroke-linecap="round"/>
+                                <path d="M8.21191 12.7248L6.36133 10.6144" stroke="#B46200" stroke-width="1.09198" stroke-linecap="round"/>
+                            </svg>
+                            <p class="hp-yellow fw6 ml2 lh1">Confirmar</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="flex pets-container-inner flex-wrap">
-            </div>
-       </div>
-
-
-       <div class="reservas-container w-40-ns">
-          <h2 class="black mb4">Mis reservas</h2>
-
-            <div class="flex flex-wrap mb4 new-reserve-list"></div>
-
-            <div class="new-reserve-trigger pa3 flex pointer">
-                <div class="m-auto flex items-center justify-center">
-                    <svg width="55" height="55" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0.448242" y="0.544189" width="54.1318" height="54.1305" rx="27.0653" fill="#4F4483"/>
-                    <path d="M27.5156 21.5154V33.7035" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-                    <path d="M33.6094 27.6095L21.4213 27.6095" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
-                    </svg>
-                   <h3 class="ml2" style="color: #FFF;">Nueva reserva</h3>
+                <div class="flex pets-container-inner flex-wrap">
                 </div>
             </div>
 
-            <!-- <h2 class="black mt4 pointer" id="log-out">Cerrar sesión</h2> -->
 
-       </div>
+            <div class="old-reservations">
+                <h2 class="black mb4">Reservas pasadas</h2>
+                <div class="old-reservations-inner flex flex-wrap"></div>
+            </div>
+        </div>
+      
 
    
     </div>
 
-    <div class="old-reservations container">
-        <h3 class="black mb4">Reservas pasadas</h2>
-        <div class="old-reservations-inner flex flex-wrap"></div>
-    </div>
+   
 
 
     <div class="new-dog-pop fixed flex-column ph6 pv5 dn">
@@ -125,6 +135,12 @@
 
 <style>
 
+    main.portal {
+        background-image: url(/wp-content/uploads/2022/09/eK5ZM6@2x-e1663169089475.png);
+        background-size: cover;
+        background-opacity: 0.5
+    }
+
     .hp-br {
         border-radius: 8px;
     }
@@ -150,12 +166,12 @@
     }
 
     .pet-header {
-        height: 27.5vh;
+        height: 37.5vh;
         border-radius: 8px;
     }
 
     .pet-name * {
-        color: #FFDBB0;
+        color: #FFF;
         text-transform: capitalize;
     }
 
@@ -163,15 +179,15 @@
         border-radius: 8px;
     }
 
-    .pet-header .bg-gradient {
-        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, #000000 100%);
+    .pets-container .bg-gradient {
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 30%, #000000 100%);;
         z-index: 2;
     }
 
     .pet-attributes p {
         padding: 5px 10px;
-        background-color: #FFC57F;
-        color: #B46200;
+        background-color: #ffffff52;
+        color: #FFF;
         border-radius: 100px;
         margin-right: 10px;
         margin-bottom: 10px;

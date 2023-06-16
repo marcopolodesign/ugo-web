@@ -6,7 +6,7 @@
       <p class="breadcrumb dn">UGo! Home > House Paradise > Sobre tu perro</p>
       <h3 class="hp-title">
         Bienvenido a House Paradise! Estás tomando los primeros pasos para darle
-        las mejores vacaciones a tu perro a partir de $4000 por día.
+        las mejores vacaciones a tu perro a partir de $5000 por día.
       </h3>
       <div class="steps-master mt4 flex flex-row justify-between pl2-ns pr5-ns">
         <!-- Aca van los steps -->
@@ -40,7 +40,10 @@
 
     </div>
 
-    <div class="absolute w-100 h-100 dn confirmation-await"></div>
+    <div class="absolute w-100 h-100 dn confirmation-await">
+      <h3><span id="confirmation-counter">1</span>/2</h3>
+      <h2 class="m-auto tc black f2">Gracias por elegirnos!<br><span id="confirmation-message">Estamos creando tu cuenta...</span></h2>
+    </div>
    
   </div>
 

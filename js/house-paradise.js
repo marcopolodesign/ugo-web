@@ -8,10 +8,11 @@ document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-web/css/hp.css\" />"    
 );
 
-console.log('hp')
 
 
-let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app/';
+
+// let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
+let url = 'http://localhost:1337'
 let infoEndPoint = 'input-main';
 
 let dogEndPoint = 'inputs-web-dog';
@@ -745,7 +746,7 @@ const calendar = () => {
                     document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
                     document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
         
-                    document.querySelector('span#final-number').innerHTML = (price * totalDays) + transportFare;
+                    document.querySelector('span.final-number').innerHTML = (price * totalDays) + transportFare;
                     document.querySelector('span#final-number-upfront').innerHTML = formatPrice(((price * totalDays) + transportFare) * 0.2);
                     
         
@@ -827,18 +828,19 @@ const calendar = () => {
     })
 }
 
-calendar();
 
+
+calendar();
 
 const discounts = () => {
     let promotions = [
         {name: 'MEJORESAMIGOS', discount : 15},
         {name: 'AMIGUIS', discount : 15},
-        {name: 'PARAISO', discount : 20}
+        {name: 'SUPERFINDE', discount : 15},
+        {name: 'PARAISO', discount : 25}
     ]
 
     let verify = document.querySelector('#discount-verify');
-    console.log(verify)
 
     verify.addEventListener('click', ()=> {
         let cupon = document.querySelector('.discount-code input').value.toUpperCase();
@@ -851,6 +853,8 @@ const discounts = () => {
 
             let discounted = finalPricing - finalPricing * (1 - discount/100);
             finalPricing = finalPricing * (1 - discount/100);
+
+            document.querySelector('.discount-cupon-success p').innerHTML = matchingProduct.name;
             
             // console.log(finalPricing);         
             // Change the validation field
@@ -863,7 +867,8 @@ const discounts = () => {
             document.querySelector('.discount-success > p').innerHTML = `Cupón cargado correctamente! Recibiste un ${discount}% de descuento equivalente a ${formatPrice(discounted)} sobre el total de tu reserva.`
 
 
-            document.querySelector('#discount-legend').innerHTML = cupon;
+            document.querySelector('#summary-discount').innerHTML = cupon;
+
 
             // If cupon is deleted 
 
@@ -1044,6 +1049,9 @@ document.querySelectorAll('.pay-now-container').forEach(pay => {
     })
 })
 
+let successCounter = document.querySelector('#confirmation-counter');
+let successMessage = document.querySelector('#confirmation-message');
+
 
 document.querySelector('.mail-now-container').addEventListener('click', ()=> {
 
@@ -1063,60 +1071,145 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             celoDate = '2022-12-18';
         }
 
-        var raw = JSON.stringify({
-            "owner_name": reserveInfo.owner.nombre,
-            "owner_surname": reserveInfo.owner.apellido,
-            "owner_phone": reserveInfo.owner.telefono,
-            "owner_email":reserveInfo.owner.mail,
-            "owner_dni": reserveInfo.owner.dni,
-            "dog_genre": reserveInfo.dog.Género,
-            "dog_raza": reserveInfo.dog.raza,
-            "dog_social": reserveInfo.dog.social,
-            "dog_age": reserveInfo.dog.edad,
-            "dog_name": reserveInfo.dog.nombre,
-            "dog_castrado": reserveInfo.dog.castrado,
-            "date_celo" : celoDate,
-            "dog_behaviour": reserveInfo.dog.behaviour,
-            "dog_vaccine": reserveInfo.dog.checkbox11,
-            "dog_deworming": reserveInfo.dog.checkbox12,
-            "aob_date_start": enterDateES,
-            "aob_date_end": exitDateES,
-            "aob_price": reserveInfo.aob.price,
-            "aob_purchased" : reserveInfo.aob.purchased, 
-            "status" : reserveInfo.aob.status,
-            "dog_bite" : reserveInfo.dog.bite,
-            "dog_swim" : reserveInfo.dog.swim,
-            "dog_cirugia" : reserveInfo.dog.cirugia,
-            "dog_alergia" : reserveInfo.dog.alergia,
-            "dog_food" : reserveInfo.dog.food,
-            "dog_comments" : reserveInfo.dog.comments
-        });
-        
+        confirmationPop.classList.remove('dn');
+        confirmationPop.classList.add('flex');
 
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-    
-        var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-        };
+       
+        // Make fetch to create user
+         let un = (reserveInfo.owner.nombre+reserveInfo.owner.apellido).toString().toLowerCase();
 
-        confirmationPop.classList.remove('dn');
-    
-
-        fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .then( () => {
-            confirmationPop.classList.add('dn');
-            document.querySelector('.reserve-input-container').classList.add('dn') 
-            document.querySelector('.reserve-input-container').classList.remove('flex') 
-            document.querySelector('.message-success').classList.remove('dn') 
+         var userBody = JSON.stringify({
+            "identifier": reserveInfo.owner.mail,
+            "email":reserveInfo.owner.mail,
+            "username": un,
+            "phone" : reserveInfo.owner.telefono,
+            "password": reserveInfo.owner.dni,
+            "name": reserveInfo.owner.nombre,
+            "last_name": reserveInfo.owner.apellido,
+            "confirmed": true
         })
-        .catch(error => console.log('error', error));
+        
+        var userRequestOptions = {
+            body: userBody,
+            method: 'POST',
+            headers: myHeaders,
+            redirect: 'follow',
+        }
+
+
+        fetch(`${url}/users`, userRequestOptions)
+            .then(response => response.json())
+            .then((result) => {
+                console.log(result)
+                let newUser = result
+
+            let dogSex = reserveInfo.dog.Género;
+            successCounter.innerHTML = '2';
+            successMessage.innerHTML = 'Estamos cargando tu perro y tu reserva...';
+
+            var dogBody = JSON.stringify({
+                "name": reserveInfo.dog.nombre,
+                "age":reserveInfo.dog.edad,
+                "owner": newUser._id,
+                "sex": dogSex.charAt(0).toUpperCase() + dogSex.slice(1),
+                // "raza" : reserveInfo.dog.raza.toString(),
+            })
+            
+            var dogRequestOptions = {
+                body: dogBody,
+                method: 'POST',
+                headers: myHeaders,
+                redirect: 'follow',
+            }
+
+            fetch(`${url}/dogs`, dogRequestOptions)
+            .then(response => response.json())
+            .then((result) => {
+
+                let newDog = result._id;
+                var raw = JSON.stringify({
+                    "owner_name": reserveInfo.owner.nombre,
+                    "owner_surname": reserveInfo.owner.apellido,
+                    "owner_phone": reserveInfo.owner.telefono,
+                    "owner_email":reserveInfo.owner.mail,
+                    "owner_dni": reserveInfo.owner.dni,
+                    "dog_genre": reserveInfo.dog.Género,
+                    "dog_raza": reserveInfo.dog.raza,
+                    "dog_social": reserveInfo.dog.social,
+                    "dog_age": reserveInfo.dog.edad,
+                    "dog_name": reserveInfo.dog.nombre,
+                    "dog_castrado": reserveInfo.dog.castrado,
+                    "date_celo" : celoDate,
+                    "dog_behaviour": reserveInfo.dog.behaviour,
+                    "dog_vaccine": reserveInfo.dog.checkbox11,
+                    "dog_deworming": reserveInfo.dog.checkbox12,
+                    "aob_date_start": enterDateES,
+                    "aob_date_end": exitDateES,
+                    "aob_price": reserveInfo.aob.price,
+                    "aob_purchased" : reserveInfo.aob.purchased, 
+                    "status" : reserveInfo.aob.status,
+                    "dog_bite" : reserveInfo.dog.bite,
+                    "dog_swim" : reserveInfo.dog.swim,
+                    "dog_cirugia" : reserveInfo.dog.cirugia,
+                    "dog_alergia" : reserveInfo.dog.alergia,
+                    "dog_food" : reserveInfo.dog.food,
+                    "dog_comments" : reserveInfo.dog.comments,
+                    "dog": result._id,
+                    "owner": newUser._id,
+                });
+
+                var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                };
+
+                fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .then( () => {
+
+                    // Make PUT to update user and add the Reserve ID
+
+                    fetch(`${url}/users/${newUser._id}`, {
+                        method: 'PUT',
+                        headers: myHeaders,
+                        body : JSON.stringify({
+                            "reserve": result._id, 
+                            "dog" : newDog,
+                        }),
+                        redirect: 'follow'
+                    }).then(response => response.text())
+                    .then(result => console.log(result))
+                    .catch(error => console.log('error', error));
+
+                    document.querySelector('.reserve-input-container').classList.add('dn') 
+                    document.querySelector('.reserve-input-container').classList.remove('flex') 
+                    document.querySelector('.message-success').classList.remove('dn') 
+
+                    setInterval(() => {
+                        let timer = document.querySelector('#success-counter');
+                        let i = 4;
+                        timer.innerHTML = i--;
+                      }, 1000);
+
+                    setTimeout(() => {
+                        localStorage.setItem('user', JSON.stringify(newUser))
+                        window.location.href = `/portal/`
+                    }, 10000);
+                    
+                })
+                .catch(error => console.log('error', error));
+            })
+            .catch(error => console.log('error', error));
+            })
+            .catch(error => console.log('error', error));
+    
+  
 
     }
 })
@@ -1217,6 +1310,9 @@ const changeSelects = () => {
 
 
 const formatPrice = (number) => {
+
+    const roundedNumber = Math.round(number);
+
     let ars = Intl.NumberFormat("es-AR", {
         style: "currency",
         currency: "ARS",
@@ -1224,7 +1320,7 @@ const formatPrice = (number) => {
         maximumSignificantDigits: 3
     });
 
-    return (ars.format(number))
+    return (ars.format(roundedNumber))
 }
 
 
