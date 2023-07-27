@@ -3,10 +3,10 @@
 
     <?php get_template_part('template-parts/reserve-hp/discount'); ?>
 
-    <div class="flex jic terms-container pa3">
+    <div class="flex jic terms-container pa3 w-max">
     <?php get_template_part('template-parts/reserve-hp/terms'); ?>
     <div class="flex jic ml4"> 
-            <p class="mr3 lh1 w-80-ns">Confirmo que estos datos actúan como declaración jurada y que estoy de acuerdo con los <span><a href="/terminos-y-condiciones" target="_blank" class="ugo-pink">términos y condiciones.</a></span></p>
+            <p class="mr3 lh1 w-80-ns">Confirmo que estos datos actúan como declaración jurada y que estoy de acuerdo con los <span><a href="/terminos-y-condiciones" target="_blank" class="ugo-pink barba-prevent" onclick="openNewTab('/terminos-y-condiciones')">términos y condiciones.</a></span></p>
             <input class="mr3 terms" type="checkbox">
     </div>
     
@@ -34,7 +34,7 @@
         </div>
 
 
-        <div class="mail-now-container hover-main flex flex-column w-100" style="width: 100%">
+        <div class="mail-now-container flex flex-column w-100" style="width: 100%">
             <div class="icon-header flex">
             <div class="m-auto">
                 <?php get_template_part('template-parts/content/mail-reserve'); ?>
@@ -43,8 +43,8 @@
             <p class="tc">Te enviaremos un desglose con tu pedido por mail, y un asesor de UGo! te contactará para que le hagas todas las preguntas que necesites!</p>
 
             <div class="mail-cta flex items-center justify-center pa3">
-            <?php get_template_part('template-parts/content/whapp'); ?>
-            <p class="ml3 lh1">Enviar cotización y contactarme</p>
+            <!-- <?php get_template_part('template-parts/content/whapp'); ?> -->
+            <p class="black lh1 b bold fw6">Confirmar reserva</p>
             </div>
         </div>
 
@@ -53,3 +53,10 @@
         </div>
     </div>
 </div>
+
+<script>
+
+function openNewTab(url) {
+    window.open(url, '_blank');
+  }
+</script>

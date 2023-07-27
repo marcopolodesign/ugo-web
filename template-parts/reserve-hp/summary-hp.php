@@ -1,5 +1,5 @@
-<div class="w-90-ns summary-stay relative pt5 ph4-ns m-auto">
-      <h4 class="f3 black">Resumen de Estadia</h4>
+<div class="w-90-ns summary-stay relative pt5 ph4-ns m-auto overflow-x-hidden">
+      <h4 class="f3 black">Resumen de Estadía</h4>
 
       <div class="mt4 summary-owner">
         <div class="flex flex-row items-center justify-between">

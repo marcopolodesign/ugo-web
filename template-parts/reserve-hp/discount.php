@@ -4,7 +4,7 @@
         <p id="discount-verify" class="tc fw5 pointer" style="white-space: nowrap">Verificar cupón</p>
     </div>
 
-    <div class="discount-success dn jic pa3">
+    <div class="discount-success dn jic column-mobile pa3">
         <p class="lh-1 w-70-ns"></p>
         <div class="discount-cupon-success pv2 ph4 relative">
             <p id="discount-legend" class="tc pink">BFF</p>

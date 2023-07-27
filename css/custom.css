@@ -121,6 +121,12 @@ p, *::placeholder, input {
   color: var(--hp-blue);
 }
 
+
+.hp-dark-color-bg {
+  background-color: var(--hp-blue);
+}
+
+
 .hp-light-color {
   color: var(--hp-yellow);
 }

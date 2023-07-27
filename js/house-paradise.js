@@ -11,8 +11,8 @@ document.getElementsByTagName("head")[0].insertAdjacentHTML(
 
 
 
-// let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
-let url = 'http://localhost:1337'
+let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
+// let url = 'http://localhost:1337'
 let infoEndPoint = 'input-main';
 
 let dogEndPoint = 'inputs-web-dog';
@@ -150,20 +150,22 @@ loadPopUp();
 const nextScreen = () => {
 
     let hasFilled = false;
-
     let lead = true;
-
     let incompleteFields;
  
-   
-
     button.addEventListener('click', () => {
 
         let inputs = Array.prototype.slice.call(document.forms[0]);
 
         if (formStep === 0) {
             inputs.forEach((input,index) => {
-                if (index <= 4) {
+            
+                if (index === 3) {
+                    const un = (inputs[0].value + inputs[1].value).toString().toLowerCase();
+                    checkEmailExists(input.value, un);
+                    console.log(input)
+                }
+                if (index <= 5) {
                    let value = input.value;
                    if (!value) {
                     input.classList.add('incomplete')
@@ -193,15 +195,28 @@ const nextScreen = () => {
         } else if (formStep === 1) {
            
             inputs.forEach((input,index) => {
-                if (index > 4 && index <= 9) {
-
+                if (index > 5 && index <= 10) {
+                    let attr = input.getAttribute('placeholder');
                     let value = input.value;    
-                    if (!value) {
+                    if (!value && input.tagName !== "SELECT") {
                         input.classList.add('incomplete')
                         hasFilled = false;
-                    } else {
+                    } else if (input.tagName === 'SELECT') { 
+                        console.log(input);
+
+                    var selectedIndex = input.selectedIndex;
+                    if (selectedIndex !== -1 && !input.options[selectedIndex].disabled){
+                        var selectedOption = input.options[selectedIndex];
+                        // alert("The select input field has a value: " + selectedOption.value);
+                        input.classList.remove('incomplete');
+                        let values = {[attr] : input.value}
+                        reserveInfo.dog = {... reserveInfo.dog, ...values}
+                        } else {
+                        input.classList.add('incomplete');
+                        }
+                    }
+                    else {
                         input.classList.remove('incomplete')
-                        let attr = input.getAttribute('placeholder');
                         let values = {[attr] : input.value}
                         reserveInfo.dog = {... reserveInfo.dog, ...values}
                     }
@@ -214,7 +229,7 @@ const nextScreen = () => {
                        hasFilled = false;
                    }
 
-                } else if (index > 10 && index <= 12) {
+                } else if (index > 11 && index <= 13) {
                  
                     let values = {[`checkbox${index}`] : input.checked}
                     reserveInfo.dog = {...reserveInfo.dog, ...values}
@@ -364,7 +379,6 @@ const nextScreen = () => {
     }
 
 }
-
 
 nextScreen();
 
@@ -943,6 +957,40 @@ let open = () => {
 open();
 
 
+const checkEmailExists = async (email, username) => {
+    const emailEndpoint = `${url}/users?[email][$eq]=${email}`;
+    const usernameEndpoint = `${url}/users?[username][$eq]=${username}`;
+  
+    try {
+      const emailResponse = await fetch(emailEndpoint);
+      const emailData = await emailResponse.json();
+  
+      console.log(emailData);
+  
+      if (emailData.length > 0) {
+        alert('Ya encontramos una cuenta con este email! Te vamos a redirigir al portal de usuario. Tu usuario es tu email y tu contraseña es tu DNI.');
+        window.location.href = '/portal';
+        return true;
+      }
+  
+      const usernameResponse = await fetch(usernameEndpoint);
+      const usernameData = await usernameResponse.json();
+  
+      console.log(usernameData);
+  
+      if (usernameData.length > 0) {
+        alert('Este username ya existe!');
+        return true;
+      }
+  
+      return false;
+    } catch (error) {
+      console.error('Error checking email or username existence:', error);
+      // Handle error, e.g., display an error message or redirect to an error page
+      return false; // Return false to indicate error occurred
+    }
+};
+  
 var raw;
 document.querySelectorAll('.pay-now-container').forEach(pay => {
     pay.addEventListener('click', ()=> {
@@ -1055,163 +1103,208 @@ let successMessage = document.querySelector('#confirmation-message');
 
 document.querySelector('.mail-now-container').addEventListener('click', ()=> {
 
-    let checked = false;
-    let terms = document.querySelector('input.terms');
-    checked = terms.checked;
-
-    if (!checked){ 
-        alert('por favor, confirmá nuestros términos y condiciones')
-    } else {
-        reserveInfo.aob.purchased = "consulta";
-        reserveInfo.aob.status = "Pendiente de pago";
-
-        let celoDate =  document.querySelector('.celo-date input').value;
-        
-        if (!celoDate) {
-            celoDate = '2022-12-18';
-        }
-
-        confirmationPop.classList.remove('dn');
-        confirmationPop.classList.add('flex');
-
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-       
-        // Make fetch to create user
-         let un = (reserveInfo.owner.nombre+reserveInfo.owner.apellido).toString().toLowerCase();
-
-         var userBody = JSON.stringify({
+    const createUser = async () => {
+        const un = (reserveInfo.owner.nombre + reserveInfo.owner.apellido).toString().toLowerCase();
+      
+        const userBody = JSON.stringify({
             "identifier": reserveInfo.owner.mail,
-            "email":reserveInfo.owner.mail,
+            "email": reserveInfo.owner.mail,
             "username": un,
-            "phone" : reserveInfo.owner.telefono,
+            "phone": reserveInfo.owner.telefono,
             "password": reserveInfo.owner.dni,
-            "name": reserveInfo.owner.nombre,
+            "first_name": reserveInfo.owner.nombre,
             "last_name": reserveInfo.owner.apellido,
+            "direccion" : reserveInfo.owner.dirección,
             "confirmed": true
-        })
+        });
+      
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+      
+        const userRequestOptions = {
+          body: userBody,
+          method: 'POST',
+          headers: myHeaders,
+          redirect: 'follow',
+        };
+      
+        try {
+          const response = await fetch(`${url}/users`, userRequestOptions);
+          const newUser = await response.json();
+      
+          console.log("new User:" + JSON.stringify(newUser))
+
+
+          return newUser;
+        } catch (error) {
+          console.error('Error while creating User:', error);
+          throw new Error('Failed to create user');
+        }
+    };
+      
+    let newDogId = '';
+    const createDog = async (newUser) => {
+        const dogSex = reserveInfo.dog.Género;
+        successCounter.innerHTML = '2';
+        successMessage.innerHTML = 'Estamos cargando tu perro y tu reserva...';
+
+
+        const dogBody = JSON.stringify({
+            "name": reserveInfo.dog.nombre,
+            "age": reserveInfo.dog.edad,
+            "owner": newUser._id,
+            "sex": dogSex.charAt(0).toUpperCase() + dogSex.slice(1),
+        });
         
-        var userRequestOptions = {
-            body: userBody,
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        
+        const dogRequestOptions = {
+            body: dogBody,
             method: 'POST',
             headers: myHeaders,
             redirect: 'follow',
+        };
+        
+        try {
+            const response = await fetch(`${url}/dogs`, dogRequestOptions);
+            const newDog = await response.json();
+
+            console.log("new Dog:" + JSON.stringify(newDog.id))
+
+            console.log(newDogId = newDog.id);
+        
+            return newDog._id;
+        } catch (error) {
+            console.error('Error while creating dog:', error);
+            throw new Error('Failed to create dog');
         }
-
-
-        fetch(`${url}/users`, userRequestOptions)
-            .then(response => response.json())
-            .then((result) => {
-                console.log(result)
-                let newUser = result
-
-            let dogSex = reserveInfo.dog.Género;
-            successCounter.innerHTML = '2';
-            successMessage.innerHTML = 'Estamos cargando tu perro y tu reserva...';
-
-            var dogBody = JSON.stringify({
-                "name": reserveInfo.dog.nombre,
-                "age":reserveInfo.dog.edad,
-                "owner": newUser._id,
-                "sex": dogSex.charAt(0).toUpperCase() + dogSex.slice(1),
-                // "raza" : reserveInfo.dog.raza.toString(),
-            })
-            
-            var dogRequestOptions = {
-                body: dogBody,
-                method: 'POST',
-                headers: myHeaders,
-                redirect: 'follow',
-            }
-
-            fetch(`${url}/dogs`, dogRequestOptions)
-            .then(response => response.json())
-            .then((result) => {
-
-                let newDog = result._id;
-                var raw = JSON.stringify({
-                    "owner_name": reserveInfo.owner.nombre,
-                    "owner_surname": reserveInfo.owner.apellido,
-                    "owner_phone": reserveInfo.owner.telefono,
-                    "owner_email":reserveInfo.owner.mail,
-                    "owner_dni": reserveInfo.owner.dni,
-                    "dog_genre": reserveInfo.dog.Género,
-                    "dog_raza": reserveInfo.dog.raza,
-                    "dog_social": reserveInfo.dog.social,
-                    "dog_age": reserveInfo.dog.edad,
-                    "dog_name": reserveInfo.dog.nombre,
-                    "dog_castrado": reserveInfo.dog.castrado,
-                    "date_celo" : celoDate,
-                    "dog_behaviour": reserveInfo.dog.behaviour,
-                    "dog_vaccine": reserveInfo.dog.checkbox11,
-                    "dog_deworming": reserveInfo.dog.checkbox12,
-                    "aob_date_start": enterDateES,
-                    "aob_date_end": exitDateES,
-                    "aob_price": reserveInfo.aob.price,
-                    "aob_purchased" : reserveInfo.aob.purchased, 
-                    "status" : reserveInfo.aob.status,
-                    "dog_bite" : reserveInfo.dog.bite,
-                    "dog_swim" : reserveInfo.dog.swim,
-                    "dog_cirugia" : reserveInfo.dog.cirugia,
-                    "dog_alergia" : reserveInfo.dog.alergia,
-                    "dog_food" : reserveInfo.dog.food,
-                    "dog_comments" : reserveInfo.dog.comments,
-                    "dog": result._id,
-                    "owner": newUser._id,
-                });
-
-                var requestOptions = {
-                    method: 'POST',
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: 'follow'
-                };
-
-                fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
-                .then(response => response.text())
-                .then(result => console.log(result))
-                .then( () => {
-
-                    // Make PUT to update user and add the Reserve ID
-
-                    fetch(`${url}/users/${newUser._id}`, {
-                        method: 'PUT',
-                        headers: myHeaders,
-                        body : JSON.stringify({
-                            "reserve": result._id, 
-                            "dog" : newDog,
-                        }),
-                        redirect: 'follow'
-                    }).then(response => response.text())
-                    .then(result => console.log(result))
-                    .catch(error => console.log('error', error));
-
-                    document.querySelector('.reserve-input-container').classList.add('dn') 
-                    document.querySelector('.reserve-input-container').classList.remove('flex') 
-                    document.querySelector('.message-success').classList.remove('dn') 
-
-                    setInterval(() => {
-                        let timer = document.querySelector('#success-counter');
-                        let i = 4;
-                        timer.innerHTML = i--;
-                      }, 1000);
-
-                    setTimeout(() => {
-                        localStorage.setItem('user', JSON.stringify(newUser))
-                        window.location.href = `/portal/`
-                    }, 10000);
-                    
-                })
-                .catch(error => console.log('error', error));
-            })
-            .catch(error => console.log('error', error));
-            })
-            .catch(error => console.log('error', error));
+    };
     
-  
+    const createReserve = async (newUser, newDog) => {
+        const celoDate = document.querySelector('.celo-date input').value || '2022-12-18';
+        
+        const raw = JSON.stringify({
+            "owner_name": reserveInfo.owner.nombre,
+            "owner_surname": reserveInfo.owner.apellido,
+            "owner_phone": reserveInfo.owner.telefono,
+            "owner_email": reserveInfo.owner.mail,
+            "owner_dni": reserveInfo.owner.dni,
+            "owner_address": reserveInfo.owner.dirección,
+            "dog_genre": reserveInfo.dog.Género,
+            "dog_raza": reserveInfo.dog.raza,
+            "dog_social": reserveInfo.dog.social,
+            "dog_age": reserveInfo.dog.edad,
+            "dog_name": reserveInfo.dog.nombre,
+            "dog_castrado": reserveInfo.dog.castrado,
+            "date_celo": celoDate,
+            "dog_behaviour": reserveInfo.dog.behaviour,
+            "dog_vaccine": reserveInfo.dog.checkbox11,
+            "dog_deworming": reserveInfo.dog.checkbox12,
+            "aob_date_start": enterDateES,
+            "aob_date_end": exitDateES,
+            "aob_price": reserveInfo.aob.price,
+            "aob_purchased": reserveInfo.aob.purchased,
+            "status": reserveInfo.aob.status,
+            "dog_bite": reserveInfo.dog.bite,
+            "dog_swim": reserveInfo.dog.swim,
+            "dog_cirugia": reserveInfo.dog.cirugia,
+            "dog_alergia": reserveInfo.dog.alergia,
+            "dog_food": reserveInfo.dog.food,
+            "dog_comments": reserveInfo.dog.comments,
+            "dog": newDogId,
+            "owner": newUser._id,
+        });
+        
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        
+        const requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+        };
+        
+        try {
+            const response = await fetch(`${url}/reserves-hps`, requestOptions);
+            const result = await response.json();
+            console.log("new reserve:" + JSON.stringify(result))
 
-    }
+            return result;
+        } catch (error) {
+            console.error('Error while creating reserve:', error);
+            throw new Error('Failed to create reserve');
+        }
+    };
+    
+    const updateUser = async (newUser, reserveId, newDog) => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        
+        const requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: JSON.stringify({
+            reserve: reserveId,
+            dog: newDog._id,
+            }),
+            redirect: 'follow'
+        };
+        
+        try {
+            const response = await fetch(`${url}/users/${newUser._id}`, requestOptions);
+            const result = await response.json();
+            console.log("Updated user: " + JSON.stringify(result));
+
+            return result;
+        } catch (error) {
+            console.error('Error while updating user:', error);
+            throw new Error('Failed to update user');
+        }
+    };
+    
+    const handleReserve = async () => {
+        const terms = document.querySelector('input.terms');
+        const checked = terms.checked;
+        
+        if (!checked) {
+            alert('Por favor, confirma nuestros términos y condiciones');
+        } else {
+            reserveInfo.aob.purchased = "consulta";
+            reserveInfo.aob.status = "Pendiente de pago";
+            
+            confirmationPop.classList.remove('dn');
+            confirmationPop.classList.add('flex');
+        
+            try {
+            const newUser = await createUser();
+            const newDog = await createDog(newUser);
+            const reserveResult = await createReserve(newUser, newDog);
+        
+            await updateUser(newUser, reserveResult._id, newDog);
+        
+            document.querySelector('.reserve-input-container').classList.add('dn');
+            document.querySelector('.reserve-input-container').classList.remove('flex');
+            document.querySelector('.message-success').classList.remove('dn');
+        
+            let i = 4;
+            setInterval(() => {
+                let timer = document.querySelector('#success-counter');
+                timer.innerHTML = i--;
+            }, 1000);
+        
+            setTimeout(() => {
+                localStorage.setItem('savedUser', JSON.stringify(newUser));
+                window.location.href = '/portal/';
+            }, 5000);
+            } catch (error) {
+            console.error('Error during product add to cart:', error);
+            }
+        }
+    };
+    
+    handleReserve();
 })
 
 // Confirmation Message
@@ -1323,14 +1416,15 @@ const formatPrice = (number) => {
     return (ars.format(roundedNumber))
 }
 
-
-
 const dogInputConditionals = () => {
     let castradoTrigger = document.querySelector('.input-castrado');
+   
 
     castradoTrigger.addEventListener('change', (e) => {
-            if (e.target.value === 'no') {
+        let sex = document.querySelector('select.input-text').value
+        console.log(sex)
+            if (e.target.value === 'no' && sex != 'macho') {
                 document.querySelector('div.celo-date').classList.remove('o-0', 'pointers-none', 'dn')
-            }
+            } 
     })
 }

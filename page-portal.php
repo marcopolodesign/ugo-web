@@ -2,23 +2,16 @@
 
 <main id="main" data-barba="container" data-barba-namespace="portal" class="portal no-mt ugo-pink-bg">
 <?php $isAuth = true;  ?>
-
-    <script>
-        const user = JSON.parse(localStorage.getItem('user'));
-        console.log(user);
-    </script>
-
-
-
     <div class="flex justify-between pv6 container flex-wrap">
 
-        <div class="w-30-ns hp-br user-info-container sticky top-30 h-max" style="top: 100px"></div>
+        <div class="w-30-ns hp-br user-info-container sticky relative-m top-30 h-max" style="top: 100px">
+        </div>
 
-        <div class="flex flex-column w-60-ns"> 
+        <div class="flex flex-column w-60-ns w-100-m"> 
              <div class="reservas-container mb4">
                 <h2 class="black mb4">Mis reservas</h2>
 
-                <div class="flex justify-between items-stretch">
+                <div class="flex justify-between items-stretch column-mobile">
                     <div class="flex flex-wrap new-reserve-list w-70-ns"></div>
                     <div class="new-reserve-trigger pa3 mb4 flex pointer w-20-ns">
                         <div class="m-auto flex flex-column items-center justify-center">
@@ -33,7 +26,6 @@
                 </div>
                 
 
-                    <!-- <h2 class="black mt4 pointer" id="log-out">Cerrar sesión</h2> -->
 
             </div>
 
@@ -67,27 +59,29 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex pets-container-inner flex-wrap">
+                <div class="flex pets-container-inner flex-wrap column-mobile">
                 </div>
             </div>
 
 
-            <div class="old-reservations">
+            <div class="old-reservations ">
                 <h2 class="black mb4">Reservas pasadas</h2>
                 <div class="old-reservations-inner flex flex-wrap"></div>
             </div>
         </div>
       
-
-   
     </div>
 
-   
+
+    <h2 class="black mt4 pointer mobile pb4 tc" id="log-out">Cerrar sesión</h2>
 
 
-    <div class="new-dog-pop fixed flex-column ph6 pv5 dn">
+    <div class="new-dog-pop fixed flex-column ph6-ns pv5-ns dn">
         <div class="new-dog-content m-auto pa5 w-100">
             <h2 class="mb5 white">Agregar nuevo perro</h2>
+            <div id="close-dog" class="absolute top-0 right-0 close-new-dog">
+                <?php get_template_part('template-parts/content/close'); ?>
+            </div>
         </div>
 
         <div class="submit-new-dog ttu pointer"><h2>Agregar perro</h2></div>
@@ -95,9 +89,14 @@
     </div>
 
 
-    <div class="new-reserve-pop fixed ph6 pv5 dn flex-column">
+    <div class="new-reserve-pop fixed ph6-ns pv5-ns dn flex-column">
+            <div id="close-reserve" class="absolute top-0 right-0 close-new-dog">
+                <?php get_template_part('template-parts/content/close'); ?>
+            </div>
+
+
         <div class="reserve-content m-auto pa5 w-100">
-            <div class="reserve-header flex items-center mb5">
+            <div class="reserve-header flex column-mobile items-center mb5">
                 <h2 id="reserve-title-ph"class=" white f2 w-40-ns">Para quién es la reserva?</h2>
                 <div class="breadcrumbs flex">
                     <p id="summary-dog-name"><?php echo $dogName; ?></p>
@@ -119,6 +118,71 @@
 
                 <div class="step-3 dn">
                     <?php get_template_part('template-parts/reserve-hp/step-4'); ?>
+                </div>
+            </div>
+
+            <div class="confirm-edit-reserve dn">
+                <h2 class="white mb5">Confirmar edición de reserva</h2>
+
+                <div class="edited-reserve hp-br bg-black ph4 pt4 flex flex-column justify-between relative pb6 w-60-ns center">
+                    <div class="flex jic">
+                     <p class="f3">Mascota:</p>
+                        <div class="edit-summary-dog breadcrumbs">
+                            <p>Fainá</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="mb3">
+                            <p class="f3 mb2">Fecha de entrada:</p>
+                            <div class="flex jic">
+                                <div class="edit-summary-start breadcrumbs">
+                                    <p class="strike"></p>
+                                </div>
+
+                                <div class="change-separator"></div>
+
+                                <div class="edit-summary-start-new breadcrumbs">
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <p class="f3 mb2">Fecha de salida:</p>
+                            <div class="flex jic">
+                                <div class="edit-summary-end breadcrumbs">
+                                    <p class="strike"></p>
+                                </div>
+
+                                <div class="change-separator"></div>
+
+
+                                <div class="edit-summary-end-new breadcrumbs">
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="flex jic">
+                     <p class="f2">Total:</p>
+                     <div class="flex">
+                        <div class="edit-summary-days breadcrumbs mr3">
+                            <p></p>
+                        </div>
+
+                        <div class="edit-summary-price breadcrumbs">
+                            <p></p>
+                        </div>
+                     </div>
+                        
+                    </div>
+                    
+                    <div class="confirm-edit-reserve w-100 ugo-pink-bg pa3 hp-br absolute bottom-0 left-0 hp-br">
+                        <h2 class="black tc">Confirmar</h2>
+                    </div>
                 </div>
             </div>
         </div>
@@ -154,6 +218,14 @@
         height: max-content;
     }
 
+    .pet-container.no-image {
+        background-color: var(--hp-blue)
+    }
+
+    .pet-container.no-image .pet-header {
+       height: unset;
+    }
+
     .previous-dogs-container {
         border-radius: 8px;
         width: 100%;
@@ -166,7 +238,7 @@
     }
 
     .pet-header {
-        height: 37.5vh;
+        height: 55vh;
         border-radius: 8px;
     }
 
@@ -230,7 +302,7 @@
 
     .aob-container {
     margin-bottom: 30px !important;
-}
+    }
 
     .reserve-img {
         width: 40px;
@@ -254,6 +326,7 @@
         background-color: var(--pink);
         color: #C2537D;
         margin-left: 10px;
+        text-wrap: nowrap;
     }
 
     .reserve-steps-container .step-3 .discount-container {
@@ -274,11 +347,135 @@
         justify-content:center;
     }
 
+    .edited-reserve {
+        background-color: var(--darkGrey)
+    }
+
+    .edited-reserve > div {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #fff;
+    }
+
+    .reserve-content .edited-reserve .breadcrumbs p {
+        margin-left: 0;
+    }
+
+    .edit-summary-start.breadcrumbs p, .edit-summary-end.breadcrumbs p {
+        background-color: #fffff578;
+        color: #fff;
+    }
+
+    .confirm-edit-reserve {
+        margin-bottom: 0px !important;
+        border-bottom: 0px !important;
+        border-top-left-radius: 0px !important;
+        border-top-right-radius: 0px !important;
+    }
+
+    .change-separator {
+        flex: 1 1 0;
+        border-top: 1px dashed #FFFFFF;
+        margin: 0 20px;
+    }
+
+
+    #imageForm button {
+        -webkit-apperance: none;
+        text-align: center;
+        background: none;
+        outline: none;
+        border: 0px;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .close-new-dog svg{
+        width: 50px;
+        height: 50px;
+        margin: 30px
+        /* border-radius: 100px; */
+    }
+
 
 @media(max-width: 1200px) {
     .ph6 {
         padding-left: 3rem !important;
         padding-right: 3rem !important;
+    }
+}
+
+
+@media (max-width: 580px) {
+    .reserve-content  {
+        height: 100vh;
+        height: 100sdvh;
+        border-radius: 0px;
+        padding: 40px 20px;
+    }
+
+    .reserve-header {
+        align-items: flex-start;
+    }
+
+    #reserve-title-ph {
+        /* text-align: center; */
+        margin-bottom: 20px;
+    }
+
+    #summary-dog-name {margin-left: 0px;}
+
+    .breadcrumbs {
+        flex-wrap: wrap;
+    }
+
+
+    .reserve-content .breadcrumbs p {
+        margin-bottom: 5px;
+    }
+
+    .terms-container {
+        width: 100%;
+    }
+
+    .terms-container svg {
+        display: none
+    }
+
+    .pet-container {
+        min-width: unset;
+        margin-bottom: 20px;
+        height: unset;
+        width: 100%;
+        flex: unset;
+    }
+
+    .desktop {
+        display: none
+    }
+
+    .mobile {
+        display: block;
+    }
+
+    .new-dog-content, .reserve-content {
+      
+        border-radius: 0px;
+        height: 100vh;
+        height: 100svh;
+        padding: 50px 20px;
+        overflow: scroll;
+    }
+
+    .close-new-dog svg{
+        width: 30px;
+        height: 30px;
+        margin: 10px
+        /* border-radius: 100px; */
+    }
+
+    .user-info-container {
+        width: 100%;
     }
 }
 </style>

@@ -1092,6 +1092,7 @@ span.white {
     display: block;
   }
 
+
   .container-left {
     padding-left: 20px;
   }
@@ -1118,6 +1119,15 @@ span.white {
 
   .cursor {
     display: none;
+  }
+
+  .w-100-m {
+    width: 100%;
+  }
+
+  .relative-m {
+    position: relative;
+    top: 0 !important;
   }
 
   /* ---- MARGINS------ */

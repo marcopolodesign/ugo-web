@@ -4,7 +4,7 @@
 
     <div class="flex justify-center min-h-100-vh">
         <div class="w-40-ns form-container flex">
-            <div class="m-auto pa5 hp-light-color-bg w-70">
+            <div class="m-auto pa5 hp-light-color-bg w-70-ns">
                 <h2 class="black mb4 tc">Iniciar sesión</h2>
                 <form action="/login" method="POST" class="">
                     <input type="email" id="email" placeholder="Mail" name="email" required><br>

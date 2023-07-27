@@ -44,10 +44,10 @@
         </div>
 
         <div class="ugo-pink-bg totals flex jic pv3 mt-auto mb0 black">
-            <p>Total</p>
+            <p class="fw6">Total</p>
             <div class="flex flex-column">
-                <p id="grand-total">$<span>....</span></p>
-                <p class="dn" id="discount-final-number">$<span>....</span></p>
+                <p class="fw6" id="grand-total">$<span>....</span></p>
+                <p class="dn fw6" id="discount-final-number">$<span>....</span></p>
             </div>
         </div>
 
