@@ -8,22 +8,15 @@ document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-web/css/hp.css\" />"    
 );
 
-
-
-
-let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
 // let url = 'http://localhost:1337'
+let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
 let infoEndPoint = 'input-main';
-
 let dogEndPoint = 'inputs-web-dog';
 let ownerEndPoint = 'inputs-web-owner';
 
 
 let reserveInfo = {};
-
-
 let closeModal = document.querySelector('.close-modal')
-
 let stepsHeader = document.querySelector('.steps-master');
 let formOwner = document.querySelector('.form-owner')
 let ownerSummary = document.querySelectorAll('.summary-owner span');
@@ -44,13 +37,37 @@ let allDays;
 
 const HPavailability = [];
 
-let formStep = 0;
+const getQueryParamValue = (param) => {
+    const queryString = window.location.hash.split('?')[1];
+    if (!queryString) return null;
+    
+    const urlParams = new URLSearchParams(queryString);
+    return urlParams.get(param);
+  }
+
+
+ const formStepValue = getQueryParamValue('form_step');
+ console.log(formStepValue)
+ let formStep = 0;
+ if (formStepValue !== null) {
+   console.log('form_step value:', formStepValue);
+    formStep = formStepValue;
+ } 
+
+
 let formContent = document.querySelectorAll('.form-container > div');
+
+let enterDateES;
+let exitDateES
+let finalPricing;
+let transportFare = 6000;
+let price;
+
 
 var requestOptions = {
     method: 'GET',
     redirect: 'follow'
-  };
+};
 
 
 const loadSteps = () => {
@@ -58,7 +75,6 @@ const loadSteps = () => {
         if (index === formStep) {
             div.classList.add('active')
             div.classList.remove('hidden')
-
         } else {
             div.classList.add('hidden');
             div.classList.remove('active')
@@ -81,16 +97,13 @@ const loadSteps = () => {
                     step.style.display = "block";
                 } else {
                     step.style.display = "";
-                }
-             
+                }           
             }
         } else {
             step.classList.remove('active');
         }
     })
-
 }
-
 
 const loadPopUp = () => {
 
@@ -112,11 +125,8 @@ const loadPopUp = () => {
           </div>
        </div>
     `
-
     Array.from(stepsHeader.children)[0].classList.add('active')
     Array.from(stepsHeader.children)[0].style.display = "block";
-
-
     })
   })
   .catch(error => console.log('error', error));
@@ -148,18 +158,15 @@ const loadPopUp = () => {
 loadPopUp();
 
 const nextScreen = () => {
-
     let hasFilled = false;
     let lead = true;
     let incompleteFields;
  
     button.addEventListener('click', () => {
-
         let inputs = Array.prototype.slice.call(document.forms[0]);
 
         if (formStep === 0) {
-            inputs.forEach((input,index) => {
-            
+            inputs.forEach((input,index) => {        
                 if (index === 3) {
                     const un = (inputs[0].value + inputs[1].value).toString().toLowerCase();
                     checkEmailExists(input.value, un);
@@ -181,9 +188,6 @@ const nextScreen = () => {
                    }
                 }
             })
-
-            // make the incompleteFields if below a reusable function
-
         incompleteFields = document.forms[0].querySelectorAll('.incomplete');
 
         if (incompleteFields.length <= 0) {
@@ -300,7 +304,6 @@ const nextScreen = () => {
 
         } else if (formStep === 2) {
             // Calendario 
-
             let calendarDates = document.querySelectorAll('#range input');
             
             calendarDates.forEach((date, index) => {
@@ -341,7 +344,6 @@ const nextScreen = () => {
 
     prevButton.forEach((prev, index) => {
         prev.addEventListener('click', () => {
-
             if (index === 0) {
                 document.querySelector('.reserve-input-container').classList.remove("ending")
                 document.querySelector('.summary-stay-container').classList.remove("ending")
@@ -354,14 +356,8 @@ const nextScreen = () => {
         
                 loadScreens();
             }
-
-            console.log(formStep)
-
-
-    })
-       
+        })  
     });
-
 
     const loadScreens = () => {
         loadSteps();
@@ -369,7 +365,6 @@ const nextScreen = () => {
         if (!dogsInputs) {
          dogDetails();
         }
- 
  
         if (formStep > 0) {
          document.querySelector('.hp-title').classList.add('dn')
@@ -644,10 +639,8 @@ const dogDetails = () => {
     })
 
     .catch(error => console.log('error', error));
-
     dogsInputs = true;
 }
-
 
 const completeSummary = (source,target) => {
     source.addEventListener('input', (e) => {
@@ -655,52 +648,9 @@ const completeSummary = (source,target) => {
     })
 }
 
-let enterDateES;
-let exitDateES
-let finalPricing;
-let transportFare = 6000;
-let price;
-
-
-const getSheet = () => {
-    var id = '1il0HUktHwxaF_wDfpAjH-N9sxoT_sd_k73Z_v3_KDhk';
-    var gid = '0'
-    var url = `https://docs.google.com/spreadsheets/d/1il0HUktHwxaF_wDfpAjH-N9sxoT_sd_k73Z_v3_KDhk/gviz/tq?tqx=out:json&tq&gid=755951076`;
-    fetch(url)
-  .then(response => response.text())
-  .then(data => {
-    // Extract the JSON data using a regular expression pattern
-    const match = data.match(/google\.visualization\.Query\.setResponse\((.*)\)/);
-    
-    if (match) {
-      const jsonData = JSON.parse(match[1]);
-
-      let HPdata = jsonData.table.rows;
-
-      HPdata.forEach(dates => {
-       let availability = dates.c
-            const obj = {
-                date: availability[0].f,
-                availability: availability[1].v
-            };
-            HPavailability.push(obj);
-      })
-      // Use the JSON data as needed
-    } else {
-      throw new Error('Unable to extract JSON data from the response.');
-    }
-  })
-  .catch(error => {
-    console.error('Error retrieving data:', error);
-  });
-}
-
-
-
 const calendar = () => {
     
     let date = new Date();
-
     const elem = document.getElementById('range');
     const dateRangePicker = new DateRangePicker(elem, {
         datesDisabled: [0,2,4,6],
@@ -719,8 +669,8 @@ const calendar = () => {
     let enterDate;
     let exitDate;
 
-    getSheet();
-    console.log(HPavailability)
+    // getSheet();
+    // console.log(HPavailability)
  
     calInputs.forEach(input => {
         input.addEventListener('changeDate', function (e, details) { 
@@ -841,9 +791,6 @@ const calendar = () => {
         })
     })
 }
-
-
-
 calendar();
 
 const discounts = () => {
@@ -917,7 +864,6 @@ const discounts = () => {
         console.log(cupon)
     })
 }
-
 discounts();
 
 let close = () => {
@@ -926,7 +872,6 @@ let close = () => {
         document.querySelector('.reserve-bg').classList.add('dn'), 'pointers-none'
     })
 }
-
 close();
 
 let open = () => {
@@ -953,9 +898,7 @@ let open = () => {
         document.querySelector('.reserve-bg').classList.remove('dn'), 'pointers-none'
     }
 }
-
 open();
-
 
 const checkEmailExists = async (email, username) => {
     const emailEndpoint = `${url}/users?[email][$eq]=${email}`;
@@ -992,115 +935,13 @@ const checkEmailExists = async (email, username) => {
 };
   
 var raw;
-document.querySelectorAll('.pay-now-container').forEach(pay => {
-    pay.addEventListener('click', ()=> {
-
-        console.log(reserveInfo.dog.edad)
-        let mpTitle;
-
-        if (pay.classList.contains('upfront')) {
-            reserveInfo.aob.price = reserveInfo.aob.price * 0.2;
-             mpTitle = `Pago del 20% del total de la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise`
-             reserveInfo.aob.purchased = 'anticipo';
-             reserveInfo.aob.status = "Anticipo pagado";
-
-        } else {
-            mpTitle = `Pago para la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise` 
-            reserveInfo.aob.purchased = 'full';
-            reserveInfo.aob.status = "A retirar";
-        }
-
-        let celoDate =  document.querySelector('.celo-date input').value;
-    
-        if (!celoDate) {
-            celoDate = '2022-12-18';
-        }
-
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-
-        var raw = JSON.stringify({
-            "owner_name": reserveInfo.owner.nombre,
-            "owner_surname": reserveInfo.owner.apellido,
-            "owner_phone": reserveInfo.owner.telefono,
-            "owner_email":reserveInfo.owner.mail,
-            "owner_dni": reserveInfo.owner.dni,
-            "dog_genre": reserveInfo.dog.genero,
-            "dog_raza": reserveInfo.dog.raza,
-            "dog_social": reserveInfo.dog.social,
-            "dog_age": reserveInfo.dog.edad,
-            "dog_name": reserveInfo.dog.nombre,
-            "dog_castrado": reserveInfo.dog.castrado,
-            "date_celo" : celoDate,
-            "dog_behaviour": reserveInfo.dog.behaviour,
-            "dog_vaccine": reserveInfo.dog.checkbox11,
-            "dog_deworming": reserveInfo.dog.checkbox12,
-            "aob_date_start": enterDateES,
-            "aob_date_end": exitDateES,
-            "aob_price": reserveInfo.aob.price,
-            "aob_purchased" : reserveInfo.aob.purchased, 
-            "status" : reserveInfo.aob.status,
-            "dog_bite" : reserveInfo.dog.bite,
-            "dog_swim" : reserveInfo.dog.swim,
-            "dog_cirugia" : reserveInfo.dog.cirugia,
-            "dog_alergia" : reserveInfo.dog.alergia,
-            "dog_food" : reserveInfo.dog.food,
-            "dog_comments" : reserveInfo.dog.comments
-        });
-        
-
-        var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-        };
-
-        fetch("https://u-go-backend-deveop-lc9t2.ondigitalocean.app/reserves-hps", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-          console.log(result.json());
-          fetch(
-            'https://u-go-backend-deveop-lc9t2.ondigitalocean.app/hp-payments/createpreference',
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                title: mpTitle,
-                description: 'test desc',
-                price: reserveInfo.aob.price,
-                quantity: 1,
-                owner_name: reserveInfo.owner.nombre,
-                owner_surname: reserveInfo.owner.apellido,
-                owner_email: reserveInfo.owner.mail,
-                reserve: result._id
-              }),
-            }
-          )
-          .then(response => response.json())
-          .then(result => {
-            // Handle the result of the second POST request
-            console.log(result);
-            // window.location.replace(result.init_point);
-          })
-          .catch(error => {
-            // Handle the error of the second POST request
-            console.log('Error performing the second POST request:', error);
-          });
-        })
-        .catch(error => {
-          // Handle the error of the first POST request
-          console.log('Error performing the first POST request:', error);
-        });
-    })
-})
 
 let successCounter = document.querySelector('#confirmation-counter');
 let successMessage = document.querySelector('#confirmation-message');
+let purchaseStatus;
 
 
+// FUNCION PARA PAGAR OK!!!
 document.querySelector('.mail-now-container').addEventListener('click', ()=> {
 
     const createUser = async () => {
@@ -1263,6 +1104,29 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             throw new Error('Failed to update user');
         }
     };
+
+    async function createMercadoPagoPreference(mpTitle, reserveInfo, reserveId) {
+        const response = await fetch('https://u-go-backend-deveop-lc9t2.ondigitalocean.app/hp-payments/createpreference', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: mpTitle,
+            description: 'Testing Mercado Pago',
+            price: reserveInfo.aob.price,
+            quantity: 1,
+            owner_name: reserveInfo.owner.nombre,
+            owner_surname: reserveInfo.owner.apellido,
+            owner_email: reserveInfo.owner.mail,
+            reserve: reserveId
+          }),
+        });
+        if (!response.ok) {
+          throw new Error('Error creating Mercado Pago preference');
+        }
+        return response.json();
+      }
     
     const handleReserve = async () => {
         const terms = document.querySelector('input.terms');
@@ -1284,20 +1148,33 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
         
             await updateUser(newUser, reserveResult._id, newDog);
         
-            document.querySelector('.reserve-input-container').classList.add('dn');
-            document.querySelector('.reserve-input-container').classList.remove('flex');
-            document.querySelector('.message-success').classList.remove('dn');
-        
-            let i = 4;
-            setInterval(() => {
-                let timer = document.querySelector('#success-counter');
-                timer.innerHTML = i--;
-            }, 1000);
-        
-            setTimeout(() => {
-                localStorage.setItem('savedUser', JSON.stringify(newUser));
-                window.location.href = '/portal/';
-            }, 5000);
+            if (purchaseStatus === 'consulta') {
+
+                document.querySelector('.reserve-input-container').classList.add('dn');
+                document.querySelector('.reserve-input-container').classList.remove('flex');
+                document.querySelector('.message-success').classList.remove('dn');
+
+
+                let i = 4;
+                setInterval(() => {
+                    let timer = document.querySelector('#success-counter');
+                    timer.innerHTML = i--;
+                }, 1000);
+            
+                setTimeout(() => {
+                    localStorage.setItem('savedUser', JSON.stringify(newUser));
+                    window.location.href = '/portal/';
+                }, 5000);
+            } else if (purchaseStatus === 'compra') {
+                successMessage.innerHTML = 'Te vamos a redirigir a Mercado Pago para pagar el anticipo y confirmar tu reserva.';
+                let mpTitle = `Pago del 20% del total de la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise`
+
+                const preferenceResult = await createMercadoPagoPreference(mpTitle, reserveInfo, reserveResult._id);
+                console.log(preferenceResult);
+                setTimeout(() => {
+                  window.location.replace(preferenceResult.init_point);
+                }, 5000);
+            }
             } catch (error) {
             console.error('Error during product add to cart:', error);
             }
@@ -1325,10 +1202,18 @@ if (urlMessage.indexOf("?payment") >= 0) {
        if (success == 'approved') {
             title.innerHTML = `Gracias por tu compra! Tu reserva quedó confirmada. Un asesor de House Paradise se pondrá en contacto a la brevedad!`
 
-            fetch(`${url}reserves-hps/${params.get('reserve')}`, requestOptions)
+            let succesId = (params.get('reserve'))
+
+            var requestOptions = {
+                method: 'GET',
+                redirect: 'follow'
+              };
+
+            fetch(`${url}/reserves-hps/${succesId}`, requestOptions)
             .then(response => response.json())
             .then((response) => {
-                console.log(response)
+            console.log(response)
+        
 
             let dogName = response.dog_name;
             let dogAge = response.dog_age;
@@ -1336,7 +1221,7 @@ if (urlMessage.indexOf("?payment") >= 0) {
      
             let startDate = response.aob_date_start
             let endDate = response.aob_date_end
-            let mail = response.hp_payment.owner_email;
+            // let mail = response.hp_payment.owner_email;
             let price = response.aob_price
        
      
@@ -1428,3 +1313,136 @@ const dogInputConditionals = () => {
             } 
     })
 }
+
+
+const getSheet = () => {
+    var id = '1il0HUktHwxaF_wDfpAjH-N9sxoT_sd_k73Z_v3_KDhk';
+    var gid = '0'
+    var url = `https://docs.google.com/spreadsheets/d/1il0HUktHwxaF_wDfpAjH-N9sxoT_sd_k73Z_v3_KDhk/gviz/tq?tqx=out:json&tq&gid=755951076`;
+    fetch(url)
+  .then(response => response.text())
+  .then(data => {
+    // Extract the JSON data using a regular expression pattern
+    const match = data.match(/google\.visualization\.Query\.setResponse\((.*)\)/);
+    
+    if (match) {
+      const jsonData = JSON.parse(match[1]);
+
+      let HPdata = jsonData.table.rows;
+
+      HPdata.forEach(dates => {
+       let availability = dates.c
+            const obj = {
+                date: availability[0].f,
+                availability: availability[1].v
+            };
+            HPavailability.push(obj);
+      })
+      // Use the JSON data as needed
+    } else {
+      throw new Error('Unable to extract JSON data from the response.');
+    }
+  })
+  .catch(error => {
+    console.error('Error retrieving data:', error);
+  });
+}
+
+
+const ready2send = () => {
+    const isDivClicked = (divElement) => divElement.dataset.clicked === 'true';
+    const isInputChecked = (inputElement) => inputElement.checked;
+
+    const checkIsReady = (divElement, inputElement) => {
+      const divClicked = isDivClicked(divElement);
+      const inputChecked = isInputChecked(inputElement);
+
+      const isReady = divClicked && inputChecked;
+      console.log('isReady:', isReady);
+      return isReady;
+    };
+
+    const divElement = document.querySelector('.is-ready');
+    const inputElement = document.querySelector('.terms-container input[type="checkbox"]');
+
+    divElement.addEventListener('click', function() {
+      this.dataset.clicked = 'true';
+      const isReady = checkIsReady(divElement, inputElement);
+
+      if (isReady) {
+        addMainColorClassToDiv();
+      }
+    });
+
+    inputElement.addEventListener('click', function() {
+      const divElement = document.querySelector('.is-ready'); // Re-select div element
+      const isReady = checkIsReady(divElement, inputElement);
+
+      if (isReady) {
+        addMainColorClassToDiv();
+      }
+    });
+
+    function addMainColorClassToDiv() {
+      const divElement = document.querySelector('.mail-cta');
+      divElement.classList.add('bg-main-color');
+    }
+}
+ready2send()
+const checkoutOptions = () => {
+    // write a function that checks which .checkout-options-inner > div was clicked
+    // then, perform a change in the inner HTML of .mail-cta
+    // Also, change the inner HTML of the inner HTML of the .options-explication p
+    const checkoutOptions = document.querySelectorAll('.checkout-option');
+    const mailCta = document.querySelector('.mail-cta p');
+    const optionsExplication = document.querySelector('.options-explication');
+
+    const options = [
+        {
+          "Reserva": {
+            "cta": 'Enviar consulta',
+            "helper": 'Te vamos a contactar por whatsapp para contarte más sobre House Paradise!'
+          }
+        },
+        {
+          "Pagar": {
+            "cta": 'Pagar con Mercado Pago y confirmar Reserva',
+            "helper": 'Estás pagando el 20% para confirmar tu reserva. Antes de la estadía de tu mascota, necesitaremos el 80% restante.'
+          }
+        }
+      ];
+        
+    checkoutOptions.forEach(c => {
+        c.addEventListener('click', (event) => {
+            checkoutOptions.forEach((element) => {
+                if (element !== c) {
+                  element.classList.remove('active');
+                }
+              });
+
+            c.classList.add('active')
+            const optionName = c.getAttribute('data-option');
+
+            if (optionName === 'Reserva') {
+                purchaseStatus = 'consulta';
+            } else if (optionName === 'Pagar') {
+                purchaseStatus = 'compra';
+            }
+
+            console.log(purchaseStatus);
+
+
+            const object = options.find(option => optionName in option)
+
+            mailCta.innerHTML = object[optionName].cta
+            optionsExplication.querySelector('p').innerHTML = object[optionName].helper
+
+            optionsExplication.classList.remove('dn');
+        })
+    })
+    
+
+}
+
+checkoutOptions();
+ 

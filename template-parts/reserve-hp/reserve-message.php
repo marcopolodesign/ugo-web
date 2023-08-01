@@ -5,11 +5,14 @@
         <h2 class="tc white mt3  measure-wide"></h2>
     </div>
     
-    
-
-
-  <div class="w-40-ns summary-stay-container flex">
+  <div class="w-40-ns summary-stay-container flex overflow-hidden">
     <?php get_template_part('template-parts/reserve-hp/summary-hp'); ?>
   </div>
 
 </div>
+
+<style>
+  .summary-stay-container.overflow-hidden .summary-stay {
+    overflow-y:hidden;
+  }
+</style>

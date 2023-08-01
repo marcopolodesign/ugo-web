@@ -5,8 +5,7 @@
     <div class="pl4-ns pt3">
       <p class="breadcrumb dn">UGo! Home > House Paradise > Sobre tu perro</p>
       <h3 class="hp-title">
-        Bienvenido a House Paradise! Estás tomando los primeros pasos para darle
-        las mejores vacaciones a tu perro a partir de $5000 por día.
+        Bienvenido a House Paradise. Las mejores vacaciones para tu perro son aca.
       </h3>
       <div class="steps-master mt4 flex flex-row justify-between pl2-ns pr5-ns">
         <!-- Aca van los steps -->
