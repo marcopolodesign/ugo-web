@@ -1,6 +1,6 @@
 <div class="transport-caption flex items-center pa3">
     <?php get_template_part('template-parts/content/transport');?> 
-    <p class="ugo-pink ml3 w-max">Los viajes de ida y vuelta se realizan todos los <span class="underline">Lunes, Miércoles y Viernes</span> hábiles de la semana.</p>
+    <p class="ugo-pink ml3 w-max">Los viajes de ida y vuelta se realizan todos los <span class="underline fw6">Lunes, Miércoles y Viernes</span> hábiles de la semana.</p>
 </div>
 
 <div class="flex w-90" id="range">

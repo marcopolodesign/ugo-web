@@ -88,7 +88,7 @@ const loadUser = async () => {
 
 const getDogs = async (user) => {
     if (user && user.dogs) {
-    console.log(user)
+    // console.log(user)
       
     var requestOptions = {
         method: 'GET',
@@ -97,7 +97,7 @@ const getDogs = async (user) => {
       };
 
       let reserves  = await fetch (`${url}/reserves-hps?[owner][$eq]=${user.id}&_sort=aob_date_start:asc`, requestOptions).then(response => response.json())
-      console.log('User has reserves:',reserves);
+    //   console.log('User has reserves:',reserves);
 
       // Populate the dog list 
         let dogList = document.querySelector('.pets-container-inner');
@@ -137,7 +137,7 @@ const getDogs = async (user) => {
             const reservations = data.filter((reservation) => reservation.owner_email === user.email);
             // console.log('Reservations:', reservations);
 
-           (fillReserves(reservations, reserveList));    
+        //    (fillReserves(reservations, reserveList));    
         }
 
    
@@ -150,22 +150,21 @@ let addedStartDates = []; // Array to store the added start dates
 
 const fillReserves = async (reserves, list) => {
     reserves.forEach(reserve => {
-        console.log(reserve);
+        console.log(reserve)
         let dogImage = reserve.dog.avatar ? reserve.dog.avatar.url : "/wp-content/uploads/2022/08/Rectangle-861.jpg";
 
         const result = calculateDates(reserve.aob_date_start, reserve.aob_date_end);
-      
+        let dogName = reserve.dog.name;
 
-        // let dogName = reserve.dog.name
-        let dogName = reserve.dog_name
+        // console.log(reserve.dog.name)
 
-        if (!addedStartDates.includes(result.startDate)) {
+        // if (!addedStartDates.includes(result.startDate)) {
         let previousReserve = `
             <div class="hp-reserve-item hp-br hp-teal-bg pa3 w-100 mb4" >
                 <div class="hp-reserve-header flex jic">
                     <div class="flex jic">
                         <div class="relative reserve-img cover bg-center" style="background-image: url('${dogImage}')"></div>
-                        <h2 class="faro ml1">${dogName}</h2>
+                        <h2 class="faro ml1 ttc">${dogName}</h2>
                         <h5 class="ttu ml3 reserve-status ph2 pv1 lausanne lh1 hp-teal" style="background-color: #4F4483; font-size: 11px; border-radius: 2px;padding-top: 5.2px;">${reserve.aob_purchased}</h5>
                     </div>
                     ${ (reserve.aob_purchased != 'COMPLETADO') ? 
@@ -198,7 +197,7 @@ const fillReserves = async (reserves, list) => {
         } else {
             list.innerHTML = list.innerHTML + previousReserve;
         }
-        } 
+        
 
     })
 }
@@ -637,7 +636,7 @@ const newDogInputs = (user) => {
         document.querySelector('.new-dog-pop').classList.remove('flex');
         setTimeout(() => {
             window.location.reload();
-        }, 3000);
+        }, 1000);
     } else {
         const errorData = await response.json();
         console.log(errorData);
@@ -901,6 +900,8 @@ let price = 5000;
 let finalPricing;
 let reserveInfo = {};
 
+let selectedDog ;
+
 const newReserve = async (user) => { 
     console.log(user)
     let newReservePop = document.querySelector('.new-reserve-pop');
@@ -1026,12 +1027,38 @@ const newReserve = async (user) => {
         })
     }
 
-    let formReserveStep = 0;
-    if (user && user.dogs.length > 0) {
-        formReserveStep = 1;
-        document.querySelector('#summary-dog-name').innerHTML = user.dogs[0].name
+    const selectDog = () => {
+        const dogContainer = document.querySelector('.reserve-dog-selector');
+
+        user.dogs.forEach(dog => {
+            let dogDiv = document.createElement('div');
+            dogDiv.classList.add('dog-selector', 'pa3', 'ugo-black-bg', 'hp-br', 'mr3', 'anchor', 'db', 'pointer');
+            dogDiv.innerHTML = `
+            <h2 class="white ttc">${dog.name}</h2>
+            `
+            dogDiv.addEventListener('click', () => {
+                document.querySelector('#summary-dog-name').innerHTML = dog.name
+                selectedDog = dog.id;
+                document.querySelectorAll('.dog-selector').forEach(d => {
+                    d.classList.remove('selected')
+                })
+
+                dogDiv.classList.add('selected')
+            })
+            dogContainer.appendChild(dogDiv);
+        })
     }
 
+
+    let formReserveStep = 0;
+    console.log( user.dogs);
+    if (user && user.dogs.length < 0) {
+        selectedDog = user.dogs[0].id;
+        formReserveStep = 1;
+        document.querySelector('#summary-dog-name').innerHTML = user.dogs[0].name
+    } else {
+        selectDog();
+    }
     let reserveSteps = document.querySelectorAll('.reserve-steps-container > div');
 
     const stepsReserve = () => {
@@ -1049,6 +1076,8 @@ const newReserve = async (user) => {
         })
 
     }
+
+
 
     const showPrice = (price, totalDays, transportFare) => {
         document.querySelector('.daily-price').innerHTML = formatPrice(price);
@@ -1151,6 +1180,50 @@ const newReserve = async (user) => {
     
     discounts();
 
+
+    const ready2send = () => {
+        const isDivClicked = (divElement) => divElement.dataset.clicked === 'true';
+        const isInputChecked = (inputElement) => inputElement.checked;
+    
+        const checkIsReady = (divElement, inputElement) => {
+          const divClicked = isDivClicked(divElement);
+          const inputChecked = isInputChecked(inputElement);
+    
+          const isReady = divClicked && inputChecked;
+          console.log('isReady:', isReady);
+          return isReady;
+        };
+    
+        const divElement = document.querySelector('.is-ready');
+        const inputElement = document.querySelector('.terms-container input[type="checkbox"]');
+    
+        divElement.addEventListener('click', function() {
+          this.dataset.clicked = 'true';
+          const isReady = checkIsReady(divElement, inputElement);
+    
+          if (isReady) {
+            addMainColorClassToDiv();
+          }
+        });
+    
+        inputElement.addEventListener('click', function() {
+          const divElement = document.querySelector('.is-ready'); // Re-select div element
+          const isReady = checkIsReady(divElement, inputElement);
+    
+          if (isReady) {
+            addMainColorClassToDiv();
+          }
+        });
+    
+        function addMainColorClassToDiv() {
+          const divElement = document.querySelector('.mail-cta');
+          divElement.classList.add('bg-main-color');
+        }
+    }
+    ready2send()
+
+
+
     let nextStep = document.querySelector('.advance-step');
 
     let reserveTitle = {
@@ -1241,19 +1314,22 @@ const newReserve = async (user) => {
                 formReserveStep++;
                 hasFilled = false;
 
+                console.log(formReserveStep)
+
                 if (isEditing) {
                     // show the reserve summary
-                    nextStep.classList.add('dn');
+                    // nextStep.classList.add('dn');
                     document.querySelector('.reserve-header').classList.add('dn');
                     document.querySelector('.reserve-steps-container').classList.add('dn');
                     document.querySelector('.reserve-header').classList.remove('flex');
                     document.querySelector('.confirm-edit-reserve').classList.remove('dn');
 
-                } else if (formReserveStep <= 2) {
+                } else if (formReserveStep >= 2) {
                     nextStep.classList.add('dn');
-                } else {
-                    nextStep.classList.remove('dn');
                 }
+                //  else {
+                //     nextStep.classList.remove('dn');
+                // }
             }
 
             document.querySelector('#reserve-title-ph').innerHTML = reserveTitle[formReserveStep];
@@ -1278,7 +1354,6 @@ const newReserve = async (user) => {
         newReservePop.classList.add('flex');
     });
 
-
 }
 
 const sendReserve = async () => {
@@ -1288,15 +1363,12 @@ const sendReserve = async () => {
         let terms = document.querySelector('input.terms');
         checked = terms.checked;
 
-        let selectedDog = user.dogs[0].id;
+   
     
         if (!checked){ 
             alert('por favor, confirmá nuestros términos y condiciones')
         } else {
-            // reserveInfo.aob.purchased = "consulta";
-            // reserveInfo.aob.status = "Pendiente de pago";
-    
-        
+            
             var raw = JSON.stringify({
                 "owner" : user.id,
                 "dog" : selectedDog,
@@ -1330,11 +1402,17 @@ const sendReserve = async () => {
             .then( () => {
               showConfirmation()
             })
-            .catch(error => console.log('error', error));
+            .catch((error) => { 
+                alert('Hubo un error en tu solicitud. Vamos a re dirigirte a nuestro Whatsapp para que puedas contactarnos directamente');
+                redirectMessage()
+                console.log('error', error)
+            });
     
         }
     })
 }
+
+
 
 const showConfirmation = () => {
     document.querySelector('.confirmation-await').classList.add('dn');
@@ -1367,7 +1445,6 @@ const closePopUps = () => {
 // Initialize the app
 
 if (window.location.pathname === '/portal/') {
-    console.log('Loading user data...');
     loadUser();
     sendReserve();
     closePopUps();

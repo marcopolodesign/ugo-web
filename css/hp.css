@@ -248,6 +248,10 @@ option {
   background-color: #fff;
   border-radius: 8px;
   margin: 64px auto;
+
+  @media (max-width: 580px) {
+    overflow: hidden;
+  }
 }
 
 .steps-master > div {
@@ -705,6 +709,12 @@ h2.daily-price {
 .confirmation-await {
     z-index: 99;
     background: #fffffff2;
+
+    @media (max-width:580px) {
+        position: fixed;
+        top: 0;
+        left: 0
+    }
 }
 
 .checkout-options-inner {
@@ -772,6 +782,10 @@ h2.daily-price {
 
 .hover-main:hover, .hover-main:hover p {
     color: var(--pink)
+}
+
+.dog-selector.selected {
+    border: 2px solid var(--pink);
 }
 
 @media (min-width: 768px) {
@@ -1034,7 +1048,7 @@ h2.daily-price {
     }
 
     .form-container > div > div {
-        width: 100%;
+        width: 100% !important;
     }
 
     .social-level > div > div {

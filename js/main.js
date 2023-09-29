@@ -1328,9 +1328,9 @@ window.addEventListener('resize', () => {
 
 
 const instagram = () => {
-  let fields = 'id,username, media_type, media_url, timestamp, permalink, comments'
+  let fields = 'id,username,media_type,media_url,timestamp,permalink'
 
-  const accessToken = 'IGQVJXRlFtV0JQaDNnNGFob3BOcjZAoSHByX3BsQ0FhN21nV0tZAQzdvaWkzLVp2SGZACLU5HR2FOUkVhZAnViWHdDMjBydG5CMU1QRV9wMUdXRzV4ZA3FlMXlZANVR2RHAxOWVqUXBzLUF1QXZAjZA2locU5QeAZDZD';
+  const accessToken = 'IGQWROeG9HTnFqdEpFdG9ndDctcXBRUkZART0NLVUVfNHN4MGdvelk2dEpiQ1I4cXFPcUduWlRjOU5XWlhhcjJ0SDBvQzhET3ZAIRXl4TUJyc3pwcVlYakNKbFdzYU5UcWlWNjVIUjF5VXlQTk1UYWhxOTZAGV0l1UU0ZD';
 
 
   const superHiApi = `https://api.superhi.com/api/test/token/instagram?access_token=${accessToken}`
@@ -1352,16 +1352,18 @@ const instagram = () => {
   const getGram = async () => {
     newToken = await refreshToken()
 
-  const apiUrl = `https://graph.instagram.com/me/media?fields=${fields}&access_token=${newToken}`;
+    const apiUrl = `https://graph.instagram.com/me/media?fields=${fields}&access_token=${newToken}`;
 
+    console.log(apiUrl)
   
-  return fetch(apiUrl, {
-    count: 5
-  })
+    return fetch(apiUrl, {
+      count: 5
+    })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data)
       sectionTag.innerHTML = '';
-       data.data.slice(0, 5).forEach((post) => {
+      data.data.slice(0, 5).forEach((post) => {
         if (post.media_type === "VIDEO") {
           sectionTag.innerHTML =
           sectionTag.innerHTML +

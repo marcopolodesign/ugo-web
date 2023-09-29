@@ -70,10 +70,18 @@
 		<a class="barba-prevent" href="/">
 			<?php get_template_part('template-parts/content/hp-logo-min'); ?>
 		</a>
-		<a href="https://api.whatsapp.com/send?phone=+5491157808539&text=Hola!%20Estoy%20interesado%20en%20darle%20las%20mejores%20vacaciones%20a%20mi%20perro!" target="_blank" class="no-deco flex f4 w-max jic anchor">
-			<?php // get_template_part('template-parts/content/whapp'); ?>
-			<p class="ml2 messina white f6 has-after pt1">Reservar ahora</p>
-		</a>
+
+		<div class="flex jic gap-5">
+			<a href="https://api.whatsapp.com/send?phone=+5491157808539&text=Hola!%20Estoy%20interesado%20en%20darle%20las%20mejores%20vacaciones%20a%20mi%20perro!" target="_blank" class="no-deco flex f4 w-max jic anchor">
+				<?php // get_template_part('template-parts/content/whapp'); ?>
+				<p class="ml2 messina white f6 has-after pt1">Reservar ahora</p>
+			</a>
+
+			<a href="/sign-in" target="_blank" class="no-deco flex f4 w-max jic anchor desktop">
+				<?php // get_template_part('template-parts/content/whapp'); ?>
+				<p class="ml5 messina white f6 has-after pt1">Iniciar sesión</p>
+			</a>
+		</div>
 
 	</header><!-- #masthead -->
 

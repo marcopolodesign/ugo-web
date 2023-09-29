@@ -14,8 +14,8 @@
                 <p>Quiero que me contacten y pagar más adelante</p>
                 <div class="checker"></div>
             </div>
-            <div class="checkout-option flex jic pa3 is-ready smooth-t anchor" data-option="Pagar">
-                <p>Pagar un anticipo de $4.200 y confirmar la reserva</p>
+            <div class="checkout-option flex jic pa3 is-ready smooth-t anchor pointers-none o-50" data-option="Pagar">
+                <p>Pagar un anticipo del 20% y confirmar la reserva [Coming Soon!]</p>
                 <div class="checker"></div>
             </div>
         </div>

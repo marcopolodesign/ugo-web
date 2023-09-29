@@ -109,7 +109,9 @@
             </div>
 
             <div class="reserve-steps-container">
-                <div class="step-1"></div>
+                <div class="step-1">
+                    <div class="flex reserve-dog-selector"></div>
+                </div>
                 <div class="step-2 dn">
                     <?php get_template_part('template-parts/portal/step-2'); ?>
                     <?php get_template_part('template-parts/reserve-hp/discount'); ?>

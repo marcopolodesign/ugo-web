@@ -1092,6 +1092,9 @@ span.white {
     display: block;
   }
 
+  .desktop {
+    display: none;
+  }
 
   .container-left {
     padding-left: 20px;

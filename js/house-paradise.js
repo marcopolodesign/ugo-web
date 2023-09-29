@@ -46,13 +46,13 @@ const getQueryParamValue = (param) => {
   }
 
 
- const formStepValue = getQueryParamValue('form_step');
- console.log(formStepValue)
+//  const formStepValue = getQueryParamValue('form_step');
+//  console.log(formStepValue)
  let formStep = 0;
- if (formStepValue !== null) {
-   console.log('form_step value:', formStepValue);
-    formStep = formStepValue;
- } 
+//  if (formStepValue !== null) {
+//    console.log('form_step value:', formStepValue);
+//     formStep = formStepValue;
+//  } 
 
 
 let formContent = document.querySelectorAll('.form-container > div');
@@ -60,7 +60,7 @@ let formContent = document.querySelectorAll('.form-container > div');
 let enterDateES;
 let exitDateES
 let finalPricing;
-let transportFare = 6000;
+let transportFare = 10000;
 let price;
 
 
@@ -745,9 +745,9 @@ const calendar = () => {
                 console.log(matchingObject);
     
                 if (matchingObject) {
-                    price = 5000;
+                    price = 7000;
                 } else {
-                    price = 5000;
+                    price = 7000;
                 }
 
 
@@ -979,10 +979,11 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
           return newUser;
         } catch (error) {
           console.error('Error while creating User:', error);
+          redirectMessage();
           throw new Error('Failed to create user');
         }
     };
-      
+ 
     let newDogId = '';
     const createDog = async (newUser) => {
         const dogSex = reserveInfo.dog.Género;
@@ -1018,6 +1019,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             return newDog._id;
         } catch (error) {
             console.error('Error while creating dog:', error);
+            redirectMessage();
             throw new Error('Failed to create dog');
         }
     };
@@ -1075,6 +1077,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             return result;
         } catch (error) {
             console.error('Error while creating reserve:', error);
+            redirectMessage();
             throw new Error('Failed to create reserve');
         }
     };
@@ -1101,6 +1104,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             return result;
         } catch (error) {
             console.error('Error while updating user:', error);
+            redirectMessage();
             throw new Error('Failed to update user');
         }
     };
@@ -1183,6 +1187,12 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
     
     handleReserve();
 })
+
+const redirectMessage = () => {
+    alert('Tuvimos un problema con tu reserva. Te vamos a redirigir al whatsapp para que te podamos ayudar a completarla.');
+    let message = `Hola! Quiero reservar para mi perro ${reserveInfo.dog.nombre} desde el ${enterDateES} hasta el ${exitDateES}. Mi nombre es ${reserveInfo.owner.nombre} ${reserveInfo.owner.apellido} y mi email es ${reserveInfo.owner.mail}. El precio total de la estadía sugerido por la página fue de ${reserveInfo.aob.price}.`
+    window.open(`https://wa.me/5491157808539&${message}`, '_blank');
+}
 
 // Confirmation Message
 

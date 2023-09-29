@@ -7,11 +7,13 @@
             <div class="m-auto pa5 hp-light-color-bg w-70-ns">
                 <h2 class="black mb4 tc">Iniciar sesión</h2>
                 <form action="/login" method="POST" class="">
-                    <input type="email" id="email" placeholder="Mail" name="email" required><br>
-                    <input type="password" placeholder="Contraseña"  id="password" name="password" required><br>
+                    <input type="email" id="email" placeholder="Ingresá tu mail..." name="email" required><br>
+                    <input type="password" placeholder="Ingresá tu DNI..."  id="password" name="password" required><br>
                     <button class="w-100 pa3 white fw5" type="submit">Iniciar sesión</button>
                 </form>
                 <p class="mt4 black tc">¿Primera vez? <a class="black"href="/signup">Crear cuenta</a></p>
+
+                <!-- <p class="mt hp-dark-color f6 tc lh-1">No recordas tu contraseña?<br>TIP: Probá con tu DNI!</p> -->
 
             </div>
        
