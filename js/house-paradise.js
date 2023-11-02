@@ -60,8 +60,8 @@ let formContent = document.querySelectorAll('.form-container > div');
 let enterDateES;
 let exitDateES
 let finalPricing;
-let transportFare = 10000;
-let price;
+// let transportFare = 10000;
+// let price;
 
 
 var requestOptions = {
@@ -745,9 +745,9 @@ const calendar = () => {
                 console.log(matchingObject);
     
                 if (matchingObject) {
-                    price = 7000;
+                    // price = 7000;
                 } else {
-                    price = 7000;
+                    // price = 7000;
                 }
 
 
@@ -796,9 +796,10 @@ calendar();
 const discounts = () => {
     let promotions = [
         {name: 'MEJORESAMIGOS', discount : 15},
-        {name: 'AMIGUIS', discount : 15},
+        {name: 'AMIGUIS', discount : 10},
+        {name: 'FINDEPRUEBA', discount : 15},
         {name: 'SUPERFINDE', discount : 15},
-        {name: 'PARAISO', discount : 25}
+        {name: 'PARAISO', discount : 20}
     ]
 
     let verify = document.querySelector('#discount-verify');
@@ -875,7 +876,7 @@ let close = () => {
 close();
 
 let open = () => {
-    let a = document.querySelectorAll('a');
+    let a = document.querySelectorAll('a:not(.log-in)');
 
     a.forEach(trigger => {
         trigger.addEventListener('click', (e)=> {

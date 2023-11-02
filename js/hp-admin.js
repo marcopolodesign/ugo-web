@@ -896,7 +896,7 @@ const uploadDogImage = async () => {
 let enterDateES;
 let exitDateES;
 
-let price = 5000;
+// let price = 5000;
 let finalPricing;
 let reserveInfo = {};
 
@@ -907,7 +907,7 @@ const newReserve = async (user) => {
     let newReservePop = document.querySelector('.new-reserve-pop');
     let isEditing = false;
   
-    let transportFare = 6000;
+    // let transportFare = 10000;
 
     const calendar = () => {
     
@@ -986,7 +986,7 @@ const newReserve = async (user) => {
                       const dateRange = getDateRange(enterDateES, exitDateES);
                         console.log(dateRange);
 
-                        price = 5000;
+                        // price = 7000;
         
 
                     // Get today's date
@@ -998,10 +998,7 @@ const newReserve = async (user) => {
                     // Calculate the difference in days
                     const timeDifference = enterDateES.getTime() - today.getTime();
                     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    
-    
-                    console.log(daysDifference)
-        
+            
                     showPrice(price, totalDays, transportFare)
                 }
                 });
@@ -1220,9 +1217,9 @@ const newReserve = async (user) => {
           divElement.classList.add('bg-main-color');
         }
     }
+
+
     ready2send()
-
-
 
     let nextStep = document.querySelector('.advance-step');
 

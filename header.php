@@ -54,6 +54,11 @@
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 					
 
+	<script>
+		let price = <?php the_field('price', 6);?>;
+		let transportFare = <?php the_field('transport_fare', 6);?>;
+		console.log(transportFare)
+	</script>
 					
 	<?php wp_head(); ?>
 
@@ -77,7 +82,7 @@
 				<p class="ml2 messina white f6 has-after pt1">Reservar ahora</p>
 			</a>
 
-			<a href="/sign-in" target="_blank" class="no-deco flex f4 w-max jic anchor desktop">
+			<a href="/sign-in" target="_blank" class="no-deco flex f4 w-max jic anchor  desktop log-in">
 				<?php // get_template_part('template-parts/content/whapp'); ?>
 				<p class="ml5 messina white f6 has-after pt1">Iniciar sesión</p>
 			</a>

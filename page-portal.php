@@ -99,7 +99,7 @@
             <div class="reserve-header flex column-mobile items-center mb5">
                 <h2 id="reserve-title-ph"class=" white f2 w-40-ns">Para quién es la reserva?</h2>
                 <div class="breadcrumbs flex">
-                    <p id="summary-dog-name"><?php echo $dogName; ?></p>
+                    <p id="summary-dog-name"></p>
                     <div class="flex">
                         <p><span id="summary-start-date"></span> — <span id="summary-end-date"></span></p>
                     </div>

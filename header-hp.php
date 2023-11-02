@@ -54,6 +54,15 @@
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 					
 
+
+	<script>
+		let price = <?php the_field('price', 6);?>;
+		let transportFare = <?php the_field('transport_fare', 6);?>;
+		console.log(transportFare)
+	</script>
+				
+				
+
 					
 	<?php wp_head(); ?>
 
