@@ -1152,7 +1152,10 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             const reserveResult = await createReserve(newUser, newDog);
         
             await updateUser(newUser, reserveResult._id, newDog);
-        
+            fbq('track', 'formok');
+
+            
+
             if (purchaseStatus === 'consulta') {
 
                 document.querySelector('.reserve-input-container').classList.add('dn');
