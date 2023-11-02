@@ -1136,6 +1136,8 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
     const handleReserve = async () => {
         const terms = document.querySelector('input.terms');
         const checked = terms.checked;
+
+        
         
         if (!checked) {
             alert('Por favor, confirma nuestros términos y condiciones');
