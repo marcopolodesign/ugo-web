@@ -1154,7 +1154,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             await updateUser(newUser, reserveResult._id, newDog);
             fbq('track', 'formok');
 
-            
+
 
             if (purchaseStatus === 'consulta') {
 
@@ -1190,6 +1190,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
     };
     
     handleReserve();
+    
 })
 
 const redirectMessage = () => {
