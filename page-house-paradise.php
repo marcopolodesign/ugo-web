@@ -39,8 +39,8 @@ get_header();
 
 	
 
-		<script src="wp-content/themes/ugo-web/js/datepicker-full.min.js"></script>
-		<script src="wp-content/themes/ugo-web/js/house-paradise.js"></script>
+		<script src="wp-content/themes/ugo-main/js/datepicker-full.min.js"></script>
+		<script src="wp-content/themes/ugo-main/js/house-paradise.js"></script>
 
 		
 	

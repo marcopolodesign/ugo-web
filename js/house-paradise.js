@@ -1,11 +1,11 @@
 document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "beforeend",
-    "<link rel=\"stylesheet\" href=\"wp-content/themes/ugo-web/css/datepicker.min.css\" />"    
+    "<link rel=\"stylesheet\" href=\"wp-content/themes/ugo-main/css/datepicker.min.css\" />"    
 );
 
 document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "beforeend",
-    "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-web/css/hp.css\" />"    
+    "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-main/css/hp.css\" />"    
 );
 
 // let url = 'http://localhost:1337'

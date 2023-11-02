@@ -60,8 +60,8 @@ $mainColor = get_field('main_color');
         get_template_part('template-parts/reserve-hp/reserve-message'); 
     ?>
 
-    <script src="/wp-content/themes/ugo-web/js/datepicker-full.min.js"></script>
-    <script src="/wp-content/themes/ugo-web/js/house-paradise.js"></script>
+    <script src="/wp-content/themes/ugo-main/js/datepicker-full.min.js"></script>
+    <script src="/wp-content/themes/ugo-main/js/house-paradise.js"></script>
   
 <style>
 
