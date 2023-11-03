@@ -1353,15 +1353,13 @@ const instagram = () => {
     newToken = await refreshToken()
 
     const apiUrl = `https://graph.instagram.com/me/media?fields=${fields}&access_token=${newToken}`;
-
-    console.log(apiUrl)
-  
     return fetch(apiUrl, {
       count: 5
     })
     .then((response) => response.json())
     .then((data) => {
       console.log(data)
+      if (!data.error) {
       sectionTag.innerHTML = '';
       data.data.slice(0, 5).forEach((post) => {
         if (post.media_type === "VIDEO") {
@@ -1383,6 +1381,7 @@ const instagram = () => {
           `;
         }
         });
+        }
     
       // setTimeout(() => {
       //   let width = document.querySelector('.instagram-feed div a').clientWidth;

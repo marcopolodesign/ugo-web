@@ -957,6 +957,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "first_name": reserveInfo.owner.nombre,
             "last_name": reserveInfo.owner.apellido,
             "direccion" : reserveInfo.owner.dirección,
+            "dni": reserveInfo.owner.dni,
             "confirmed": true
         });
       
@@ -997,6 +998,52 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "age": reserveInfo.dog.edad,
             "owner": newUser._id,
             "sex": dogSex.charAt(0).toUpperCase() + dogSex.slice(1),
+            "hp_questions" : [
+                {
+                    'title' : 'Está castrado?',
+                    'slug' : reserveInfo.dog.castrado
+                }, 
+                {
+                    'title' : "Tiene alguna cirugía?",
+                    'slug' : reserveInfo.dog.cirugia
+                }, 
+                {
+                    'title' : "Tiene alguna alergia?",
+                    'slug' : reserveInfo.dog.alergia
+                }, 
+                {
+                    'title': 'Qué tan sociable es?' , 
+                    'slug' : reserveInfo.dog.social
+                },
+                {
+                    'title': 'Tiene alguno de estos comportamientos?' , 
+                    'slug' : reserveInfo.dog.behaviour
+                },
+                {
+                    'title': 'Tiene vacunas?' , 
+                    'slug' : reserveInfo.dog.checkbox12.toString()
+                },
+                {
+                    'title': 'Está desparacitado?' , 
+                    'slug' : reserveInfo.dog.checkbox13.toString()
+                },
+                {
+                    'title': 'Mordió a otros perros?' , 
+                    'slug' : reserveInfo.dog.bite
+                },
+                {
+                    'title': 'Sabe nadar?' , 
+                    'slug' : reserveInfo.dog.swim
+                },
+                {
+                    'title': 'Qué comida come?' , 
+                    'slug' : reserveInfo.dog.food
+                }, 
+                {
+                    'title': 'Otros comentarios?' , 
+                    'slug' : reserveInfo.dog.comments
+                }
+            ]
         });
         
         const myHeaders = new Headers();

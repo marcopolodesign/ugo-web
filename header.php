@@ -57,7 +57,7 @@
 	<script>
 		let price = <?php the_field('price', 6);?>;
 		let transportFare = <?php the_field('transport_fare', 6);?>;
-		console.log(transportFare)
+		// console.log(transportFare)
 	</script>
 					
 	<?php wp_head(); ?>
