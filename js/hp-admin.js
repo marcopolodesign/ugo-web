@@ -71,7 +71,7 @@ const logoutButton = document.getElementById('log-out');
 const loadUser = async () => {
     let userID = localStorage.getItem('savedUser');
     userID ? userID = userID = JSON.parse(userID) : window.location.href = '/sign-in';
-    console.log(userID._id);
+    // console.log(userID._id);
 
     const response = await fetch(`${url}/users/${userID._id}`);
     if (response.ok) {
@@ -82,6 +82,7 @@ const loadUser = async () => {
         newReserve(user);
         newDogInputs(user);
         console.log(user);
+        console.log(user.dogs[1])
     }
    
 }
@@ -1035,7 +1036,8 @@ const newReserve = async (user) => {
             `
             dogDiv.addEventListener('click', () => {
                 document.querySelector('#summary-dog-name').innerHTML = dog.name
-                selectedDog = dog.id;
+                selectedDog = dog;
+                console.log(selectedDog)
                 document.querySelectorAll('.dog-selector').forEach(d => {
                     d.classList.remove('selected')
                 })
@@ -1048,9 +1050,9 @@ const newReserve = async (user) => {
 
 
     let formReserveStep = 0;
-    console.log( user.dogs);
     if (user && user.dogs.length < 0) {
-        selectedDog = user.dogs[0].id;
+        selectedDog = user.dogs[0];
+        console.log(selectDog)
         formReserveStep = 1;
         document.querySelector('#summary-dog-name').innerHTML = user.dogs[0].name
     } else {
@@ -1368,7 +1370,7 @@ const sendReserve = async () => {
             
             var raw = JSON.stringify({
                 "owner" : user.id,
-                "dog" : selectedDog,
+                "dog" : selectedDog.id,
                 "aob_date_start": enterDateES,
                 "aob_date_end": exitDateES,
                 "aob_price": finalPricing,
@@ -1377,34 +1379,32 @@ const sendReserve = async () => {
 
 
                 "owner_name": user.first_name,
-                "owner_surname": user.last_names,
-                "owner_phone": user.phone,
+                "owner_surname": user.last_name,
+                "owner_phone": user.phone.toString(),
                 "owner_email": user.email,
-                "owner_dni": reserveInfo.owner.dni,
-                "owner_address": reserveInfo.owner.dirección,
-                "dog_genre": reserveInfo.dog.Género,
-                "dog_raza": reserveInfo.dog.raza,
-                "dog_social": reserveInfo.dog.social,
-                "dog_age": reserveInfo.dog.edad,
-                "dog_name": reserveInfo.dog.nombre,
-                "dog_castrado": reserveInfo.dog.castrado,
-                "date_celo": celoDate,
-                "dog_behaviour": reserveInfo.dog.behaviour,
-                "dog_vaccine": reserveInfo.dog.checkbox11,
-                "dog_deworming": reserveInfo.dog.checkbox12,
-                "aob_date_start": enterDateES,
-                "aob_date_end": exitDateES,
-                "aob_price": reserveInfo.aob.price,
-                "aob_purchased": reserveInfo.aob.purchased,
-                "status": reserveInfo.aob.status,
-                "dog_bite": reserveInfo.dog.bite,
-                "dog_swim": reserveInfo.dog.swim,
-                "dog_cirugia": reserveInfo.dog.cirugia,
-                "dog_alergia": reserveInfo.dog.alergia,
-                "dog_food": reserveInfo.dog.food,
-                "dog_comments": reserveInfo.dog.comments,
-                "dog": newDogId,
-                "owner": newUser._id,
+                "owner_dni": user.dni,
+                "owner_address": user.direccion,
+                "dog_genre": selectedDog.sex,
+                "dog_raza": selectedDog.raza,
+                // "dog_social": reserveInfo.dog.social,
+                // "dog_age": reserveInfo.dog.edad,
+                // "dog_name": reserveInfo.dog.nombre,
+                // "dog_castrado": reserveInfo.dog.castrado,
+                // "date_celo": celoDate,
+                // "dog_behaviour": reserveInfo.dog.behaviour,
+                // "dog_vaccine": reserveInfo.dog.checkbox11,
+                // "dog_deworming": reserveInfo.dog.checkbox12,
+                // "aob_date_start": enterDateES,
+                // "aob_date_end": exitDateES,
+                // "aob_price": reserveInfo.aob.price,
+                // "aob_purchased": reserveInfo.aob.purchased,
+                // "status": reserveInfo.aob.status,
+                // "dog_bite": reserveInfo.dog.bite,
+                // "dog_swim": reserveInfo.dog.swim,
+                // "dog_cirugia": reserveInfo.dog.cirugia,
+                // "dog_alergia": reserveInfo.dog.alergia,
+                // "dog_food": reserveInfo.dog.food,
+                // "dog_comments": reserveInfo.dog.comments,
             });
             
     

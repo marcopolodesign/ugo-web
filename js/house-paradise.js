@@ -8,8 +8,8 @@ document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-main/css/hp.css\" />"    
 );
 
-// let url = 'http://localhost:1337'
-let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
+let url = 'http://localhost:1337'
+// let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
 let infoEndPoint = 'input-main';
 let dogEndPoint = 'inputs-web-dog';
 let ownerEndPoint = 'inputs-web-owner';
@@ -143,7 +143,7 @@ const loadPopUp = () => {
         input.classList.add('input-text');
         input.setAttribute("required", "")
 
-    formOwner.appendChild(input);
+        formOwner.appendChild(input);
 
         completeSummary(input, ownerSummary[index])
     })  
@@ -172,7 +172,7 @@ const nextScreen = () => {
                     checkEmailExists(input.value, un);
                     console.log(input)
                 }
-                if (index <= 5) {
+                if (index <= 6) {
                    let value = input.value;
                    if (!value) {
                     input.classList.add('incomplete')
@@ -199,7 +199,7 @@ const nextScreen = () => {
         } else if (formStep === 1) {
            
             inputs.forEach((input,index) => {
-                if (index > 5 && index <= 10) {
+                if (index > 6 && index <= 11) {
                     let attr = input.getAttribute('placeholder');
                     let value = input.value;    
                     if (!value && input.tagName !== "SELECT") {
@@ -233,7 +233,7 @@ const nextScreen = () => {
                        hasFilled = false;
                    }
 
-                } else if (index > 11 && index <= 13) {
+                } else if (index > 12 && index <= 14) {
                  
                     let values = {[`checkbox${index}`] : input.checked}
                     reserveInfo.dog = {...reserveInfo.dog, ...values}
@@ -283,21 +283,16 @@ const nextScreen = () => {
                        }
 
                        //aob responses
-               
-
                        let foodRes = document.querySelectorAll('.aob-container input')[0];
                        if (foodRes) {
                         foodRes = foodRes.value;
                            reserveInfo.dog.food = foodRes;
                        }
-
                        let commentsRes = document.querySelectorAll('.aob-container input')[1];
                        if (commentsRes) {
                         commentsRes = commentsRes.value;
                            reserveInfo.dog.comments = commentsRes;
                        }
-
-
                 } 
             }) 
 
@@ -957,6 +952,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "first_name": reserveInfo.owner.nombre,
             "last_name": reserveInfo.owner.apellido,
             "direccion" : reserveInfo.owner.dirección,
+            "dni": reserveInfo.owner.dni,
             "confirmed": true
         });
       
@@ -997,6 +993,52 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "age": reserveInfo.dog.edad,
             "owner": newUser._id,
             "sex": dogSex.charAt(0).toUpperCase() + dogSex.slice(1),
+            "hp_questions" : [
+                {
+                    'title' : 'Está castrado?',
+                    'slug' : reserveInfo.dog.castrado
+                }, 
+                {
+                    'title' : "Tiene alguna cirugía?",
+                    'slug' : reserveInfo.dog.cirugia
+                }, 
+                {
+                    'title' : "Tiene alguna alergia?",
+                    'slug' : reserveInfo.dog.alergia
+                }, 
+                {
+                    'title': 'Qué tan sociable es?' , 
+                    'slug' : reserveInfo.dog.social
+                },
+                {
+                    'title': 'Tiene alguno de estos comportamientos?' , 
+                    'slug' : reserveInfo.dog.behaviour
+                },
+                {
+                    'title': 'Tiene vacunas?' , 
+                    'slug' : reserveInfo.dog.checkbox13.toString()
+                },
+                {
+                    'title': 'Está desparacitado?' , 
+                    'slug' : reserveInfo.dog.checkbox14.toString()
+                },
+                {
+                    'title': 'Mordió a otros perros?' , 
+                    'slug' : reserveInfo.dog.bite
+                },
+                {
+                    'title': 'Sabe nadar?' , 
+                    'slug' : reserveInfo.dog.swim
+                },
+                {
+                    'title': 'Qué comida come?' , 
+                    'slug' : reserveInfo.dog.food
+                }, 
+                {
+                    'title': 'Otros comentarios?' , 
+                    'slug' : reserveInfo.dog.comments
+                }
+            ]
         });
         
         const myHeaders = new Headers();
@@ -1035,6 +1077,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "owner_email": reserveInfo.owner.mail,
             "owner_dni": reserveInfo.owner.dni,
             "owner_address": reserveInfo.owner.dirección,
+            "provincia" : reserveInfo.owner.provincia,
             "dog_genre": reserveInfo.dog.Género,
             "dog_raza": reserveInfo.dog.raza,
             "dog_social": reserveInfo.dog.social,
@@ -1043,8 +1086,8 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "dog_castrado": reserveInfo.dog.castrado,
             "date_celo": celoDate,
             "dog_behaviour": reserveInfo.dog.behaviour,
-            "dog_vaccine": reserveInfo.dog.checkbox11,
-            "dog_deworming": reserveInfo.dog.checkbox12,
+            "dog_vaccine": reserveInfo.dog.checkbox13,
+            "dog_deworming": reserveInfo.dog.checkbox14,
             "aob_date_start": enterDateES,
             "aob_date_end": exitDateES,
             "aob_price": reserveInfo.aob.price,

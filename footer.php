@@ -72,6 +72,7 @@
 	</footer><!-- #colophon -->
 </div><!-- #page -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1D8FEDMZ6S"></script>
 <script>
