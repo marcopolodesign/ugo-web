@@ -8,8 +8,8 @@ document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-main/css/hp.css\" />"    
 );
 
-let url = 'http://localhost:1337'
-// let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
+// let url = 'http://localhost:1337'
+let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
 let infoEndPoint = 'input-main';
 let dogEndPoint = 'inputs-web-dog';
 let ownerEndPoint = 'inputs-web-owner';
