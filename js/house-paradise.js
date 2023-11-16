@@ -3,10 +3,10 @@ document.getElementsByTagName("head")[0].insertAdjacentHTML(
     "<link rel=\"stylesheet\" href=\"wp-content/themes/ugo-main/css/datepicker.min.css\" />"    
 );
 
-document.getElementsByTagName("head")[0].insertAdjacentHTML(
-    "beforeend",
-    "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-main/css/hp.css\" />"    
-);
+// document.getElementsByTagName("head")[0].insertAdjacentHTML(
+//     "beforeend",
+//     "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-main/css/hp.css\" />"    
+// );
 
 // let url = 'http://localhost:1337'
 let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
@@ -46,13 +46,13 @@ const getQueryParamValue = (param) => {
   }
 
 
-//  const formStepValue = getQueryParamValue('form_step');
+ const formStepValue = getQueryParamValue('form_step');
 //  console.log(formStepValue)
  let formStep = 0;
-//  if (formStepValue !== null) {
-//    console.log('form_step value:', formStepValue);
-//     formStep = formStepValue;
-//  } 
+ if (formStepValue !== null) {
+   console.log('form_step value:', formStepValue);
+    formStep = formStepValue;
+ } 
 
 
 let formContent = document.querySelectorAll('.form-container > div');
@@ -1153,7 +1153,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
         }
     };
 
-    async function createMercadoPagoPreference(mpTitle, reserveInfo, reserveId) {
+    async function createMercadoPagoPreference(mpTitle, reserveInfo, reserveId, newUser) {
         const response = await fetch('https://u-go-backend-deveop-lc9t2.ondigitalocean.app/hp-payments/createpreference', {
           method: 'POST',
           headers: {
@@ -1167,11 +1167,12 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             owner_name: reserveInfo.owner.nombre,
             owner_surname: reserveInfo.owner.apellido,
             owner_email: reserveInfo.owner.mail,
-            reserve: reserveId
+            reserve: reserveId, 
+            user_id : newUser._id,
           }),
         });
         if (!response.ok) {
-          throw new Error('Error creating Mercado Pago preference');
+          throw new Error('Error creating Mercado Pago preference ' + response);
         }
         return response.json();
       }
@@ -1222,7 +1223,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
                 successMessage.innerHTML = 'Te vamos a redirigir a Mercado Pago para pagar el anticipo y confirmar tu reserva.';
                 let mpTitle = `Pago del 20% del total de la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise`
 
-                const preferenceResult = await createMercadoPagoPreference(mpTitle, reserveInfo, reserveResult._id);
+                const preferenceResult = await createMercadoPagoPreference(mpTitle, reserveInfo, reserveResult._id, newUser);
                 console.log(preferenceResult);
                 setTimeout(() => {
                   window.location.replace(preferenceResult.init_point);
@@ -1291,7 +1292,25 @@ if (urlMessage.indexOf("?payment") >= 0) {
             document.querySelector('.mp-callback-container #summary-end-date').innerHTML = endDate;
      
             document.querySelector('.mp-callback-container span.final-number').innerHTML = price;
+
+            const data = {
+            aob_purchased: "Anticipo Pagado",
+            status: 'Anticipo Pagado'
+            };
+
+            const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+            };
+
+            fetch(`${url}/reserves-hps/${response.id}`, requestOptions)
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
             });
+
+
       
 
        } else {
@@ -1409,43 +1428,54 @@ const getSheet = () => {
 
 
 const ready2send = () => {
-    const isDivClicked = (divElement) => divElement.dataset.clicked === 'true';
-    const isInputChecked = (inputElement) => inputElement.checked;
-
-    const checkIsReady = (divElement, inputElement) => {
-      const divClicked = isDivClicked(divElement);
-      const inputChecked = isInputChecked(inputElement);
-
-      const isReady = divClicked && inputChecked;
-      console.log('isReady:', isReady);
-      return isReady;
+ 
+    const checkIsReady = (inputElement) => {
+        let divClicked = document.querySelector('.is-ready[data-clicked="true"]');
+        const inputChecked = inputElement.checked;
+        const isReady = divClicked !== null && inputChecked; // Check if divClicked is not null
+        console.log('isReady:', isReady);
+        return isReady;
     };
-
-    const divElement = document.querySelector('.is-ready');
+    
+    const divElements = document.querySelectorAll('.is-ready'); // Use querySelectorAll
     const inputElement = document.querySelector('.terms-container input[type="checkbox"]');
-
-    divElement.addEventListener('click', function() {
-      this.dataset.clicked = 'true';
-      const isReady = checkIsReady(divElement, inputElement);
-
+    
+    divElements.forEach((d) => {
+      d.addEventListener('click', function () {
+        if (this.dataset.clicked === 'true') {
+            this.dataset.clicked = 'false'; // Toggle the state
+        } else {
+            this.dataset.clicked = 'true';
+        }
+        const isReady = checkIsReady(inputElement); 
+        
+        if (isReady) {
+          addMainColorClassToDiv();
+        } else {
+            const divElement = document.querySelector('.mail-cta');
+            divElement.classList.remove('bg-main-color');
+          }
+      });
+    });
+    
+    inputElement.addEventListener('change', function() {
+      const isReady = checkIsReady(inputElement);
+    
       if (isReady) {
         addMainColorClassToDiv();
+      } else {
+        const divElement = document.querySelector('.mail-cta');
+        divElement.classList.remove('bg-main-color');
+        divElement.classList.add('pointers-none')
       }
     });
-
-    inputElement.addEventListener('click', function() {
-      const divElement = document.querySelector('.is-ready'); // Re-select div element
-      const isReady = checkIsReady(divElement, inputElement);
-
-      if (isReady) {
-        addMainColorClassToDiv();
-      }
-    });
-
+    
     function addMainColorClassToDiv() {
       const divElement = document.querySelector('.mail-cta');
       divElement.classList.add('bg-main-color');
+      divElement.classList.remove('pointers-none')
     }
+    
 }
 ready2send()
 const checkoutOptions = () => {
