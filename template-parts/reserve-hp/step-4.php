@@ -14,8 +14,8 @@
                 <p>Quiero que me contacten y pagar más adelante</p>
                 <div class="checker"></div>
             </div>
-            <div class="checkout-option flex jic pa3 is-ready smooth-t anchor pointers-none o-50" data-option="Pagar">
-                <p>Pagar un anticipo del 20% y confirmar la reserva [Coming Soon!]</p>
+            <div class="checkout-option flex jic pa3 is-ready smooth-t anchor" data-option="Pagar">
+                <p>Pagar un anticipo del 20% y confirmar la reserva</p>
                 <div class="checker"></div>
             </div>
         </div>
@@ -62,7 +62,7 @@
             </div>
             <p class="tc dn">Te enviaremos un desglose con tu pedido por mail, y un asesor de UGo! te contactará para que le hagas todas las preguntas que necesites!</p>
 
-            <div class="mail-cta flex items-center justify-center pa3">
+            <div class="mail-cta flex items-center justify-center pa3 pointers-none">
             <p class="black lh1 b bold fw6 faro f3 pa2 tc">Confirmar reserva</p>
             </div>
         </div>
