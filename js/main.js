@@ -1411,7 +1411,7 @@ const instagram = () => {
   getGram()
 };
 
-// instagram();
+instagram();
 
 
 
