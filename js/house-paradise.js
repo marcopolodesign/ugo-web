@@ -738,28 +738,17 @@ const calendar = () => {
     
                 // const matchedDate = HPavailability.find(item => item.date === dateRange);
 
-console.log(HPavailability)
+                console.log(HPavailability)
                 HPavailability.forEach(hpDate => {
                     var newPrice = 0;
                     if (dateRange.includes(hpDate.date)) {
-
-                        price = hpDate.price;
+                        if (hpDate.price > price) {
+                            price = hpDate.price;
+                        }
                         newPrice += hpDate.price;
                         console.log(newPrice)
                     }
                 })
-
-                // for (const rangeDate of dateRange) {
-                //     const matchedDate = HPavailability.find(item => item.date === rangeDate);
-                  
-                //     if (matchedDate) {
-                //         console.log(matchedDate)
-                //         price += matchedDate.price;
-                //     }
-                // }
-
-             
-
 
                 // Get today's date
                 const today = new Date();
