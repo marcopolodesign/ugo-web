@@ -150,9 +150,8 @@ function ugo_scripts() {
 	wp_enqueue_style('ugo-custom', get_template_directory_uri() . '/css/custom.css');
 
 
-	if (is_page(230)) :
+	if (is_page(array(230, 6, 'house-paradise'))) :
 		wp_enqueue_style('ugo-cal', get_template_directory_uri() . '/css/datepicker.min.css');
-
 		wp_enqueue_style('ugo-hp', get_template_directory_uri() . '/css/hp.css');
 
 	endif;

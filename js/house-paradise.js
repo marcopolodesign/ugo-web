@@ -1,15 +1,15 @@
-document.getElementsByTagName("head")[0].insertAdjacentHTML(
-    "beforeend",
-    "<link rel=\"stylesheet\" href=\"wp-content/themes/ugo-main/css/datepicker.min.css\" />"    
-);
+// document.getElementsByTagName("head")[0].insertAdjacentHTML(
+//     "beforeend",
+//     "<link rel=\"stylesheet\" href=\"wp-content/themes/ugo-main/css/datepicker.min.css\" />"    
+// );
 
-document.getElementsByTagName("head")[0].insertAdjacentHTML(
-    "beforeend",
-    "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-main/css/hp.css\" />"    
-);
+// document.getElementsByTagName("head")[0].insertAdjacentHTML(
+//     "beforeend",
+//     "<link rel=\"stylesheet\" href=\"/wp-content/themes/ugo-main/css/hp.css\" />"    
+// );
 
-let url = 'http://localhost:1337'
-// let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
+// let url = 'http://localhost:1337'
+let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
 let infoEndPoint = 'input-main';
 let dogEndPoint = 'inputs-web-dog';
 let ownerEndPoint = 'inputs-web-owner';
@@ -46,13 +46,13 @@ const getQueryParamValue = (param) => {
   }
 
 
-//  const formStepValue = getQueryParamValue('form_step');
+ const formStepValue = getQueryParamValue('form_step');
 //  console.log(formStepValue)
  let formStep = 0;
-//  if (formStepValue !== null) {
-//    console.log('form_step value:', formStepValue);
-//     formStep = formStepValue;
-//  } 
+ if (formStepValue !== null) {
+   console.log('form_step value:', formStepValue);
+    formStep = formStepValue;
+ } 
 
 
 let formContent = document.querySelectorAll('.form-container > div');
@@ -665,7 +665,7 @@ const calendar = () => {
     let exitDate;
 
     // getSheet();
-    // console.log(HPavailability)
+
  
     calInputs.forEach(input => {
         input.addEventListener('changeDate', function (e, details) { 
@@ -688,7 +688,7 @@ const calendar = () => {
             exitDateES = exitDateES[1] + "/" + exitDateES[0] + '/' + exitDateES[2];
             exitDateES =  new Date(exitDateES);
 
-            console.log(exitDateES)
+            // console.log(exitDateES)
 
             if (enterDate != exitDate) {
                 let difference = exitDateES.getTime() - enterDateES.getTime();
@@ -716,34 +716,49 @@ const calendar = () => {
                     allDays = totalDays;
                 }
     
+                // console.log(HPavailability);
                 const matchingObject = HPavailability.find(item => item.date.toString() === exitDate);
 
-
-                // Chequear cuales noches son 
-
-
+                // console.log(HPavailability[0].date)
+            
                 function getDateRange(startDate, endDate) {
                     const dates = [];
                     let currentDate = new Date(startDate);
-                  
-                    while (currentDate <= endDate) {
-                      dates.push(new Date(currentDate));
-                      currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                  
-                    return dates;
-                  }
 
-                  const dateRange = getDateRange(enterDateES, exitDateES);
-                    console.log(dateRange);
-    
-                console.log(matchingObject);
-    
-                if (matchingObject) {
-                    // price = 7000;
-                } else {
-                    // price = 7000;
+                    while (currentDate <= endDate) {
+                        dates.push(currentDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }));
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+
+                    return dates;
                 }
+
+                const dateRange = getDateRange(enterDateES, exitDateES);
+                // console.log(dateRange);
+    
+                // const matchedDate = HPavailability.find(item => item.date === dateRange);
+
+console.log(HPavailability)
+                HPavailability.forEach(hpDate => {
+                    var newPrice = 0;
+                    if (dateRange.includes(hpDate.date)) {
+
+                        price = hpDate.price;
+                        newPrice += hpDate.price;
+                        console.log(newPrice)
+                    }
+                })
+
+                // for (const rangeDate of dateRange) {
+                //     const matchedDate = HPavailability.find(item => item.date === rangeDate);
+                  
+                //     if (matchedDate) {
+                //         console.log(matchedDate)
+                //         price += matchedDate.price;
+                //     }
+                // }
+
+             
 
 
                 // Get today's date
@@ -757,7 +772,7 @@ const calendar = () => {
                 const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
 
-                console.log(daysDifference)
+                // console.log(daysDifference)
     
                 showPrice(price)
             }
@@ -1153,7 +1168,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
         }
     };
 
-    async function createMercadoPagoPreference(mpTitle, reserveInfo, reserveId) {
+    async function createMercadoPagoPreference(mpTitle, reserveInfo, reserveId, newUser) {
         const response = await fetch('https://u-go-backend-deveop-lc9t2.ondigitalocean.app/hp-payments/createpreference', {
           method: 'POST',
           headers: {
@@ -1167,11 +1182,12 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             owner_name: reserveInfo.owner.nombre,
             owner_surname: reserveInfo.owner.apellido,
             owner_email: reserveInfo.owner.mail,
-            reserve: reserveId
+            reserve: reserveId, 
+            user_id : newUser._id,
           }),
         });
         if (!response.ok) {
-          throw new Error('Error creating Mercado Pago preference');
+          throw new Error('Error creating Mercado Pago preference ' + response);
         }
         return response.json();
       }
@@ -1222,7 +1238,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
                 successMessage.innerHTML = 'Te vamos a redirigir a Mercado Pago para pagar el anticipo y confirmar tu reserva.';
                 let mpTitle = `Pago del 20% del total de la estadía de ${reserveInfo.dog.nombre} por ${allDays} días en House Paradise`
 
-                const preferenceResult = await createMercadoPagoPreference(mpTitle, reserveInfo, reserveResult._id);
+                const preferenceResult = await createMercadoPagoPreference(mpTitle, reserveInfo, reserveResult._id, newUser);
                 console.log(preferenceResult);
                 setTimeout(() => {
                   window.location.replace(preferenceResult.init_point);
@@ -1292,7 +1308,25 @@ if (urlMessage.indexOf("?payment") >= 0) {
             document.querySelector('.mp-callback-container #summary-end-date').innerHTML = endDate;
      
             document.querySelector('.mp-callback-container span.final-number').innerHTML = price;
+
+            const data = {
+            aob_purchased: "anticipo",
+            status: 'Anticipo Pagado'
+            };
+
+            const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+            };
+
+            fetch(`${url}/reserves-hps/${response.id}`, requestOptions)
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
             });
+
+
       
 
        } else {
@@ -1376,12 +1410,11 @@ const dogInputConditionals = () => {
 
 
 const getSheet = () => {
-    var id = '1il0HUktHwxaF_wDfpAjH-N9sxoT_sd_k73Z_v3_KDhk';
-    var gid = '0'
-    var url = `https://docs.google.com/spreadsheets/d/1il0HUktHwxaF_wDfpAjH-N9sxoT_sd_k73Z_v3_KDhk/gviz/tq?tqx=out:json&tq&gid=755951076`;
+
+    var url = `https://docs.google.com/spreadsheets/d/19iEmGbyUbuKp8hzt_GYNWlSs8KDcN3R-mt0Pftee3Og/gviz/tq?tqx=out:json&tq&gid=0`;
     fetch(url)
-  .then(response => response.text())
-  .then(data => {
+    .then(response => response.text())
+    .then(data => {
     // Extract the JSON data using a regular expression pattern
     const match = data.match(/google\.visualization\.Query\.setResponse\((.*)\)/);
     
@@ -1391,10 +1424,11 @@ const getSheet = () => {
       let HPdata = jsonData.table.rows;
 
       HPdata.forEach(dates => {
+     
        let availability = dates.c
             const obj = {
-                date: availability[0].f,
-                availability: availability[1].v
+                date: availability[0].v,
+                price: availability[1].v
             };
             HPavailability.push(obj);
       })
@@ -1409,44 +1443,57 @@ const getSheet = () => {
 }
 
 
+getSheet();
+
 const ready2send = () => {
-    const isDivClicked = (divElement) => divElement.dataset.clicked === 'true';
-    const isInputChecked = (inputElement) => inputElement.checked;
-
-    const checkIsReady = (divElement, inputElement) => {
-      const divClicked = isDivClicked(divElement);
-      const inputChecked = isInputChecked(inputElement);
-
-      const isReady = divClicked && inputChecked;
-      console.log('isReady:', isReady);
-      return isReady;
+ 
+    const checkIsReady = (inputElement) => {
+        let divClicked = document.querySelector('.is-ready[data-clicked="true"]');
+        const inputChecked = inputElement.checked;
+        const isReady = divClicked !== null && inputChecked; // Check if divClicked is not null
+        console.log('isReady:', isReady);
+        return isReady;
     };
-
-    const divElement = document.querySelector('.is-ready');
+    
+    const divElements = document.querySelectorAll('.is-ready'); // Use querySelectorAll
     const inputElement = document.querySelector('.terms-container input[type="checkbox"]');
-
-    divElement.addEventListener('click', function() {
-      this.dataset.clicked = 'true';
-      const isReady = checkIsReady(divElement, inputElement);
-
+    
+    divElements.forEach((d) => {
+      d.addEventListener('click', function () {
+        if (this.dataset.clicked === 'true') {
+            this.dataset.clicked = 'false'; // Toggle the state
+        } else {
+            this.dataset.clicked = 'true';
+        }
+        const isReady = checkIsReady(inputElement); 
+        
+        if (isReady) {
+          addMainColorClassToDiv();
+        } else {
+            const divElement = document.querySelector('.mail-cta');
+            divElement.classList.remove('bg-main-color');
+          }
+      });
+    });
+    
+    inputElement.addEventListener('change', function() {
+      const isReady = checkIsReady(inputElement);
+    
       if (isReady) {
         addMainColorClassToDiv();
+      } else {
+        const divElement = document.querySelector('.mail-cta');
+        divElement.classList.remove('bg-main-color');
+        divElement.classList.add('pointers-none')
       }
     });
-
-    inputElement.addEventListener('click', function() {
-      const divElement = document.querySelector('.is-ready'); // Re-select div element
-      const isReady = checkIsReady(divElement, inputElement);
-
-      if (isReady) {
-        addMainColorClassToDiv();
-      }
-    });
-
+    
     function addMainColorClassToDiv() {
       const divElement = document.querySelector('.mail-cta');
       divElement.classList.add('bg-main-color');
+      divElement.classList.remove('pointers-none')
     }
+    
 }
 ready2send()
 const checkoutOptions = () => {

@@ -1330,7 +1330,7 @@ window.addEventListener('resize', () => {
 const instagram = () => {
   let fields = 'id,username,media_type,media_url,timestamp,permalink'
 
-  const accessToken = 'IGQWRPelJZAQlFfdjlZAMmg4SXkzYm1tYWRKb0h0b0hrLXVVTHZADamhvUGVtcXVBUVQ1NmlxM1BBUHdTRXNtamE5eWtuSGZAyYW5TdlBnM0xoS1NKdFlyajFGOEdRRlJXSThwbkxIdVJVSGJmUndyNmVkakJzdnB6YWcZD';
+  const accessToken = 'IGQWROSDFiRFNmclpCaDVQMUhHbTF2X2dEZAmhOTHdRUVhXRFBENWJEcmhjRnJUWWdhSTVfZAjBvcjdFRmxKOTJVcHlHRk4wOHBRX1E3amNxdEZAHRWZApYjU2bnE0RnhQcGlJeFJ1b1Jmd1BGT1ljeWh6eHMyNUxUSjgZD';
 
 
   const superHiApi = `https://api.superhi.com/api/test/token/instagram?access_token=${accessToken}`
