@@ -1204,7 +1204,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             await updateUser(newUser, reserveResult._id, newDog);
             fbq('track', 'formok');
 
-            
+
 
             if (purchaseStatus === 'consulta') {
 
@@ -1240,6 +1240,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
     };
     
     handleReserve();
+    
 })
 
 const redirectMessage = () => {
@@ -1360,10 +1361,19 @@ const conversion = () => {
 
 const changeSelects = () => {
     document.querySelectorAll('select').forEach(s => {
-        s.addEventListener('click' , ()=> {
+        if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+            s.addEventListener('change' , ()=> {
+                s.classList.add('selected')
+                console.log(s)
+            })  
+        
+        } else {
+              s.addEventListener('click' , ()=> {
             s.classList.add('selected')
             console.log(s)
-        })    
+        })  
+        }
+        
     })
 
 }
