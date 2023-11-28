@@ -1361,10 +1361,19 @@ const conversion = () => {
 
 const changeSelects = () => {
     document.querySelectorAll('select').forEach(s => {
-        s.addEventListener('click' , ()=> {
+        if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+            s.addEventListener('change' , ()=> {
+                s.classList.add('selected')
+                console.log(s)
+            })  
+        
+        } else {
+              s.addEventListener('click' , ()=> {
             s.classList.add('selected')
             console.log(s)
-        })    
+        })  
+        }
+        
     })
 
 }
