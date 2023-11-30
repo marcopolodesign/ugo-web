@@ -792,6 +792,10 @@ const calendar = () => {
 }
 calendar();
 
+let discounted;
+let discount;
+let cupon;
+
 const discounts = () => {
     let promotions = [
         {name: 'MEJORESAMIGOS', discount : 15},
@@ -804,15 +808,15 @@ const discounts = () => {
     let verify = document.querySelector('#discount-verify');
 
     verify.addEventListener('click', ()=> {
-        let cupon = document.querySelector('.discount-code input').value.toUpperCase();
+        cupon = document.querySelector('.discount-code input').value.toUpperCase();
 
         const matchingProduct = promotions.find(product => product.name === cupon);
 
         if (matchingProduct) {
-            let discount = matchingProduct.discount;
+             discount = matchingProduct.discount;
             // alert(`tenes un descuento de ${matchingProduct.discount}`)
 
-            let discounted = finalPricing - finalPricing * (1 - discount/100);
+             discounted = finalPricing - finalPricing * (1 - discount/100);
             finalPricing = finalPricing * (1 - discount/100);
 
             document.querySelector('.discount-cupon-success p').innerHTML = matchingProduct.name;
@@ -1104,8 +1108,12 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "dog_food": reserveInfo.dog.food,
             "dog_comments": reserveInfo.dog.comments,
             "dog": newDogId,
+            "discount_cupon" : `${cupon} [${discount}%]`,
+            "discount_amount" : discounted ,
             "owner": newUser._id,
         });
+
+        console.log(raw)
         
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -1221,7 +1229,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             
                 setTimeout(() => {
                     localStorage.setItem('savedUser', JSON.stringify(newUser));
-                    window.location.href = '/portal/';
+                    // window.location.href = '/portal/';
                 }, 5000);
             } else if (purchaseStatus === 'compra') {
                 successMessage.innerHTML = 'Te vamos a redirigir a Mercado Pago para pagar el anticipo y confirmar tu reserva.';
@@ -1361,10 +1369,19 @@ const conversion = () => {
 
 const changeSelects = () => {
     document.querySelectorAll('select').forEach(s => {
-        s.addEventListener('click' , ()=> {
+        if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+            s.addEventListener('change' , ()=> {
+                s.classList.add('selected')
+                console.log(s)
+            })  
+        
+        } else {
+              s.addEventListener('click' , ()=> {
             s.classList.add('selected')
             console.log(s)
-        })    
+        })  
+        }
+        
     })
 
 }

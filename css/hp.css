@@ -220,7 +220,17 @@ border: 1px solid var(--pink) !important
 }
 
 select.input-text {
-color: #6C6C6C !important;
+    color: #6C6C6C !important;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+select.input-text::after {
+    content: "&#8595;";
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #6c6c6c;
 }
 
 select.selected.input-text {
