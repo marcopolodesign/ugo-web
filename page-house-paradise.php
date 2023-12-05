@@ -9,6 +9,8 @@ get_header();
 			<?php get_template_part('template-parts/house-paradise-slider'); ?>
 		</div>
 
+
+
 		<div class="bloques-home">
 			<?php get_template_part('template-parts/bloques-marco');?>
 		</div>
@@ -31,6 +33,7 @@ get_header();
 
 
 		</div>
+
 
 		<?php  
 			get_template_part('template-parts/reserve'); 
