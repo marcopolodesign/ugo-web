@@ -802,7 +802,8 @@ const discounts = () => {
         {name: 'AMIGUIS', discount : 10},
         {name: 'FINDEPRUEBA', discount : 15},
         {name: 'SUPERFINDE', discount : 15},
-        {name: 'PARAISO', discount : 20}
+        {name: 'PARAISO', discount : 20}, 
+        {name: 'MARCOPOLO', discount : 99},
     ]
 
     let verify = document.querySelector('#discount-verify');
