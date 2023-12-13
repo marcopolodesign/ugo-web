@@ -1430,9 +1430,14 @@ const sendReserve = async () => {
                 "aob_date_end": exitDateES,
                 "aob_price": finalPricing,
                 "aob_purchased" : 'consulta', 
+                "precio_noche" : "",
+                "tarifa_descuento" : "",
                 "status" : "Pendiente de pago",
-
-
+                "tarifa_traslado": transportFare,
+                "precio_noche": price,
+                "discount_cupon" : `${cupon} [${discount}%]`,
+                "discount_amount" : discounted ,
+                
                 "owner_name": user.first_name,
                 "owner_surname": user.last_name,
                 "owner_phone": user.phone.toString(),
@@ -1443,6 +1448,7 @@ const sendReserve = async () => {
                 "dog_raza": selectedDog.raza,
                 "dog_name": selectedDog.name,
                 "dog_age": selectedDog.age,
+                
                 // "dog_social": reserveInfo.dog.social,            
                 // "dog_castrado": reserveInfo.dog.castrado,
                 // "date_celo": celoDate,
