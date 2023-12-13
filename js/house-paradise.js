@@ -1112,6 +1112,8 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             "discount_cupon" : `${cupon} [${discount}%]`,
             "discount_amount" : discounted ,
             "owner": newUser._id,
+            "tarifa_traslado": transportFare,
+            "precio_noche": price
         });
 
         console.log(raw)
@@ -1230,7 +1232,7 @@ document.querySelector('.mail-now-container').addEventListener('click', ()=> {
             
                 setTimeout(() => {
                     localStorage.setItem('savedUser', JSON.stringify(newUser));
-                    // window.location.href = '/portal/';
+                    window.location.href = '/portal/';
                 }, 5000);
             } else if (purchaseStatus === 'compra') {
                 successMessage.innerHTML = 'Te vamos a redirigir a Mercado Pago para pagar el anticipo y confirmar tu reserva.';

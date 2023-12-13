@@ -1,6 +1,7 @@
 // let url = 'http://localhost:1337';
 let url = 'https://u-go-backend-deveop-lc9t2.ondigitalocean.app';
 let user;
+const HPavailability = [];
 
 async function createAccount(email, password) {
     const response = await fetch(`${url}/users`, {
@@ -903,6 +904,39 @@ let reserveInfo = {};
 
 let selectedDog ;
 
+const getSheet = () => {
+
+    var url = `https://docs.google.com/spreadsheets/d/19iEmGbyUbuKp8hzt_GYNWlSs8KDcN3R-mt0Pftee3Og/gviz/tq?tqx=out:json&tq&gid=0`;
+    fetch(url)
+    .then(response => response.text())
+    .then(data => {
+    // Extract the JSON data using a regular expression pattern
+    const match = data.match(/google\.visualization\.Query\.setResponse\((.*)\)/);
+    
+    if (match) {
+      const jsonData = JSON.parse(match[1]);
+
+      let HPdata = jsonData.table.rows;
+
+      HPdata.forEach(dates => {
+     
+       let availability = dates.c
+            const obj = {
+                date: availability[0].v,
+                price: availability[1].v
+            };
+            HPavailability.push(obj);
+      })
+      // Use the JSON data as needed
+    } else {
+      throw new Error('Unable to extract JSON data from the response.');
+    }
+  })
+  .catch(error => {
+    console.error('Error retrieving data:', error);
+  });
+}
+
 const newReserve = async (user) => { 
     console.log(user)
     let newReservePop = document.querySelector('.new-reserve-pop');
@@ -913,6 +947,7 @@ const newReserve = async (user) => {
     const calendar = () => {
     
         let date = new Date();
+    
         const elem = document.getElementById('range');
         const dateRangePicker = new DateRangePicker(elem, {
             datesDisabled: [0,2,4,6],
@@ -931,8 +966,8 @@ const newReserve = async (user) => {
         let enterDate;
         let exitDate;
     
-        // getSheet();
-    
+        getSheet();
+        // console.log(HPavailability)
      
         calInputs.forEach(input => {
             input.addEventListener('changeDate', function (e, details) { 
@@ -955,37 +990,19 @@ const newReserve = async (user) => {
                 exitDateES = exitDateES[1] + "/" + exitDateES[0] + '/' + exitDateES[2];
                 exitDateES =  new Date(exitDateES);
     
-                // console.log(exitDateES)
+                console.log(exitDateES)
+
+                if (isEditing) {
+                    document.querySelector('.edit-summary-start-new p').innerHTML = enterDate;
+                    document.querySelector('.edit-summary-end-new p').innerHTML = exitDate;
+                }
     
                 if (enterDate != exitDate) {
                     let difference = exitDateES.getTime() - enterDateES.getTime();
                     totalDays = Math.ceil(difference / (1000 * 3600 * 24));
                     
-                    // console.log(totalDays + ' days in House Paradise  ');
-                    
-                    
-                    const showPrice = (price) => {
-                        document.querySelector('.daily-price').innerHTML = formatPrice(price);
-        
-                        document.querySelector('.title-nights').innerHTML = `${formatPrice(price)} por ${totalDays} noches`;
-                        document.querySelector('.price-nights').innerHTML = formatPrice(price * totalDays);
-                        document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
-                        document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
-            
-                        document.querySelector('span.final-number').innerHTML = (price * totalDays) + transportFare;
-                        document.querySelector('span#final-number-upfront').innerHTML = formatPrice(((price * totalDays) + transportFare) * 0.2);
-                        
-            
-                        finalPricing = (price * totalDays) + transportFare;
-                        document.querySelector('span.final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
-                        document.querySelector('.final-summery-title span').innerHTML = ` por ${totalDays} días`
-            
-                        allDays = totalDays;
-                    }
-        
-                    // console.log(HPavailability);
                     const matchingObject = HPavailability.find(item => item.date.toString() === exitDate);
-    
+
                     // console.log(HPavailability[0].date)
                 
                     function getDateRange(startDate, endDate) {
@@ -1017,6 +1034,8 @@ const newReserve = async (user) => {
                         }
                     })
     
+        
+
                     // Get today's date
                     const today = new Date();
     
@@ -1026,15 +1045,9 @@ const newReserve = async (user) => {
                     // Calculate the difference in days
                     const timeDifference = enterDateES.getTime() - today.getTime();
                     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    
-    
-                    // console.log(daysDifference)
-        
-                    showPrice(price)
+            
+                    showPrice(price, totalDays, transportFare)
                 }
-    
-              
-    
                 });
                 
         })
@@ -1214,46 +1227,55 @@ const newReserve = async (user) => {
 
 
     const ready2send = () => {
-        const isDivClicked = (divElement) => divElement.dataset.clicked === 'true';
-        const isInputChecked = (inputElement) => inputElement.checked;
-    
-        const checkIsReady = (divElement, inputElement) => {
-          const divClicked = isDivClicked(divElement);
-          const inputChecked = isInputChecked(inputElement);
-    
-          const isReady = divClicked && inputChecked;
-          console.log('isReady:', isReady);
-          return isReady;
+ 
+        const checkIsReady = (inputElement) => {
+            let divClicked = document.querySelector('.is-ready[data-clicked="true"]');
+            const inputChecked = inputElement.checked;
+            const isReady = divClicked !== null && inputChecked; // Check if divClicked is not null
+            console.log('isReady:', isReady);
+            return isReady;
         };
-    
-        const divElement = document.querySelector('.is-ready');
+        
+        const divElements = document.querySelectorAll('.is-ready'); // Use querySelectorAll
         const inputElement = document.querySelector('.terms-container input[type="checkbox"]');
-    
-        divElement.addEventListener('click', function() {
-          this.dataset.clicked = 'true';
-          const isReady = checkIsReady(divElement, inputElement);
-    
+        
+        divElements.forEach((d) => {
+          d.addEventListener('click', function () {
+            if (this.dataset.clicked === 'true') {
+                this.dataset.clicked = 'false'; // Toggle the state
+            } else {
+                this.dataset.clicked = 'true';
+            }
+            const isReady = checkIsReady(inputElement); 
+            
+            if (isReady) {
+              addMainColorClassToDiv();
+            } else {
+                const divElement = document.querySelector('.mail-cta');
+                divElement.classList.remove('bg-main-color');
+              }
+          });
+        });
+        
+        inputElement.addEventListener('change', function() {
+          const isReady = checkIsReady(inputElement);
+        
           if (isReady) {
             addMainColorClassToDiv();
+          } else {
+            const divElement = document.querySelector('.mail-cta');
+            divElement.classList.remove('bg-main-color');
+            divElement.classList.add('pointers-none')
           }
         });
-    
-        inputElement.addEventListener('click', function() {
-          const divElement = document.querySelector('.is-ready'); // Re-select div element
-          const isReady = checkIsReady(divElement, inputElement);
-    
-          if (isReady) {
-            addMainColorClassToDiv();
-          }
-        });
-    
+        
         function addMainColorClassToDiv() {
           const divElement = document.querySelector('.mail-cta');
           divElement.classList.add('bg-main-color');
+          divElement.classList.remove('pointers-none')
         }
+        
     }
-
-
     ready2send()
 
     let nextStep = document.querySelector('.advance-step');
@@ -1408,9 +1430,14 @@ const sendReserve = async () => {
                 "aob_date_end": exitDateES,
                 "aob_price": finalPricing,
                 "aob_purchased" : 'consulta', 
+                "precio_noche" : "",
+                "tarifa_descuento" : "",
                 "status" : "Pendiente de pago",
-
-
+                "tarifa_traslado": transportFare,
+                "precio_noche": price,
+                "discount_cupon" : `${cupon} [${discount}%]`,
+                "discount_amount" : discounted ,
+                
                 "owner_name": user.first_name,
                 "owner_surname": user.last_name,
                 "owner_phone": user.phone.toString(),
@@ -1419,16 +1446,15 @@ const sendReserve = async () => {
                 "owner_address": user.direccion,
                 "dog_genre": selectedDog.sex,
                 "dog_raza": selectedDog.raza,
-                // "dog_social": reserveInfo.dog.social,
-                // "dog_age": reserveInfo.dog.edad,
-                // "dog_name": reserveInfo.dog.nombre,
+                "dog_name": selectedDog.name,
+                "dog_age": selectedDog.age,
+                
+                // "dog_social": reserveInfo.dog.social,            
                 // "dog_castrado": reserveInfo.dog.castrado,
                 // "date_celo": celoDate,
                 // "dog_behaviour": reserveInfo.dog.behaviour,
                 // "dog_vaccine": reserveInfo.dog.checkbox11,
                 // "dog_deworming": reserveInfo.dog.checkbox12,
-                // "aob_date_start": enterDateES,
-                // "aob_date_end": exitDateES,
                 // "aob_price": reserveInfo.aob.price,
                 // "aob_purchased": reserveInfo.aob.purchased,
                 // "status": reserveInfo.aob.status,
