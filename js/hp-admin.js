@@ -913,7 +913,6 @@ const newReserve = async (user) => {
     const calendar = () => {
     
         let date = new Date();
-    
         const elem = document.getElementById('range');
         const dateRangePicker = new DateRangePicker(elem, {
             datesDisabled: [0,2,4,6],
@@ -933,7 +932,7 @@ const newReserve = async (user) => {
         let exitDate;
     
         // getSheet();
-        // console.log(HPavailability)
+    
      
         calInputs.forEach(input => {
             input.addEventListener('changeDate', function (e, details) { 
@@ -956,40 +955,68 @@ const newReserve = async (user) => {
                 exitDateES = exitDateES[1] + "/" + exitDateES[0] + '/' + exitDateES[2];
                 exitDateES =  new Date(exitDateES);
     
-                console.log(exitDateES)
-
-                if (isEditing) {
-                    document.querySelector('.edit-summary-start-new p').innerHTML = enterDate;
-                    document.querySelector('.edit-summary-end-new p').innerHTML = exitDate;
-                }
+                // console.log(exitDateES)
     
                 if (enterDate != exitDate) {
                     let difference = exitDateES.getTime() - enterDateES.getTime();
                     totalDays = Math.ceil(difference / (1000 * 3600 * 24));
                     
-                    // const matchingObject = HPavailability.find(item => item.date.toString() === exitDate);
+                    // console.log(totalDays + ' days in House Paradise  ');
+                    
+                    
+                    const showPrice = (price) => {
+                        document.querySelector('.daily-price').innerHTML = formatPrice(price);
+        
+                        document.querySelector('.title-nights').innerHTML = `${formatPrice(price)} por ${totalDays} noches`;
+                        document.querySelector('.price-nights').innerHTML = formatPrice(price * totalDays);
+                        document.querySelector('.price-transport').innerHTML = formatPrice(transportFare);
+                        document.querySelector('#grand-total').innerHTML = formatPrice((price * totalDays) + transportFare);
+            
+                        document.querySelector('span.final-number').innerHTML = (price * totalDays) + transportFare;
+                        document.querySelector('span#final-number-upfront').innerHTML = formatPrice(((price * totalDays) + transportFare) * 0.2);
+                        
+            
+                        finalPricing = (price * totalDays) + transportFare;
+                        document.querySelector('span.final-number').innerHTML = formatPrice((price * totalDays) + transportFare);
+                        document.querySelector('.final-summery-title span').innerHTML = ` por ${totalDays} días`
+            
+                        allDays = totalDays;
+                    }
+        
+                    // console.log(HPavailability);
+                    const matchingObject = HPavailability.find(item => item.date.toString() === exitDate);
     
-    
-                    // Chequear cuales noches son 
-    
+                    // console.log(HPavailability[0].date)
+                
                     function getDateRange(startDate, endDate) {
                         const dates = [];
                         let currentDate = new Date(startDate);
-                      
-                        while (currentDate <= endDate) {
-                          dates.push(new Date(currentDate));
-                          currentDate.setDate(currentDate.getDate() + 1);
-                        }
-                      
-                        return dates;
-                      }
     
-                      const dateRange = getDateRange(enterDateES, exitDateES);
-                        console.log(dateRange);
-
-                        // price = 7000;
+                        while (currentDate <= endDate) {
+                            dates.push(currentDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }));
+                            currentDate.setDate(currentDate.getDate() + 1);
+                        }
+    
+                        return dates;
+                    }
+    
+                    const dateRange = getDateRange(enterDateES, exitDateES);
+                    // console.log(dateRange);
         
-
+                    // const matchedDate = HPavailability.find(item => item.date === dateRange);
+    
+                    console.log(HPavailability)
+                    HPavailability.forEach(hpDate => {
+                        var newPrice = 0;
+                        if (dateRange.includes(hpDate.date)) {
+                            if (hpDate.price > price) {
+                                price = hpDate.price;
+                            }
+                            newPrice += hpDate.price;
+                            console.log(newPrice)
+                        }
+                    })
+    
                     // Get today's date
                     const today = new Date();
     
@@ -999,9 +1026,15 @@ const newReserve = async (user) => {
                     // Calculate the difference in days
                     const timeDifference = enterDateES.getTime() - today.getTime();
                     const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-            
-                    showPrice(price, totalDays, transportFare)
+    
+    
+                    // console.log(daysDifference)
+        
+                    showPrice(price)
                 }
+    
+              
+    
                 });
                 
         })
