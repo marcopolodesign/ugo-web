@@ -1430,8 +1430,6 @@ const sendReserve = async () => {
                 "aob_date_end": exitDateES,
                 "aob_price": finalPricing,
                 "aob_purchased" : 'consulta', 
-                "precio_noche" : "",
-                "tarifa_descuento" : "",
                 "status" : "Pendiente de pago",
                 "tarifa_traslado": transportFare,
                 "precio_noche": price,
