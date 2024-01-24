@@ -1013,6 +1013,6 @@ label[for="payment_method_woo-mercado-pago-custom"], .mp-wallet-button-container
 .xoo-wsc-basket, .xoo-wsc-markup {display: none !important}
 
 
-form.checkout input, form.checkout option, form.checkout textarea, form.checkout li{
+form.checkout input, form.checkout option, form.checkout textarea, .woocommerce-billing-fields li{
   color: #000;
 }

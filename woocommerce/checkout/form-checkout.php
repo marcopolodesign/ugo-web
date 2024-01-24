@@ -51,7 +51,7 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 					<h4 class="main-font f2 mb2 pr5-ns">Ingrese su código postal para calcular el precio envío</h4>
 					<input type="text" class="input-text black w-100 pa3 bg-main-light" name="temporary_postcode" id="temporary_postcode" placeholder="Ingrese su código postal aquí..." value="" autocomplete="postal-code" maxlength="4">
 				</div>
-				<div class="checkout-review-shipping-table"></div>
+				<div class="checkout-review-shipping-table mb-5"></div>
 				
 			</div>
 			<?php endif; ?>

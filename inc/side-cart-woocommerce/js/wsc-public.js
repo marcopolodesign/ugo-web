@@ -332,48 +332,7 @@ jQuery(document).ready(function($){
             })
         }
     });
-    /*($('input#shipping_postcode').on('input', function () {
-        var postcode = $(this).val();
-        if (postcode.length == 4) {
-            $('#shipping_city').css('opacity','.3');
-            $('.state_select').css('opacity','.3');
-            $('#shipping_state + .select2').css('opacity','.3');
-            $.ajax({
-                type: "post",
-                url: base_url + '/wp-admin/admin-ajax.php',
-                data: {
-                    action: "autofill_checkout_fields_by_postcode",
-                    postcode: postcode
-                },
-                error: function (response) {
-                    console.log(response);
-                },
-                success: function (response) {
-                    console.log(response);
-                    if (response){
-                        data = JSON.parse(response);
-                        provincia = data[0];
-                        codigo = data[1];
-                        localidades = "";
-                        for (var i = 2; i < data.length; i++) {
-                            localidades = localidades + '<option value="' + data[i] + '">' + data[i] + '</option>' 
-                        }
-                                                             
-                        $('#shipping_state').replaceWith('<select name="shipping_state" id="shipping_state" class="state_select"><option value="' + codigo + '">' + provincia +'</option></select>');
-                        $('#shipping_state + .select2').remove();
 
-                        $('#shipping_city').replaceWith('<select name="shipping_city" id="shipping_city" class="city_select">' + localidades + '</select>');
-                    } else {
-                        console.log('ERROR');
-                    }
-                    
-
-                    
-                }
-            })
-        }
-    });
-    */
 
     setInputFilter(document.getElementById("temporary_postcode"), function(value) {
         return /^\d*\d*$/.test(value); // Allow digits and '.' only, using a RegExp

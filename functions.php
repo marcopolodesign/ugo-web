@@ -354,3 +354,104 @@ function autofill_checkout_fields_by_postcode(){
 
 add_action( 'wp_ajax_nopriv_autofill_checkout_fields_by_postcode', 'autofill_checkout_fields_by_postcode' );
 add_action( 'wp_ajax_autofill_checkout_fields_by_postcode', 'autofill_checkout_fields_by_postcode' );
+
+
+add_filter('woocommerce_update_order_review_fragments', 'order_fragments_split_shipping', 10, 1);
+
+function order_fragments_split_shipping($order_fragments) {
+
+	if (is_checkout()){
+		ob_start();
+		woocommerce_order_review_shipping_split();
+		$woocommerce_order_review_shipping_split = ob_get_clean();
+		$order_fragments['.checkout-review-shipping-table'] =$woocommerce_order_review_shipping_split;
+		return $order_fragments;
+	}
+
+}
+
+function woocommerce_order_review_shipping_split( $deprecated = false ) {
+	wc_get_template( 'checkout/shipping-review.php', array( 'checkout' => WC()->checkout() ) );
+}
+
+
+
+add_filter( 'woocommerce_package_rates', 'rates_by_zone_weight', 10, 2 );
+function rates_by_zone_weight($rates, $package)
+{
+	global $woocommerce;
+	
+	// REGIONES
+	$regional = array('C', 'B', 'S', 'X');
+	$nacional = array('K', 'H', 'W', 'E', 'P', 'Y', 'L', 'F', 'M', 'N', 'A', 'J', 'D', 'G', 'T', 'U', 'R', 'Z', 'V');
+
+	// TOTALES CARRITO
+	$total = WC()->cart->cart_contents_total;
+	$peso_total = WC()->cart->get_cart_contents_weight();
+	
+	// COSTO CAJA
+	if ($peso_total > 15){ // CAJA HASTA 20KG
+		$costo_caja = 265; 
+	} else if ($peso_total > 10){ // CAJA HASTA 15KG
+ 		$costo_caja = 215;
+	} else if ($peso_total > 5){ // CAJA HASTA 10KG
+		$costo_caja = 125;
+	} else if ($peso_total > 2){ // CAJA HASTA 5KG
+		$costo_caja = 75;
+	} else if ($peso_total > 1){ // CAJA HASTA 2KG
+		$costo_caja = 65;
+	} else if ($peso_total > 0){ // CAJA HASTA 1KG
+		$costo_caja = 55;
+	}
+	
+	// TARIFAS REGIONAL
+	if (in_array(WC()->customer->get_shipping_state(), $regional)) {
+		if ($peso_total > 20 && $peso_total < 25){ // HASTA 25KG
+			$tarifa = 1620; 
+		} else if ($peso_total > 15){ // HASTA 20KG
+			$tarifa = 1330;
+		} else if ($peso_total > 10){ // HASTA 15KG
+			$tarifa = 1110;
+		} else if ($peso_total > 5){ // HASTA 10KG
+			$tarifa = 910;
+		} else if ($peso_total > 1){ // HASTA 5KG
+			$tarifa = 730;
+		} else if ($peso_total > 0){ // HASTA 1KG
+			$tarifa = 600;
+		}
+	// TARIFAS NACIONAL
+	} else if (in_array(WC()->customer->get_shipping_state(), $nacional)){
+		if ($peso_total > 20 && $peso_total < 25){ // HASTA 25KG
+			$tarifa = 2370; 
+		} else if ($peso_total > 15){ // HASTA 20KG
+			$tarifa = 1970;
+		} else if ($peso_total > 10){ // HASTA 15KG
+			$tarifa = 1680;
+		} else if ($peso_total > 5){ // HASTA 10KG
+			$tarifa = 1360;
+		} else if ($peso_total > 1){ // HASTA 5KG
+			$tarifa = 1020;
+		} else if ($peso_total > 0){ // HASTA 1KG
+			$tarifa = 830;
+		}
+	}
+	
+	foreach ($rates as $rate) {
+		if ($rate->label == 'Envío a domicilio por Correo Argentino') {
+			$rate->cost = $tarifa + $costo_caja;
+		}
+	}
+
+	return $rates;
+}
+
+add_action( 'woocommerce_before_cart', 'bbloomer_print_cart_weight' );
+function bbloomer_print_cart_weight() {
+   $notice = 'Your cart weight is: ' . WC()->cart->get_cart_contents_weight() . get_option( 'woocommerce_weight_unit' );
+   if ( is_cart() ) {
+      wc_print_notice( $notice, 'notice' );
+   } else {
+      wc_add_notice( $notice, 'notice' );
+   }
+}
+
