@@ -15,7 +15,7 @@ get_header();
 			<?php get_template_part('template-parts/bloques-marco');?>
 		</div>
 
-		<div class="landing-footer pt5-ns flex justify-between container bg-black pb5">
+		<div class="landing-footer pt5-ns flex justify-between container lg:max-w-[unset] mx-auto bg-black pb5">
 		
 			<div class="measure center flex flex-column items-center">
 				<h1 class="tc f1 center white main-font">Te esperamos!</h1>

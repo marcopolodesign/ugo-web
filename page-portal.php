@@ -2,7 +2,7 @@
 
 <main id="main" data-barba="container" data-barba-namespace="portal" class="portal no-mt ugo-pink-bg">
 <?php $isAuth = true;  ?>
-    <div class="flex justify-between pv6 container flex-wrap">
+    <div class="flex justify-between pv6 container lg:max-w-[unset] mx-auto flex-wrap">
 
         <div class="w-30-ns hp-br user-info-container sticky relative-m top-30 h-max" style="top: 100px">
         </div>

@@ -100,6 +100,11 @@ if ( ! function_exists( 'ugo_setup' ) ) :
 				'flex-height' => true,
 			)
 		);
+
+		if( class_exists( 'WooCommerce' ) ){
+			// Include custom plugin for side cart
+			require get_template_directory() . '/inc/side-cart-woocommerce/wsc.php';
+		}
 	}
 endif;
 add_action( 'after_setup_theme', 'ugo_setup' );
@@ -231,7 +236,12 @@ function my_acf_json_save_point( $path ) {
     
 }
  
-
+/**
+ * Load WooCommerce compatibility file.
+ */
+if ( class_exists( 'WooCommerce' ) ) {
+	require get_template_directory() . '/inc/woocommerce.php';
+}
 
 add_filter('acf/settings/load_json', 'my_acf_json_load_point');
 
@@ -247,3 +257,100 @@ function my_acf_json_load_point( $paths ) {
    $paths[] = MY_PLUGIN_DIR_PATH . '/acf-json';
    return $paths;
 }
+
+remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10 );
+remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_upsell_display', 15 );
+remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_after_single_product_summary', 20 );
+
+
+
+function get_cart_total() {
+    echo WC()->cart->get_cart_contents_count();
+    wp_die();
+}
+add_action('wp_ajax_get_cart_total', 'get_cart_total');
+add_action('wp_ajax_nopriv_get_cart_total', 'get_cart_total');
+
+
+function localize_script() {
+    wp_localize_script('ugo-main', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
+}
+add_action('wp_enqueue_scripts', 'localize_script');
+
+
+function implement_ajax_apply_coupon() {
+
+    global $woocommerce;
+
+    //$code = $_REQUEST['coupon_code'];
+    $code = filter_input( INPUT_POST, 'coupon_code', FILTER_DEFAULT );
+
+    if( empty( $code ) || !isset( $code ) ) {
+        $response = array(
+            'result'    => 'error',
+            'message'   => 'Code text field can not be empty.'
+        );
+
+        header( 'Content-Type: application/json' );
+        echo json_encode( $response );
+
+        exit();
+    }
+
+    $coupon = new WC_Coupon( $code );
+
+    if( ! $coupon->id && ! isset( $coupon->id ) ) {
+        $response = array(
+            'result'    => 'error',
+            'message'   => 'Código invalido. Por favor reintente.'
+        );
+
+        header( 'Content-Type: application/json' );
+        echo json_encode( $response );
+
+        exit();
+
+    } else {
+          if ( ! empty( $code ) && ! WC()->cart->has_discount( $code ) ){
+            WC()->cart->add_discount( $code );
+            $response = array(
+                'result'    => 'success',
+                'message'   => 'Se agregó correctamente.'
+            );
+
+            header( 'Content-Type: application/json' );
+            echo json_encode( $response );
+
+            exit();
+        }
+    }
+}
+
+add_action('wp_ajax_ajaxapplycoupon', 'implement_ajax_apply_coupon');
+add_action('wp_ajax_nopriv_ajaxapplycoupon', 'implement_ajax_apply_coupon');
+
+
+function autofill_checkout_fields_by_postcode(){
+
+	global $wpdb;
+	$postcode = $_POST['postcode'];
+    $results = $wpdb->get_results( "SELECT provincia, codigo, localidad FROM {$wpdb->prefix}localidades WHERE cp = " . $postcode );
+    
+    if ($results){
+        // Asumiendo que un CP solo corresponde a una provincia. El primer valor ya es suficiente.
+        $provincia = $results[0]->provincia;
+        $codigo = $results[0]->codigo;
+        $data = [];
+        array_push($data,$provincia,$codigo);
+        foreach ( $results as $row )
+            {
+               array_push($data,$row->localidad);
+            }
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    }
+    
+    die();
+}
+
+add_action( 'wp_ajax_nopriv_autofill_checkout_fields_by_postcode', 'autofill_checkout_fields_by_postcode' );
+add_action( 'wp_ajax_autofill_checkout_fields_by_postcode', 'autofill_checkout_fields_by_postcode' );

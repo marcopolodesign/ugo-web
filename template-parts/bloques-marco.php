@@ -115,7 +115,7 @@
         <?php get_template_part('template-parts/content/hp-marquee'); ?>
       </div>
 
-      <div class="flex justify-between column-mobile items-stretch reviews mv5 pv3 container">
+      <div class="flex justify-between column-mobile items-stretch reviews mv5 pv3 container lg:max-w-[unset] mx-auto">
 
         <?php if( have_rows('review') ): while( have_rows('review') ): the_row(); ?>
             <div class="review mh4">
@@ -174,7 +174,7 @@
   </div>
 
   <?php elseif( get_row_layout() == 'timeline' ): ?>
-    <div class="container relative" >
+    <div class="container lg:max-w-[unset] mx-auto relative" >
       <!-- <div class="absolute-cover z-2" style="background-image:url(<?php the_sub_field('timeline_bg');?>)"></div> -->
 
       <div class="relative z-3 pt6 pb5 marco-timeline-container">
@@ -270,7 +270,7 @@
 
           <?php elseif( get_row_layout() == 'next_section' ): ?>
             
-            <div class="mv5 container">
+            <div class="mv5 container lg:max-w-[unset] mx-auto">
               <div class="next-section-container relative ph4-ns ">
                 <div class="relative z-3 next-section-content flex flex-column items-end justify-end pv6 measure mr-0 ml-auto">
                   <?php the_sub_field('next_content');
@@ -303,7 +303,7 @@
             $textWidth = 'w-60-ns';
           ?>
 
-          <div class="bloque-round-container flex jic container mv5">
+          <div class="bloque-round-container flex jic container lg:max-w-[unset] mx-auto mv5">
             <?php if(get_sub_field('image')): 
               $textWidth = 'w-40-ns';
               ?>
@@ -330,7 +330,7 @@
 
           <?php elseif( get_row_layout() == 'card_item_new' ): ?>
 
-            <div class="cards-container-new container pv5">
+            <div class="cards-container-new container lg:max-w-[unset] mx-auto pv5">
               <h2 class="tc black f1 faro mb5"><?php the_sub_field('title');?></h2>
               <div class="cards-container-new flex flex-wrap justify-between items-stretch">
                   <?php if( have_rows('cards') ): while( have_rows('cards') ): the_row(); ?>

@@ -6,7 +6,7 @@ get_header();
 <div id="primary" class="content-area">
 		<main id="main" data-barba="container" data-barba-namespace="home" class="home">
 
-		<div class="home-starter flex pb3 container relative">
+		<div class="home-starter flex pb3 container lg:max-w-[unset] mx-auto relative">
 			<div class="w-80-ns center relative z-2 mt-0 ml-0 ">
 					<h1 class="white f0 lh-0 main-font bold mb2 measure w-80-ns">Vacaciones para tu perro</h1>
 				<p class="messina white lh-copy f4 measure-wide">Un campo destinado para que tu mascota disfrute de correr en libertad con sus amigos y juegue hasta agotarse. La mejor experiencia para ellos y para vos.</p>

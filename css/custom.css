@@ -58,7 +58,7 @@ p {
 }
 
 
-h1, a p, h2, .faro {
+h1, a p, h2, .faro, .font-faro {
   font-family: 'Faro' !important;
 }
 
@@ -67,7 +67,7 @@ a p {
   text-transform: uppercase;
 }
 
-p, *::placeholder, input {
+p, *::placeholder, input, .font-lausanne {
   font-family: 'Lausanne' !important;
 }
 
@@ -167,6 +167,10 @@ p, *::placeholder, input {
 
 .main-cta {
   padding: 15px 28px;
+}
+
+.smooth-t {
+  transition: var(--smooth);
 }
 
 /* Header & Footer Desktop */
@@ -987,4 +991,28 @@ border-left: 1px solid var(--pink)
   .instagram-feed > div {
     margin-right: 20px;
   }
+}
+
+
+/* Woocommerce */
+
+.woocommerce-notices-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  margin: 30px;
+  z-index: 999999999;
+  width: 70vw;
+  transform: translateX(-50%);
+}
+
+label[for="payment_method_woo-mercado-pago-custom"], .mp-wallet-button-container, .mp-checkout-custom-available-payments, .woocommerce-privacy-policy-text {
+  display: none !important;
+}
+
+.xoo-wsc-basket, .xoo-wsc-markup {display: none !important}
+
+
+form.checkout input, form.checkout option, form.checkout textarea, form.checkout li{
+  color: #000;
 }

@@ -14,7 +14,6 @@ let infoEndPoint = 'input-main';
 let dogEndPoint = 'inputs-web-dog';
 let ownerEndPoint = 'inputs-web-owner';
 
-
 let reserveInfo = {};
 let closeModal = document.querySelector('.close-modal')
 let stepsHeader = document.querySelector('.steps-master');
@@ -43,8 +42,7 @@ const getQueryParamValue = (param) => {
     
     const urlParams = new URLSearchParams(queryString);
     return urlParams.get(param);
-  }
-
+}
 
  const formStepValue = getQueryParamValue('form_step');
 //  console.log(formStepValue)
@@ -880,7 +878,7 @@ let close = () => {
 close();
 
 let open = () => {
-    let a = document.querySelectorAll('a:not(.log-in)');
+    let a = document.querySelectorAll('a[href="#reserve"]');
 
     a.forEach(trigger => {
         trigger.addEventListener('click', (e)=> {
@@ -1450,7 +1448,6 @@ const getSheet = () => {
     console.error('Error retrieving data:', error);
   });
 }
-
 
 getSheet();
 

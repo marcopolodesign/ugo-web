@@ -7,7 +7,7 @@ $mainColor = get_field('main_color');
 
 <main id="main" data-barba="container" data-barba-namespace="faq" class="faq no-mt ugo-pink-bg">
 
-  <section class="relative container pt5">
+  <section class="relative container w-full max-w-[unset] mx-auto pt5">
       <div class="flex justify-between items-end pt6-ns pb4 faq-title">
         <h1 class='black f0'><?php the_title();?>s</h1>
         <div class="tr tc page-description black black-text f3">
@@ -35,7 +35,7 @@ $mainColor = get_field('main_color');
     <!-- <div class="absolute-cover z--1" style="background-image: url(<?php the_post_thumbnail_url();?>)"></div> -->
   </section>
 
-  <section class="pb5 container">
+  <section class="pb5 container w-full max-w-[unset] mx-auto">
       <div class="faq-container">
       <div class="faq-content">
         <div class="faq-category-container relative">

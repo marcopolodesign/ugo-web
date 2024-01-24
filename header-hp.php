@@ -54,16 +54,19 @@
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 					
 
+	
 
 	<script>
 		let price = <?php the_field('price', 6);?>;
 		let transportFare = <?php the_field('transport_fare', 6);?>;
 	</script>
 				
-				
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- <script src="/wp-content/themes/ugo-main/tailwind.config.js"></script>	 -->
 
 					
 	<?php wp_head(); ?>
+
 
 
 </head>
@@ -73,7 +76,7 @@
 <div id="page" class="site">
 	<a class="skip-link screen-reader-text" href="#primary"><?php esc_html_e( 'Skip to content', 'ugo' ); ?></a>
 
-	<header id="masthead" class="site-header flex absolute top-0 left-0 z-4 container w-100 pv3 justify-between">
+	<header id="masthead" class="site-header flex absolute top-0 left-0 z-4 container w-full max-w-[unset] mx-auto pv3 justify-between">
 		<a class="barba-prevent" href="/">
 			<?php get_template_part('template-parts/content/hp-logo-min'); ?>
 		</a>

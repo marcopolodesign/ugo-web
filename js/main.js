@@ -1,7 +1,6 @@
 let myLocalStorage = window.localStorage;
 let pageName = document.querySelector('[data-barba=container]');
 let preLoad = document.querySelectorAll('.pre-load');
-
 let docuHeight = document.body.clientHeight;
 let color;
 let anchors;
@@ -458,14 +457,11 @@ const runScripts = () => {
     }
   };
 
-  // postAnimations();
   initScripts();
   fbTrack();
   googleAnalytics();
   allCursor();
   postAnimations();
-
-  // changeFooter();
 };
 
 const moreAnchors = () => {
@@ -576,330 +572,12 @@ const moveCarrousel = () => {
   });
 };
 
-const logo = () => {
-  document.addEventListener('scroll', () => {
-    let logo = document.querySelector('.logo');
-
-    const currentScroll = window.pageYOffset;
-    // logo.style.transform = 'rotate(' + window.pageYOffset / 4 + 'deg)';
-  });
-};
-
-
-// Para páginas individuales de grados
-
-let currentSlide = 0;
-
-const homeSlide = () => {
-  let slides = document.querySelectorAll('.home-slide >div.overflow-hidden >div');
-  let containerSlides = document.querySelectorAll('.home-slide');
-  let text = document.querySelectorAll('.slider-text>div:first-child');
-
-  let indicators = document.querySelectorAll('.indicator');
-  let timeIndicator = document.querySelectorAll('.indicator span span');
-  let maxSlides = slides.length - 1;
-
-  return new Promise((resolve) => {
-    const timeline = gsap.timeline({
-      defaults: {
-        ease: Expo.easeOut,
-        duration: 1.5,
-      },
-      onComplete() {
-        currentSlide++;
-        resolve();
-      },
-    });
-
-    timeline
-      .set(text.children, { opacity: 0 })
-      .set(slides, { zIndex: 3 })
-      .set(timeIndicator, { width: '0%' })
-      .set(text[currentSlide].children, { opacity: 0, y: '50%' })
-      .call(() => {
-
-      })
-      .set(slides[currentSlide], { scalex: 0, x: '-100%', zIndex: 4 })
-      .to(timeIndicator[currentSlide], { width: '100%', duration: 10 })
-      .to(slides[currentSlide], { scalex: 1, x: '0%' }, 0)
-      .to(text[currentSlide].children, { opacity: 1, y: '0%', stagger: 0.1, duration: 2 }, 0.8)
-      .call(() => {
-        console.log(currentSlide)
-        currentSlide++;
-
-        if (currentSlide > maxSlides) {
-          currentSlide = 0;
-          indicators.forEach((i) => {
-            i.classList.remove('active');
-          });
-
-          indicators.forEach((i) => {
-            i.classList.remove('active');
-          });
-          indicators[currentSlide].classList.add('active');
-        }
-
-        console.log(currentSlide)
-      });
-
-
-    indicators.forEach((i) => {
-      i.classList.remove('active');
-    });
-    indicators[currentSlide].classList.add('active');
-
-
-  });
-};
-
-let currentPhrase = 0;
-
-const phrase = () => {
-  let phrases = document.querySelectorAll('.phrase > div');
-  let firstPhrase = phrases[0].innerHTML;
-  let phraseHeight = phrases[0].clientHeight;
-
-  document.querySelector('.phrase').style.minHeight = phraseHeight + 'px';
-
-  let maxPhrases = phrases.length - 1;
-
-  const phraseTimeline = gsap.timeline({
-    repeatDelay: 5,
-    repeat: -1,
-    defaults: {
-      ease: Expo.easeOut,
-      duration: 2.5,
-    },
-  });
-  phraseTimeline
-    .to(phrases[0], { opacity: 0, y: 40, duration: 0.8 })
-    .call(() => {
-      if (currentPhrase === 0) {
-        phrases[0].innerHTML = firstPhrase;
-      } else {
-        phrases[0].innerHTML = phrases[currentPhrase].innerHTML;
-      }
-    })
-    .to(phrases[0], { opacity: 1, y: 0, duration: 0.8 })
-    .call(() => {
-      currentPhrase++;
-      if (currentPhrase > maxPhrases) {
-        currentPhrase = 0;
-      }
-    });
-};
-
-const multiOptions = (instances, description, placeholder) => {
-  let n;
-  placeholder.innerHTML = description[0].innerText;
-  instances[0].classList.add('selected');
-  instances.forEach((i) => {
-    i.addEventListener('mouseenter', () => {
-      instances.forEach((i) => {
-        i.classList.remove('selected');
-      });
-
-      n = instances.indexOf(i);
-      let newDescription = description[n].innerText;
-
-      i.classList.add('selected');
-
-      const timeline = gsap.timeline({
-        defaults: {
-          ease: Expo.easeOut,
-          duration: 0.5,
-        },
-      });
-
-      timeline
-        .to(placeholder, { opacity: 0, y: 20 })
-        .call(() => {
-          placeholder.innerHTML = newDescription;
-        })
-        .to(placeholder, { opacity: 1, y: 0 });
-    });
-  });
-};
-
-
-const changeFooter = () => {
-  let footer = document.querySelector('footer');
-
-  let colors = {
-    0: {
-      'background-color': '#fbcb26',
-    },
-
-    1: {
-      'background-color': '#fbcb26',
-    },
-    2: {
-      'background-color': '#654a8a',
-    },
-    3: {
-      'background-color': '#7cb1e6',
-    },
-  };
-
-  let randomNumber = Math.floor(Math.random() * 4);
-
-  if (docuHeight < 4500) {
-    // document.querySelector('footer > h1').classList.add('dn');
-  } else {
-    // document.querySelector('footer > h1').classList.remove('dn');
-  }
-
-  footer.style.backgroundColor = colors[randomNumber]['background-color'];
-};
-
-const filterBy = () => {
-  let posts = document.querySelectorAll('.exhibit-archive');
-
-  posts.forEach((p) => {
-    // console.log(p);
-    let date = p.getAttribute('year');
-    let year = date.split(' ');
-    console.log(year[1]);
-    // let year = document.querySelectorAll;
-  });
-};
-
-// filterBy();
-
-const openBio = () => {
-  let bioTrigger = document.querySelector('.bio-trigger');
-  let bioClose = document.querySelector('#close-bio');
-  let bio = document.querySelector('.artist-bio-container');
-
-  bioTrigger.addEventListener('click', () => {
-    bio.classList.remove('dn');
-    bio.classList.add('flex');
-    bio.classList.remove('pointers-none');
-  });
-
-  bioClose.addEventListener('click', () => {
-    bio.classList.add('dn');
-    bio.classList.remove('flex');
-    bio.classList.add('pointers-none');
-  });
-};
-
-const openBioCurador = () => {
-  let bioTrigger = document.querySelector('.bio-trigger-curador');
-  let bioClose = document.querySelector('#close-bio-curador');
-  let bio = document.querySelector('.artist-bio-container.curador-bio');
-
-  bioTrigger.addEventListener('click', () => {
-    bio.classList.remove('dn');
-    bio.classList.add('flex');
-    bio.classList.remove('pointers-none');
-  });
-
-  bioClose.addEventListener('click', () => {
-    bio.classList.add('dn');
-    bio.classList.remove('flex');
-    bio.classList.add('pointers-none');
-  });
-};
-
-const playAudio = () => {
-  let audioTrigger = document.querySelector('.audio-container');
-  let waves = audioTrigger.querySelectorAll('.audio-effect');
-  let text = audioTrigger.querySelector('h2');
-  let isPlaying = false;
-  let audio = audioTrigger.querySelector('#myAudio');
-
-  let audioTl = new TimelineMax({
-    defaults: {
-      duration: 2,
-      ease: Expo.EaseOut,
-    },
-    repeat: -1,
-    paused: true,
-  });
-
-  audioTl.to(waves, { opacity: 0, scale: 1.8, stagger: 0.5 });
-
-  audioTrigger.addEventListener('click', () => {
-    if (!isPlaying) {
-      text.innerHTML = 'Pausar';
-      isPlaying = true;
-      audio.play();
-      audioTl.play();
-    } else {
-      isPlaying = false;
-      text.innerHTML = 'Play';
-      audioTl.pause();
-      audio.pause();
-    }
-  });
-};
-
 
 const closeSideCart = () => {
   document.querySelector('.wsc-modal').classList.remove('wsc-active');
   document.querySelector('body').classList.remove('wsc-active');
 };
 
-const filterByLinks = () => {
-  let triggers = document.querySelectorAll('.filters-mb p');
-  let obrasContainer = document.querySelector('.artist-obras ul')
-  let obras = document.querySelectorAll('.obra-artista');
-  // let instock = document.querySelectorAll('.instock');
-  // let nostock = document.querySelectorAll('.outofstock');
-  let noProducts = false;
-
-  triggers.forEach((t) => {
-    t.addEventListener('click', () => {
-      let status = t.getAttribute('filter');
-
-
-      let filterTl = gsap.timeline({
-        defaults: {
-          ease: Expo.easeOut,
-          duration: 0.4
-        },
-      });
-
-      filterTl.to(obrasContainer, { opacity: 0, y: 40 }, 0)
-        .to(obrasContainer, { opacity: 1, y: 0 }, 1)
-
-      let match = document.querySelectorAll(`.obra-artista.${status}`);
-
-      if (match.length > 0) {
-        obras.forEach((o) => {
-          o.classList.add('dn');
-        });
-        match.forEach((m) => {
-          m.classList.remove('dn');
-        });
-
-        triggers.forEach((t) => {
-          t.classList.remove('active');
-        });
-        t.classList.add('active');
-      } else if (status === 'all') {
-        obras.forEach((o) => {
-          o.classList.remove('dn');
-        });
-
-        triggers.forEach((t) => {
-          t.classList.remove('active');
-        });
-        t.classList.add('active');
-
-        noProducts = false;
-
-      } else {
-        noProducts = true;
-      }
-
-      if (noProducts) {
-        alert('no hay productos disponibles');
-      }
-    });
-  });
-};
 
 const Menu = () => {
   if (!pageName.classList.contains('success')) {
@@ -923,21 +601,6 @@ const Menu = () => {
   onScroll();
 }
 };
-
-Menu();
-
-const interview = () => {
-  let questionContainer = document.querySelectorAll('.interview-q-container');
-  questionContainer.forEach(q => {
-    let question = q.querySelector('.interview-q')
-    if (q.clientHeight > window.innerHeight - 150) {
-      question.classList.add('sticky')
-    }
-  })
-}
-
-
-
 
 
 const contact = () => {
@@ -1001,21 +664,6 @@ const animateHome = () => {
     .to(children, { opacity: 1, y: 0, stagger: 0.1, duration: 1, }, 1.6);
 }
 
-const gallery = () => {
-  let gal = document.querySelector('.marco-gallery');
-  let cursor = document.querySelector('.cursor')
-
-  gal.addEventListener('mouseenter', () => {
-    cursor.classList.add('is-scroll-h');
-  })
-
-  gal.addEventListener('mouseleave', () => {
-    cursor.classList.remove('is-scroll-h');
-  })
-}
-
-
-
 const animateMarco = () => {
   let background = document.querySelector('.bg-color-ball');
   let children = Array.prototype.slice.call(document.querySelector('.home-starter > *').children);
@@ -1055,9 +703,6 @@ const carrousel = () => {
     })
   })
 }
-
-carrousel();
-
 
 const homeGallery = () => {
   // set up some general x-position and tweening speeds
@@ -1142,18 +787,6 @@ const marquee = () => {
   })
 }
 
-// const wallpapers = gsap.utils.toArray('.wallpaper-images-container > div');
-//     const wallpaperTL = gsap.timeline({ repeat: -1, });
-//     wallpapers.forEach((w, i) => {
-//         wallpaperTL
-//             // .set(w, { clipPath: 'inset (100% 0 0 )' })
-//             .to(w, { clipPath: "inset(0)", duration: .6, ease: 'power1.out' })
-//             .to(w, { duration: 9.8 })
-//     });
-
-//     var i = 0
-
-
 
 const paradiseSlider = () => {
   let images = document.querySelectorAll('.hp-slider > div');
@@ -1202,129 +835,35 @@ const paradiseSlider = () => {
 
 
 
+let currentImage = 0 ;
 
-barba.init({
-  timeout: 5000,
-  prevent: ({ el }) => el.classList.contains('barba-prevent'),
-  transitions: [
-    {
-      leave({ current, next, trigger }) {
-        // let cursor = document.querySelector('.cursor');
-        // cursor.classList.remove('is-hover');
-        // cursor.classList.remove('is-shop');
-        // cursor.classList.remove('add-cart');
-        // closeSideCart();
-        // closeMenu();
+const animateProductImages = () => {
+  let images = document.querySelectorAll('.featured-images>div.featured');
+  let maxImages = images.length - 1;
+  if (currentImage > maxImages) {
+    currentImage = 0;
 
-        return new Promise((resolve) => {
-          const timeline = gsap.timeline({
-            defaults: {
-              ease: Expo.easeOut,
-            },
-            onComplete() {
-              current.container.remove();
-              resolve();
-            },
-          });
-          timeline
-            .call(() => {
-              preLoad[0].classList.add('animate');
-            })
-            .set(preLoad, { x: '100%', opacity: '1' })
-            .to(current.container, { opacity: 0.6, x: '-10%', duration: 2 }, 0)
-            .to(preLoad[0], { x: '0%', ease: Power4.easeOut, duration: 1.5 }, 0);
-        });
+    images.forEach((img) => {
+      img.style.width = '';
+    });
+  }
+
+  return new Promise((resolve) => {
+    const timeline = gsap.timeline({
+      onComplete() {
+        currentImage++;
+        resolve();
       },
-      enter({ current, next, trigger }) {
-        return new Promise((resolve) => {
-          window.scrollTo({
-            top: 0,
-          });
-          runScripts();
-          const timeline = gsap.timeline({
-            onComplete() {
-              resolve();
-            },
-            defaults: {
-              duration: 2,
-              ease: Expo.easeOut,
-            },
-          });
 
-          timeline
-            .call(() => {
-              preLoad.classList.remove('animate');
-            })
-            .set(next.container, { opacity: 0, x: '10%' })
-            .to(preLoad, { x: '-100%', opacity: 1, duration: 2.3 }, 0)
-            .to(next.container, { opacity: 1, x: '0' }, 0.5);
-        });
+      defaults: {
+        duration: 0.7,
+        ease: Expo.ease,
       },
-    },
+    });
 
-  ],
-  views: [
-    {
-      namespace: 'hp',
-      afterEnter(data) {
-        // animateHome();
-        homeGallery();
-        marquee();
-        paradiseSlider();
-        // moveCarrousel();
-
-      },
-    },
-    {
-      namespace: 'app',
-      afterEnter(data) {
-        let featuresContainer = document.querySelector('.app-features');
-        let elements = Array.prototype.slice.call(featuresContainer.children);
-        console.log(featuresContainer.offsetHeight);
-        console.log(featuresContainer.offsetTop);
-        
-        
-        document.addEventListener('scroll', (e)=> {
-          let scroll = window.scrollY + window.innerHeight / 1.3;
-         
-          if (scroll > featuresContainer.offsetTop && featuresContainer.offsetTop + featuresContainer.offsetHeight  > scroll - 600) {
-            // let percentScrolled = window.scrollY / window.innerHeight;
-         
-            elements.forEach((el, index) => {
-              el.classList.add('transform');
-              const delay = index * 100;
-              el.style.transitionDelay = delay  + 'ms';
-            })
-          } else {
-            elements.forEach(el => {
-              el.classList.remove('transform')
-            })
-          }
-        })
-      },
-    },
-  ],
-  debug: true,
-});
-
-runScripts();
-
-
-
-
-// 
-
-// First we get the viewport height and we multiple it by 1% to get a value for a vh unit
-let vh = window.innerHeight * 0.01;
-// Then we set the value in the --vh custom property to the root of the document
-document.documentElement.style.setProperty('--vh', `${vh}px`);
-
-// We listen to the resize event
-window.addEventListener('resize', () => {
-  // We execute the same script as before
-  let vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-});
+    timeline.to(images[currentImage], {width: '100%'});
+  });
+};
 
 
 const instagram = () => {
@@ -1414,7 +953,6 @@ const instagram = () => {
 // instagram();
 
 
-
 const getPaymentID = () => {
 
   if (pageName.classList.contains('success')) {
@@ -1441,9 +979,6 @@ const getPaymentID = () => {
       console.log(status)
 }
 }
-getPaymentID();
-
-
 
 const faqQuestions = () => {
 
@@ -1487,5 +1022,64 @@ const faqQuestions = () => {
   })
 }
 
-
+runScripts();
+Menu();
+carrousel();
 faqQuestions();
+getPaymentID();
+
+
+
+if (pageName.classList.contains('hp')) {
+  // animateHome();
+  homeGallery();
+  marquee();
+  paradiseSlider();
+  // moveCarrousel();
+}
+
+if (pageName.classList.contains('app')) {
+ let featuresContainer = document.querySelector('.app-features');
+ let elements = Array.prototype.slice.call(featuresContainer.children);
+ console.log(featuresContainer.offsetHeight);
+ console.log(featuresContainer.offsetTop);
+ 
+ 
+ document.addEventListener('scroll', (e)=> {
+   let scroll = window.scrollY + window.innerHeight / 1.3;
+  
+   if (scroll > featuresContainer.offsetTop && featuresContainer.offsetTop + featuresContainer.offsetHeight  > scroll - 600) {
+     // let percentScrolled = window.scrollY / window.innerHeight;
+  
+     elements.forEach((el, index) => {
+       el.classList.add('transform');
+       const delay = index * 100;
+       el.style.transitionDelay = delay  + 'ms';
+     })
+   } else {
+     elements.forEach(el => {
+       el.classList.remove('transform')
+     })
+   }
+ })
+}
+
+if (pageName.classList.contains('product')) {
+ animateProductImages();
+
+ setInterval(() => {
+  animateProductImages();
+}, 8000);
+}
+
+
+
+let vh = window.innerHeight * 0.01;
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+// We listen to the resize event
+window.addEventListener('resize', () => {
+  // We execute the same script as before
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+});

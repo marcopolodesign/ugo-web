@@ -7,7 +7,7 @@ get_header();
 <div id="primary" class="content-area">
 		<main id="main" data-barba="container" data-barba-namespace="app" class="app pv5 bg-black">
 
-        <section class="app-starter container flex jic pv5 column-mobile" id="app-top">
+        <section class="app-starter container max-w-[unset] mx-autoflex jic pv5 column-mobile" id="app-top">
             <div class="w-50-ns app-image relative">
                 <div class="w-70-ns center ph3">
                     <img class="ph4" src="<?php the_field('imagen_principal');?>">

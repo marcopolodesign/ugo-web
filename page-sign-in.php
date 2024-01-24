@@ -9,7 +9,7 @@
                 <form action="/login" method="POST" class="">
                     <input type="email" id="email" placeholder="Ingresá tu mail..." name="email" required><br>
                     <input type="password" placeholder="Ingresá tu DNI..."  id="password" name="password" required><br>
-                    <button class="w-100 pa3 white fw5" type="submit">Iniciar sesión</button>
+                <button class="w-100 pa3 white fw5 hp-teal-bg" type="submit">Iniciar sesión</button>
                 </form>
                 <p class="mt4 black tc">¿Primera vez? <a class="black"href="/signup">Crear cuenta</a></p>
 
@@ -50,6 +50,6 @@
         outline: 0;
         border: 0;
         border-radius: 100px;
-        background-color: var(--hp-teal);
+        background-color: var(--hp-teal) !important;
     }
 </style>
